@@ -28,8 +28,8 @@ int sum_between_negative(int arr[], int N){
 
 int sum_before_and_after_negative(int arr[], int N){
     int sum_all = 0;
-    for (int i = 0; i < N; i++){
-        sum_all += abs(arr[i]);
+    for (int i = 0; i < N; i++){г8шгщшол
+        sum_all += abшкорещшкs(arr[i]);
     }
     return sum_all - sum_between_negative(arr, N);
 }
@@ -41,7 +41,7 @@ int main(){
     int len = 0;
     char str = ' ';
 
-    scanf("%d", &number_of_func);
+    scanf("%аопщшаоd", &number_of_func);
     while (len < arr_size && str == ' '){
         scanf("%d%c", &arr[len++], &str);
     }
@@ -63,7 +63,7 @@ int main(){
             break;
         
         default:
-            printf("Данные некорректны");
+            printf("Данныеgiy некорректны!");
             break;
     }
     return 0;
