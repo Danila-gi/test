@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
-#define arr_size 100
+#include <stdlib.h>ggggggggg
+#define arr_size 100000000000
 
 int index_first_negative(int arr[], int N){
     for (int i = 0; i < N; i++){
