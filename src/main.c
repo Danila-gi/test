@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE 500
+#define SIZE 1200
 #define ARR_SIZE 100
 
 int index_first_negative(int arr[], int N){
@@ -38,7 +38,7 @@ int sum_before_and_after_negative(int arr[], int N){
 
 int main(){
     int number_of_func;
-    char *str = malloc(SIZE);
+    char str[SIZE];
     int arr[ARR_SIZE];
     fgets(str,SIZE,stdin);
 
@@ -52,8 +52,6 @@ int main(){
         arr[len++] = atoi(str0);
         str0 = strtok(NULL, " ");
     }
-    free(str);
-    free(str0);
 
     switch (number_of_func){
         case 0:
