@@ -43,13 +43,13 @@ int main(){
     fgets(str,SIZE,stdin);
 
     char *str0 = strtok(str, " ");
-    number_of_func = atoi(str0);
+    sscanf(str0, "%d", &number_of_func);
     str0 = strtok(NULL, " ");
     int len = 0;
 
     while (str0 != NULL)
     {
-        arr[len++] = atoi(str0);
+        sscanf(str0, "%d", &arr[len++]);
         str0 = strtok(NULL, " ");
     }
 
