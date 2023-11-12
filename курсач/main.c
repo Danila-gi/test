@@ -8,6 +8,7 @@
 #include "delete.h"
 #include "memory.h"
 #include "function_1.h"
+#include "function_2.h"
 
 struct Sentence{
     wchar_t* sentence;
@@ -66,6 +67,10 @@ int main()
         }
         if (num_of_func == 1){
             wprintf(L"%d\n", func_1(text));
+        }
+        if (num_of_func == 2){
+            qsort(text.list_of_sentences, text.count_of_sentences, sizeof(struct Sentence), cmp);
+            output(text);
         }
 
         free_memory(dyn_strs, len);
