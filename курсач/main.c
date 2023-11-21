@@ -9,6 +9,8 @@
 #include "memory.h"
 #include "function_1.h"
 #include "function_2.h"
+#include "function_3.h"
+#include "function_4.h"
 
 struct Sentence{
     wchar_t* sentence;
@@ -28,20 +30,26 @@ void output(struct Text text){
 
 int main()
 {
+    setlocale(LC_ALL, "");
     wprintf(L"Course work for option 5.14, created by Danila Ivanov.\n");
     int num_of_func;
-    scanf("%d\n", &num_of_func);
+    wscanf(L"%ld", &num_of_func);
+    if (!(num_of_func == 0 || num_of_func == 1 || num_of_func == 2 || num_of_func == 3 || num_of_func == 4 || num_of_func == 5)){
+        wprintf(L"Error: <неверный номер функции>");
+        return 0;
+    }
     if (num_of_func == 5){
-        wprintf(L"0 - вывод текста после первичной обязательной обработки (если предусмотрена заданием данного уровня сложности)\n");
-        wprintf(L"1 - вызов функции под номером 1 из списка задания\n");
-        wprintf(L"2 - вызов функции под номером 2 из списка задания\n");
-        wprintf(L"3 - вызов функции под номером 3 из списка задания\n");
-        wprintf(L"4 - вызов функции под номером 4 из списка задания\n");
-        wprintf(L"5 - вывод справки о функциях, которые реализует программа.\n");
+        wprintf(L"0 - вывод текста после первичной обязательной обработки\n");
+        wprintf(L"1 - Посчитать и вывести в минутах количество секунд встречающихся в тексте\n");
+        wprintf(L"2 - Отсортировать предложения по увеличению сумме кодов символов первого слова в предложении.\n");
+        wprintf(L"3 - Заменить все символы '%', '#', '@' на “<percent>”, “<решетка>”, “(at)” соответственно.\n");
+        wprintf(L"4 - Удалить все предложения которые заканчиваются на слово с тремя согласными подряд.\n");
+        wprintf(L"5 - Вывод справки о функциях.\n");
+        return 0;
     }
     else {
         wchar_t **dyn_strs = allocate_memory_for_text();
-        setlocale(LC_CTYPE, "");
+
         int index = 0;
         int* ptr_index = &index;
 
@@ -72,8 +80,17 @@ int main()
             qsort(text.list_of_sentences, text.count_of_sentences, sizeof(struct Sentence), cmp);
             output(text);
         }
-
-        free_memory(dyn_strs, len);
+        if (num_of_func == 3){
+            for (int i = 0; i < text.count_of_sentences; i++){
+                text.list_of_sentences[i] = func_3(text.list_of_sentences[i]);
+            }
+            output(text);
+        }
+        if (num_of_func == 4){
+            text = func_4(text);
+            output(text);
+        }
+        free_memory(dyn_strs, text.count_of_sentences);
         return 0;
     }
 }

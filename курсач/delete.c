@@ -22,7 +22,7 @@ struct Text{
 wchar_t* space(wchar_t* str){
     wchar_t* res = calloc(wcslen(str) + 1, sizeof(wchar_t));
     int start = 0;
-    while (str[start] == '\t' || str[start] == ' '){
+    while (str[start] == '\t' || str[start] == ' ' || str[start] == '\n'){
         start++;
     }
     for (int i = 0; i < wcslen(str) - start; i++){
@@ -32,14 +32,18 @@ wchar_t* space(wchar_t* str){
     return res;
 }
 
-struct Sentence lower_sentence(struct Sentence sent){
-    struct Sentence res;
-    res.sentence = calloc(sent.len_of_sentence, sizeof(wchar_t));
-    res.len_of_sentence = sent.len_of_sentence;
-    for (int i = 0; i < sent.len_of_sentence; i++){
-        res.sentence[i] = towlower(sent.sentence[i]);
+int equal_sentences(wchar_t* str1, wchar_t* str2){
+    int ind1 = 0;
+    int ind2 = 0;
+    if (wcslen(str1) != wcslen(str2))
+        return 1;
+    while (str1[ind1] != L'\0' || str2[ind2] != L'\0'){
+        if (towlower(str1[ind1]) != towlower(str2[ind2]))
+            return 1;
+        ind1++;
+        ind2++;
     }
-    return res;
+    return 0;
 }
 
 struct Text delete_sentences(struct Text text){
@@ -50,12 +54,10 @@ struct Text delete_sentences(struct Text text){
     int index = 0;
     for (int i = 0; i < text.count_of_sentences; i++){
         str = text.list_of_sentences[i];
-        str_low = lower_sentence(str);
         int flag = 1;
         for (int x = 0; x < index; x++){
             str_0 = text.list_of_sentences[x];
-            str_0_low = lower_sentence(str_0);
-            if (wcscmp(str_low.sentence, str_0_low.sentence) == 0){
+            if (equal_sentences(str.sentence, str_0.sentence) == 0){
                 flag = 0;
                 break;
             }

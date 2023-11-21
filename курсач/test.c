@@ -38,7 +38,8 @@ wchar_t** reading_of_sentences(int* ptr_index, int* ptr_len, wchar_t** dyn_strs)
 
         if (symbol == L'.'){
             str[*ptr_index] = L'\0';
-            dyn_strs[(*ptr_len)++] = str;
+            dyn_strs[(*ptr_len)] = realloc(dyn_strs[(*ptr_len)], wcslen(str) * sizeof(wchar_t));
+            wcscpy(dyn_strs[(*ptr_len)++], str);
             overflow_str = 0;
             (*ptr_index) = 0;
             str = calloc(TEXT_MAX_SIZE, sizeof(wchar_t));
@@ -51,5 +52,21 @@ wchar_t** reading_of_sentences(int* ptr_index, int* ptr_len, wchar_t** dyn_strs)
     }
 
     free(str);
+    for (int i = 0; i < (*ptr_len); i++)
+        wprintf(L"%ld---%ls\n", i, dyn_strs[i]);
     return dyn_strs;
+}
+
+int main(){
+    wchar_t **dyn_strs = malloc(NUMBER_OF_SENTENCES * sizeof(wchar_t*));
+    for(int i = 0; i < NUMBER_OF_SENTENCES; i++){
+        dyn_strs[i] = calloc(TEXT_MAX_SIZE, sizeof(wchar_t));
+    } 
+    int index = 0;
+    int* ptr_index = &index;
+
+    int len = 0;
+    int* ptr_len = &len;
+    reading_of_sentences(ptr_index, ptr_len, dyn_strs);
+    return 0;
 }

@@ -19,13 +19,14 @@ int func_1(struct Text text){
     int sum = 0; 
     int position, start, len;
     wchar_t* result;
-    wchar_t* search = L"sec";
+    wchar_t* str;
+    wchar_t* search = L" sec ";
     for (int i = 0; i < text.count_of_sentences; i++){
-        wchar_t* str = text.list_of_sentences[i].sentence;
-        if (wcsstr(str, search) != NULL){
+        str = text.list_of_sentences[i].sentence;
+        while (wcsstr(str, search) != NULL){
             result = wcsstr(str, search);
             position = result - str;
-            start = position - 2;
+            start = position - 1;
             while (1)
             {
                 if (iswdigit(str[start]))
@@ -35,13 +36,15 @@ int func_1(struct Text text){
                     break;
                 }
             }
-            if (start <= position - 2){
-                char* number = calloc(position - 2 - start + 1, sizeof(char));
-                for (int x = 0; x < (position - 2 - start + 1); x++){
+            if (start <= position - 1){
+                char* number = calloc(position - start + 1, sizeof(char));
+                for (int x = 0; x < (position - start); x++){
                     number[x] = str[start + x];
                 }
                 sum += atoi(number);
+                free(number);
             }
+            str = wcsstr(str, search) + 5;
         }
     }
     sum = sum / 60;
