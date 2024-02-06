@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <regex.h>
+#define REGULAR_SENT "^[:word:]+@[[:word:]-]+:[:space:]?~[:space:]?# .*$"
 
 int main() {
     char** text = malloc(sizeof(char*));
@@ -33,7 +35,17 @@ int main() {
         text[overflow_sent - 1][overflow_symb - 1] = '\0';
         sent[overflow_symb - 1] = '\0';
     }
+    
+
+    regex_t reegex;
+ 
+    int value;
+    value = regcomp(&reegex, REGULAR_SENT, 0);
     for (int i = 0; i < overflow_sent; i++){
         printf("{%s}\n", text[i]);
+        value = regexec(&reegex, text[i], 0, NULL, 0);
+        /*if (value == 0){
+            printf("%s\n", text[i]);
+        }*/
     }
 }
