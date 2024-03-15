@@ -1,83 +1,115 @@
+#include <dirent.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#define TEXT_MAX_SIZE 10000
-#define NUMBER_OF_SENTENCES 1000
-#define END_OF_INPUT "Dragon flew away!"
+#include <stdlib.h>
+#include <sys/types.h>
 
-char* space(char* str){
-    char* res = calloc(TEXT_MAX_SIZE, sizeof(char));
-    int start = 0;
-    while (str[start] == '\t' || str[start] == ' '){
-        start++;
+void memory_error(){
+    fprintf(stderr, "Error with memory allocation!");
+    exit(1);
+}
+
+long long sum(char* str){
+    long long res = 0;
+    char* istr = strtok(str, " ");
+    while (istr != NULL)
+    {
+        res += atoi(istr);
+        istr = strtok (NULL, " ");
     }
-    for (int i = 0; i < strlen(str) - start; i++){
-        res[i] = str[start + i];
-    }
-    res[strlen(str) - start] = '\0';
     return res;
 }
 
-int isNot7(char* str){
-    if (strstr(str, "7") == NULL){
-        return 1;
+long long pr(char* str){
+    long long res = 1;
+    char* istr = strtok(str, " ");
+    while (istr != NULL)
+    {
+        res *= atoi(istr);
+        istr = strtok (NULL, " ");
     }
-    return 0;
+    return res;
 }
 
-char** allocate_memory_for_text(){
-    char **dyn_strs = malloc(NUMBER_OF_SENTENCES * sizeof(char*));
-    for(int i = 0; i < NUMBER_OF_SENTENCES; i++){
-        dyn_strs[i] = calloc(TEXT_MAX_SIZE, sizeof(char));
-    } 
-    return dyn_strs;
-}
-
-void reading_of_sentences(int* ptr_index, int* ptr_len, int* ptr_result, char** dyn_strs, char* str){
-    while (1){
-        char symbol = getchar();
-        str[(*ptr_index)++] = symbol;
-        if (symbol == '.' || symbol == '?' || symbol == ';'){
-            str[*ptr_index] = '\0';
-            dyn_strs[(*ptr_len)++] = str;
-            *ptr_index = 0;
-            str = calloc(TEXT_MAX_SIZE, sizeof(char));
+long long list_dir(const char *dirPath, long long result)
+{
+    DIR *dir = opendir(dirPath);
+    if(dir) {
+        struct  dirent *de = readdir(dir);
+        while (de) {
+            char* new_dir = calloc(strlen(dirPath) + 4, sizeof(char));
+            char* file_dir;
+            char* line = calloc(100, sizeof(char));
+            if (new_dir == NULL || line == NULL){
+                memory_error();
+            }
+            FILE *file;
+            if (de->d_type == 4 && strstr(de->d_name, "add") != NULL){
+                sprintf(new_dir, "%s/%s", dirPath, de->d_name);
+                if (dirPath[strlen(dirPath) - 1] == 'd'){
+                    result += list_dir(new_dir, 0);
+                }
+                if (dirPath[strlen(dirPath) - 1] == 'l'){
+                    result *= list_dir(new_dir, 0);
+                }
+            }
+            if (de->d_type == 4 && strstr(de->d_name, "mul") != NULL){
+                sprintf(new_dir, "%s/%s", dirPath, de->d_name);
+                if (dirPath[strlen(dirPath) - 1] == 'd'){
+                    result += list_dir(new_dir, 1);
+                }
+                if (dirPath[strlen(dirPath) - 1] == 'l'){
+                    result *= list_dir(new_dir, 1);
+                }
+            }
+            if (de->d_type == 8){
+                file_dir = calloc(strlen(dirPath) + strlen(de->d_name) + 3, sizeof(char));
+                if (file_dir == NULL){
+                    memory_error();
+                }
+                sprintf(file_dir, "%s/%s", dirPath, de->d_name);
+                file = fopen(file_dir, "r");
+                fgets(line, 100, file);
+                if (dirPath[strlen(dirPath) - 1] == 'd'){
+                    result += sum(line);
+                }
+                if (dirPath[strlen(dirPath) - 1] == 'l'){
+                    result *= pr(line);
+                }
+                fclose(file);
+                free(file_dir);
+            }
+            de = readdir(dir);
+            free(line);
+            free(new_dir);
         }
-        if (strstr(str, END_OF_INPUT) != NULL){
-            dyn_strs[(*ptr_len)++] = END_OF_INPUT;
+    }
+    closedir(dir);
+    return result;
+}
+
+int main(){
+    DIR *dir = opendir("./tmp");
+    struct  dirent *de = readdir(dir);
+    long long result = 0;
+    while (de){
+        if (strstr(de->d_name, "add") != NULL){
+            result = list_dir("./tmp/add", 0);
             break;
         }
-    }
-}
-
-void output_of_sentences(int* ptr_len, int* ptr_result, char** dyn_strs){
-    for (int i = 0; i < (*ptr_len) - 1; i++){
-        char* sentence = space(dyn_strs[i]);
-        if (isNot7(sentence)){
-            (*ptr_result)++;
-            printf("%s\n", sentence);
+        if (strstr(de->d_name, "mul") != NULL){
+            result = list_dir("./tmp/mul", 1);
+            break;
         }
+        de = readdir(dir);
     }
-    printf("%s\n", dyn_strs[(*ptr_len) - 1]);
-}
-
-int main()
-{
-    char **dyn_strs = allocate_memory_for_text();
-    char* str = calloc(TEXT_MAX_SIZE, sizeof(char));
-    int index = 0;
-    int* ptr_index = &index;
-
-    int len = 0;
-    int* ptr_len = &len;
-
-    int result = 0;
-    int* ptr_result = &result;
-
-    reading_of_sentences(ptr_index, ptr_len, ptr_result, dyn_strs, str);
-
-    output_of_sentences(ptr_len, ptr_result, dyn_strs);
-
-    printf("Количество предложений до %d и количество предложений после %d", len - 1, result);
-    return 0;
+    char * filename = "result.txt";
+    FILE *fp = fopen(filename, "w");
+    if(fp)
+    {
+        char result_str[128];
+        sprintf(result_str, "%lld", result);
+        fputs(result_str, fp);
+        fclose(fp);
+    }
 }
