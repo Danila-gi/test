@@ -1,0 +1,287 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <getopt.h>
+#include "struct.h"
+#include <string.h>
+
+void print_file_header(BitmapFileHeader header){
+	printf("signature:\t%x (%hu)\n", header.signature,header.signature);
+	printf("filesize:\t%x (%u)\n", header.filesize,header.filesize);
+	printf("reserved1:\t%x (%hu)\n", header.reserved1,header.reserved1);
+	printf("reserved2:\t%x (%hu)\n", header.reserved2, header.reserved2);
+	printf("pixelArrOffset:\t%x (%u)\n", header.pixelArrOffset, header.pixelArrOffset);
+}
+
+void print_info_header(BitmapInfoHeader header){
+	printf("headerSize:\t%x (%u)\n", header.headerSize, header.headerSize);
+	printf("width: \t%x (%u)\n", header.width, header.width);
+	printf("height: \t%x (%u)\n", header.height, header.height);
+	printf("planes: \t%x (%hu)\n", header.planes, header.planes);
+	printf("bitsPerPixel:\t%x (%hu)\n", header.bitsPerPixel, header.bitsPerPixel);
+	printf("compression:\t%x (%u)\n", header.compression, header.compression);
+	printf("imageSize:\t%x (%u)\n", header.imageSize,header.imageSize);
+	printf("xPixelsPerMeter:\t%x (%u)\n", header.xPixelsPerMeter, header.xPixelsPerMeter);
+	printf("yPixelsPerMeter:\t%x (%u)\n", header.yPixelsPerMeter, header.yPixelsPerMeter);
+	printf("colorsInColorTable:\t%x (%u)\n", header.colorsInColorTable, header.colorsInColorTable);
+	printf("importantColorCount:\t%x (%u)\n", header.importantColorCount, header.importantColorCount);
+}
+
+int* get_arguments(char* str){
+	char *pch = strtok(str, ".");
+	int i = 0;
+	int* arr = malloc(3 * sizeof(int));
+	while (pch != NULL){
+		arr[i++] = atoi(pch);
+		pch = strtok(NULL, ".");
+	}
+	return arr;
+}
+
+void draw_line(Rgb **arr, int start_x, int start_y, int end_x, int end_y, int color_r, int color_g, int color_b, int H, int W, int thickness){
+    int len_of_line = sqrt((start_x - end_x) * (start_x - end_x) + (start_y - end_y) * (start_y - end_y));
+    float offset_x = (float)(end_x - start_x) / (float)len_of_line;
+    float offset_y = (float)(end_y - start_y) / (float)len_of_line;
+    for (int i = 0; i <= len_of_line; i++){
+		for (int j = 0; j < thickness; j++){
+			if ((H - 1 - (int)(roundf(start_y + i * offset_y)) + j) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y)) + j) < H){
+				if (((int)(roundf(start_x + i * offset_x)) - j) >= 0 && ((int)(roundf(start_x + i * offset_x)) - j) < W){
+					//if ((H - (int)(roundf(start_y + i * offset_y))) == 562)
+						//printf("%d %f %f\n", i, H - (start_y + i * offset_y), (start_x + i * offset_x) - j);
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x)) - j].r = color_r;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x)) - j].g = color_g;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x)) - j].b = color_b;
+				}
+			}
+			if ((H - 1 - (int)(roundf(start_y + i * offset_y))) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y))) < H){
+				if (((int)(roundf(start_x + i * offset_x)) - j) >= 0 && ((int)(roundf(start_x + i * offset_x)) - j) < W){
+					//if ((H - (int)(roundf(start_y + i * offset_y))) == 562)
+						//printf("%d %f %f\n", i, H - (start_y + i * offset_y), (start_x + i * offset_x) - j);
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) - j].r = color_r;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) - j].g = color_g;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) - j].b = color_b;
+				}
+			}
+			if ((H - 1 - (int)(roundf(start_y + i * offset_y)) + j) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y)) + j) < H){
+				if (((int)(roundf(start_x + i * offset_x))) >= 0 && ((int)(roundf(start_x + i * offset_x))) < W){
+					//if ((H - (int)(roundf(start_y + i * offset_y))) == 562)
+						//printf("%d %f %f\n", i, H - (start_y + i * offset_y), (start_x + i * offset_x) - j);
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x))].r = color_r;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x))].g = color_g;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x))].b = color_b;
+				}
+			}
+		}
+    }
+}
+
+void invert_colors(Rgb **arr, int center_x, int center_y, int radius, int H, int W){
+	for (int y = 1; y < H; y++){
+		for (int x = 0; x < W; x++){
+			int rast_from_center = (x - center_x) * (x - center_x) + (y - center_y) * (y - center_y);
+			if (radius * radius >= rast_from_center){
+				arr[H - y][x].r = 255 - arr[H - y][x].r;
+				arr[H - y][x].g = 255 - arr[H - y][x].g;
+				arr[H - y][x].b = 255 - arr[H - y][x].b;
+			}
+		}
+	}
+}
+
+Rgb** cut_of_picture(Rgb **arr, int left_up_x, int left_up_y, int right_down_x, int right_down_y, int H, int W){
+	Rgb **new_arr = malloc(H * sizeof(Rgb*));
+	for(int i = 0; i < H; i++){
+		new_arr[i] = malloc(W * sizeof(Rgb) + (W * 3) % 4);
+	}
+	for (int y = 1; y < H; y++){
+		for (int x = 0; x < W; x++){
+			if (!(left_up_x <= x && x <= right_down_x && left_up_y <= y && y <= right_down_y)){
+				new_arr[H - y][x].r = arr[H - y][x].r;
+				new_arr[H - y][x].g = arr[H - y][x].g;
+				new_arr[H - y][x].b = arr[H - y][x].b;
+			}
+		}
+	}
+	return new_arr; 
+}
+
+int main(int argc, char *argv[]){
+	char* input_file = argv[argc - 1];
+	const char* short_options = "hlIts:e:c:C:r:u:d:T:i:o:";
+
+	const struct option long_options[] = {
+		{ "help", no_argument, NULL, 'h' },
+		{ "line", no_argument, NULL, 'l' },
+		{ "inverse_circle", no_argument, NULL, 'I' },
+		{ "trim", no_argument, NULL, 't' },
+        { "start", required_argument, NULL, 's' },
+		{ "end", required_argument, NULL, 'e' },
+		{ "color", required_argument, NULL, 'c' },
+        { "radius", required_argument, NULL, 'r' },
+		{ "center", required_argument, NULL, 'C' },
+        { "left_up", required_argument, NULL, 'u' },
+		{ "right_down", required_argument, NULL, 'd' },
+		{ "thickness", required_argument, NULL, 'T' },
+		{ "input", required_argument, NULL, 'i' },
+		{ "output", required_argument, NULL, 'o' },
+		{ "info", no_argument, NULL, 0},
+		{ NULL, 0, NULL, 0 }
+	};
+
+	int rez;
+	int option_index;
+
+	int option = -1;
+    char *start = NULL;
+    char *end = NULL;
+    char *color = NULL;
+    int thickness = 0;
+    char *center = NULL;
+    int radius = 0;
+    char *left_up = NULL;
+    char *right_down = NULL;
+	char* output_file = NULL;
+
+	while ((rez=getopt_long(argc,argv,short_options, long_options,&option_index))!=-1){
+        switch(rez){
+			case 'h': {
+				printf("Help!\n");
+				break;
+			};
+			case 'l': {
+				option = 1;
+				break;
+			};
+	
+			case 'I': {
+				option = 2;
+				break;
+			};
+			case 't': {
+				option = 3;
+				break;
+			}
+			case 's': {
+				start = optarg;
+				break;
+			}
+			case 'e': {
+				end = optarg;
+				break;
+			}
+			case 'c': {
+				color = optarg;
+				break;
+			}
+			case 'T': {
+				thickness = atoi(optarg);
+				break;
+			}
+			case 'C': {
+				center = optarg;
+				break;
+			}
+			case 'r': {
+				radius = atoi(optarg);
+				break;
+			}
+			case 'u': {
+				left_up = optarg;
+				break;
+			}
+			case 'd': {
+				right_down = optarg;
+				break;
+			}
+			case 'i': {
+				input_file = optarg;
+				break;
+			}
+			case 'o': {
+				output_file = optarg;
+				break;
+			}
+			case 0:{
+				if (strcmp(long_options[option_index].name, "info") == 0){
+                    option = 4;
+                } else {
+                    printf("found unknown option\n");
+					exit(1);
+                }
+				break;
+			}
+			case '?': default: {
+				printf("found unknown option\n");
+				exit(1);
+				break;
+			};
+		};
+	};
+
+	FILE *f = fopen(input_file, "rb");
+	BitmapFileHeader bmfh;
+	BitmapInfoHeader bmif;
+	fread(&bmfh,1,sizeof(BitmapFileHeader),f);
+	fread(&bmif,1,sizeof(BitmapInfoHeader),f);
+
+	unsigned int H = bmif.height;
+	unsigned int W = bmif.width;
+
+	Rgb **arr = malloc(H*sizeof(Rgb*));
+	for(int i=0; i<H; i++){
+		arr[i] = malloc(W * sizeof(Rgb) + (W * 3) % 4);
+		fread(arr[i], 1, W * sizeof(Rgb) + (W * 3) % 4, f);
+	}
+
+
+	switch (option)
+	{
+		case 1:
+			int* start_arr = get_arguments(start);
+			int* end_arr = get_arguments(end);
+			int* color_arr = get_arguments(color);
+			if (!(0 <= color_arr[0] && color_arr[0] <= 255 && 0 <= color_arr[1] && color_arr[1] <= 255 && 0 <= color_arr[2] && color_arr[2] <= 255)){
+				printf("incorrect color\n");
+				exit(1);
+			}
+			printf("line: start=[%d %d], end=[%d %d], color=[%d %d %d], thickness=%d\n", start_arr[0], start_arr[1], end_arr[0], end_arr[1],
+			color_arr[0], color_arr[1], color_arr[2], thickness);
+			draw_line(arr, start_arr[0], start_arr[1], end_arr[0], end_arr[1], color_arr[0], color_arr[1], color_arr[2], H, W, thickness);
+			break;
+
+		case 2:
+			int* center_arr = get_arguments(center);
+			printf("inverse: center=[%d %d], radius=%d\n", center_arr[0], center_arr[1], radius);
+			invert_colors(arr, center_arr[0], center_arr[1], radius, H, W);
+			break;
+
+		case 3:
+			int* left_up_arr = get_arguments(left_up);
+			int* right_down_arr = get_arguments(right_down);
+			printf("cut: left_up=[%d %d], right_down=[%d %d]\n", left_up_arr[0], left_up_arr[1], right_down_arr[0], right_down_arr[1]);
+			arr = cut_of_picture(arr, left_up_arr[0], left_up_arr[1], right_down_arr[0], right_down_arr[1], H, W);
+			break;
+
+		case 4:
+			print_file_header(bmfh);
+			print_info_header(bmif);
+		
+		default:
+			break;
+	}
+
+	FILE *ff = fopen(output_file, "wb");
+
+	fwrite(&bmfh, 1, sizeof(BitmapFileHeader),ff);
+	fwrite(&bmif, 1, sizeof(BitmapInfoHeader),ff);
+	unsigned int w = W * sizeof(Rgb) + (W * 3) % 4;
+	for(int i=0; i<H; i++){
+		fwrite(arr[i], 1, w, ff);
+	}
+	fclose(ff);
+
+	printf("\n");
+
+
+return 0;
+}
