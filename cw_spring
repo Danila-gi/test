@@ -38,6 +38,35 @@ int* get_arguments(char* str){
 	return arr;
 }
 
+void drawLine(Rgb **arr, int x1, int y1, int x2, int y2, int H, int W) {
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int sx = (x1 < x2) ? 1 : -1;
+    int sy = (y1 < y2) ? 1 : -1;
+    int err = dx - dy;
+
+    while (1) {
+        //arr[H - 1 - y1][x1].r = 0;
+		arr[H - 1 - y1][x1].g = 0;
+		arr[H - 1 - y1][x1].b = 255;
+
+        if (x1 == x2 && y1 == y2) {
+            break;
+        }
+
+        int err2 = 2 * err;
+        if (err2 > -dy) {
+            err -= dy;
+            x1 += sx;
+        }
+        if (err2 < dx) {
+            err += dx;
+            y1 += sy;
+        }
+    }
+}
+
+
 void draw_line(Rgb **arr, int start_x, int start_y, int end_x, int end_y, int color_r, int color_g, int color_b, int H, int W, int thickness){
     int len_of_line = sqrt((start_x - end_x) * (start_x - end_x) + (start_y - end_y) * (start_y - end_y));
     float offset_x = (float)(end_x - start_x) / (float)len_of_line;
@@ -46,8 +75,6 @@ void draw_line(Rgb **arr, int start_x, int start_y, int end_x, int end_y, int co
 		for (int j = 0; j < thickness; j++){
 			if ((H - 1 - (int)(roundf(start_y + i * offset_y)) + j) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y)) + j) < H){
 				if (((int)(roundf(start_x + i * offset_x)) - j) >= 0 && ((int)(roundf(start_x + i * offset_x)) - j) < W){
-					//if ((H - (int)(roundf(start_y + i * offset_y))) == 562)
-						//printf("%d %f %f\n", i, H - (start_y + i * offset_y), (start_x + i * offset_x) - j);
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x)) - j].r = color_r;
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x)) - j].g = color_g;
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x)) - j].b = color_b;
@@ -55,8 +82,6 @@ void draw_line(Rgb **arr, int start_x, int start_y, int end_x, int end_y, int co
 			}
 			if ((H - 1 - (int)(roundf(start_y + i * offset_y))) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y))) < H){
 				if (((int)(roundf(start_x + i * offset_x)) - j) >= 0 && ((int)(roundf(start_x + i * offset_x)) - j) < W){
-					//if ((H - (int)(roundf(start_y + i * offset_y))) == 562)
-						//printf("%d %f %f\n", i, H - (start_y + i * offset_y), (start_x + i * offset_x) - j);
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) - j].r = color_r;
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) - j].g = color_g;
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) - j].b = color_b;
@@ -64,11 +89,30 @@ void draw_line(Rgb **arr, int start_x, int start_y, int end_x, int end_y, int co
 			}
 			if ((H - 1 - (int)(roundf(start_y + i * offset_y)) + j) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y)) + j) < H){
 				if (((int)(roundf(start_x + i * offset_x))) >= 0 && ((int)(roundf(start_x + i * offset_x))) < W){
-					//if ((H - (int)(roundf(start_y + i * offset_y))) == 562)
-						//printf("%d %f %f\n", i, H - (start_y + i * offset_y), (start_x + i * offset_x) - j);
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x))].r = color_r;
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x))].g = color_g;
 					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) + j][(int)(roundf(start_x + i * offset_x))].b = color_b;
+				}
+			}
+			if ((H - 1 - (int)(roundf(start_y + i * offset_y)) - j) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y)) - j) < H){
+				if (((int)(roundf(start_x + i * offset_x)) + j) >= 0 && ((int)(roundf(start_x + i * offset_x)) + j) < W){
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) - j][(int)(roundf(start_x + i * offset_x)) + j].r = color_r;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) - j][(int)(roundf(start_x + i * offset_x)) + j].g = color_g;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) - j][(int)(roundf(start_x + i * offset_x)) + j].b = color_b;
+				}
+			}
+			if ((H - 1 - (int)(roundf(start_y + i * offset_y))) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y))) < H){
+				if (((int)(roundf(start_x + i * offset_x)) + j) >= 0 && ((int)(roundf(start_x + i * offset_x)) + j) < W){
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) + j].r = color_r;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) + j].g = color_g;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y))][(int)(roundf(start_x + i * offset_x)) + j].b = color_b;
+				}
+			}
+			if ((H - 1 - (int)(roundf(start_y + i * offset_y)) - j) >= 0 && (H - 1 -(int)(roundf(start_y + i * offset_y)) - j) < H){
+				if (((int)(roundf(start_x + i * offset_x))) >= 0 && ((int)(roundf(start_x + i * offset_x))) < W){
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) - j][(int)(roundf(start_x + i * offset_x))].r = color_r;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) - j][(int)(roundf(start_x + i * offset_x))].g = color_g;
+					arr[H - 1 - (int)(roundf(start_y + i * offset_y)) - j][(int)(roundf(start_x + i * offset_x))].b = color_b;
 				}
 			}
 		}
@@ -146,6 +190,7 @@ int main(int argc, char *argv[]){
         switch(rez){
 			case 'h': {
 				printf("Help!\n");
+				exit(0);
 				break;
 			};
 			case 'l': {
@@ -218,6 +263,11 @@ int main(int argc, char *argv[]){
 		};
 	};
 
+	if (strcmp(input_file, output_file) == 0){
+		printf("files have same names");
+		exit(1);
+	}
+
 	FILE *f = fopen(input_file, "rb");
 	BitmapFileHeader bmfh;
 	BitmapInfoHeader bmif;
@@ -247,6 +297,7 @@ int main(int argc, char *argv[]){
 			printf("line: start=[%d %d], end=[%d %d], color=[%d %d %d], thickness=%d\n", start_arr[0], start_arr[1], end_arr[0], end_arr[1],
 			color_arr[0], color_arr[1], color_arr[2], thickness);
 			draw_line(arr, start_arr[0], start_arr[1], end_arr[0], end_arr[1], color_arr[0], color_arr[1], color_arr[2], H, W, thickness);
+			//drawLine(arr, start_arr[0], start_arr[1], end_arr[0], end_arr[1], H, W);
 			break;
 
 		case 2:
@@ -265,6 +316,7 @@ int main(int argc, char *argv[]){
 		case 4:
 			print_file_header(bmfh);
 			print_info_header(bmif);
+			exit(0);
 		
 		default:
 			break;
