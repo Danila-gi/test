@@ -1,32 +1,27 @@
 CC=gcc
 CFLAGS=-c -std=c11
 
-all: main.o reading.o delete.o memory.o function_1.o function_2.o function_3.o function_4.o
-	$(CC) main.o reading.o delete.o memory.o function_1.o function_2.o function_3.o function_4.o -o cw
+all: main.o function_of_draw_line.o function_of_invert_color.o function_of_cut_part.o print_info_programm_img.o work_with_bmp.o
+	$(CC) main.o function_of_draw_line.o function_of_invert_color.o function_of_cut_part.o print_info_programm_img.o work_with_bmp.o -o cw -lm
 
-main.o: main.c reading.h
+main.o: main.c
 	$(CC) $(CFLAGS)  main.c
 
-reading.o: reading.h
-	$(CC) $(CFLAGS) reading.c
+function_of_draw_line.o: function_of_draw_line.h
+	$(CC) $(CFLAGS)  function_of_draw_line.c -lm
 
-delete.o: delete.h
-	$(CC) $(CFLAGS) delete.c
+function_of_invert_color.o: function_of_invert_color.h
+	$(CC) $(CFLAGS) function_of_invert_color.c
 
-memory.o: memory.h
-	$(CC) $(CFLAGS) memory.c
+function_of_cut_part.o: function_of_cut_part.h
+	$(CC) $(CFLAGS) function_of_cut_part.c
 
-function_1.o: function_1.h
-	$(CC) $(CFLAGS) function_1.c
+print_info_programm_img.o: print_info_programm_img.h
+	$(CC) $(CFLAGS) print_info_programm_img.c
 
-function_2.o: function_2.h
-	$(CC) $(CFLAGS) function_2.c
+work_with_bmp.o: work_with_bmp.h
+	$(CC) $(CFLAGS) work_with_bmp.c
 
-function_3.o: function_3.h
-	$(CC) $(CFLAGS) function_3.c
-
-function_4.o: function_4.h
-	$(CC) $(CFLAGS) function_4.c
 
 clean:
 	rm -rf *.o

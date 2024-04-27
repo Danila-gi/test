@@ -1,0 +1,7 @@
+gcc test_main.c -o test_main -lm && ./test_main -o out.bmp --line --start 10.22 --end 400.282 --color 255.0.0 --thickness=52 input.bmp
+gcc test_main.c -o test_main -lm && ./test_main --output out.bmp --inverse_circle --center=200.145 --radius 80 input.bmp
+gcc test_main.c -o test_main -lm && ./test_main --trim --left_up=34.56 -o out.bmp --input input.bmp --right_down 403.150
+--------
+./cw -o out.bmp --line --start 10.22 --end 400.282 --color 255.0.0 --thickness=52 input.bmp
+./cw --output out.bmp --inverse_circle --center=200.145 --radius 80 input.bmp
+./cw --trim --left_up=34.56 -o out.bmp --input input.bmp --right_down 403.150
