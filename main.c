@@ -3,7 +3,7 @@
 #include <string.h>
 #define TEXT_MAX_SIZE 10000
 #define NUMBER_OF_SENTENCES 1000
-#define END_OF_INPUT "Dragon flew away!"
+#define END_OF_INPUT "Dragon flew away!"dfdfdfdfd
 
 char* space(char* str){
     char* res = calloc(strlen(str) + 1, sizeof(char));
