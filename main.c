@@ -1,13 +1,10 @@
-from math import ceil
-
-
 class Node:
     def __init__(self, array=[]):
         self.arr = array.copy()
         self.next = None
 
 
-class ListNode:
+class UnrolledLinkedList:
     def __init__(self, arr=[]):
         self.head = None
         self.length = 0
@@ -60,23 +57,29 @@ class ListNode:
         return True
 
     def insert(self, element, index):
-        el, start_index, _ = self.find_node_by_index_of_element(index)
+        el = self.head
+        start_index = len(el.arr)
+        while start_index < index:
+            el = el.next
+            start_index += len(el.arr)
         if el is None:
             return False
 
         el.arr.insert(index - start_index, element)
 
-        if len(el.arr) < self.len_of_node_array:
+        if len(el.arr) <= self.len_of_node_array:
             return True
 
         half_length = self.len_of_node_array // 2
         new_array = el.arr[half_length:]
         el.arr = el.arr[:half_length]
 
-        if el.next != None and len(el.next.arr) + len(new_array) < self.len_of_node_array:
+        if el.next != None and len(el.next.arr) + len(new_array) <= self.len_of_node_array:
             el.next.arr = new_array + el.next.arr
         else:
+            tmp = el.next
             el.next = Node(new_array)
+            el.next.next = tmp
             self.length += 1
 
         return True
@@ -84,11 +87,10 @@ class ListNode:
     def delete_number(self, index):
         el, start_index, index_node = self.find_node_by_index_of_element(index)
         el_next = el.next
-        #start_index_next = start_index + len(el.arr)
         index_node_next = index_node + 1
         del el.arr[index - start_index]
         if len(el.arr) == 0:
-            self.head = el_next
+            self.delete_arr(index_node)
             return
         if el_next != None:
             if len(el_next.arr) + len(el.arr) <= self.len_of_node_array:
