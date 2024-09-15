@@ -2,8 +2,7 @@
 #include <iostream>
 #include "Ship.h"
 #include "Enum_arguments.h"
-
-using namespace std;
+#include <vector>
 
 class Manager_of_ships
 {
@@ -21,12 +20,10 @@ public:
     }
 
     ~Manager_of_ships(){
-        for (int i = 0; i < count; i++)
-            delete ships[i];
         delete[] ships;
     }
 
-    Manager_of_ships(){}
+    Manager_of_ships() : Manager_of_ships(0, {}){}
 
     Ship** get_arr_of_ships(){
         return ships;
@@ -41,9 +38,18 @@ public:
         ships[count - 1] = new Ship(length, location);
     }
 
+    void add_ship(Ship* ship){
+        ships = (Ship**)realloc(ships, (++count) * sizeof(Ship*));
+        ships[count - 1] = ship;
+    }
+
+    void remove_ship(int index){
+
+    }
+
     void print_ships(){
         for (int i = 0; i < count; i++){
-            cout << i + 1 << ":";
+            std::cout << i + 1 << ":";
             (*ships[i]).print_statment_of_ship();
         }
     }
