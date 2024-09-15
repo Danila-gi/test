@@ -4,8 +4,6 @@
 #include "Manager_of_ships.h"
 #include "Enum_arguments.h"
 
-using namespace std;
-
 class Playground{
 private:
     int width;
@@ -24,32 +22,34 @@ public:
             for (int j = 0; j < width; j++)
                 arr_of_ground[i][j] = 2;
         }
+        arr_of_coords = new Coords;
     }
 
     Playground(){}
 
-    void get_ships(Manager_of_ships* ships,Coords* coords){
-        list_of_ships = ships;
-        arr_of_coords = coords;
-        Ship** lis = list_of_ships->get_arr_of_ships();
+    void get_ship(Ship* ship, Coords coord){
+        list_of_ships->add_ship(ship);
+        arr_of_coords = (Coords*)realloc(arr_of_coords, list_of_ships->get_count() * sizeof(Coords));
+        arr_of_coords[list_of_ships->get_count() - 1] = coord;
+
         for (int i = 0; i<list_of_ships->get_count(); i++){
-            if (lis[i]->get_location() == Vertical){
-                for (int j = coords[i].y; j < coords[i].y + lis[i]->get_length(); j++)
-                    arr_of_ground[j][coords[i].x] = 1;
+            if (ship->get_location() == Vertical){
+                for (int j = coord.y; j < coord.y + ship->get_length(); j++)
+                    arr_of_ground[j][coord.x] = 1;
             }
             else{
-                for (int j = coords[i].x; j < coords[i].x + lis[i]->get_length(); j++)
-                    arr_of_ground[coords[i].y][j] = 1;
+                for (int j = coord.x; j < coord.x + ship->get_length(); j++)
+                    arr_of_ground[coord.y][j] = 1;
             }
         }
     }
 
     void print_ground(){
         for (int i = 0; i < height; i++){
-            cout << "| ";
+            std::cout << "| ";
             for (int j = 0; j < width; j++)
-                cout << arr_of_ground[i][j] << " ";
-            cout << "|\n";
+                std::cout << arr_of_ground[i][j] << " ";
+            std::cout << "|\n";
         }
     }
 };
