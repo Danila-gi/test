@@ -2,56 +2,31 @@
 #include <iostream>
 #include "Enum_arguments.h"
 
-using namespace std;
-
 class Ship
 {
 private:
-    int length;
-    int* segments;
+    Length_of_the_ship length;
+    Statment_of_the_ship* segments;
     Location location_of_ship;
 
 public:
-    Ship(int p_length, Location p_location_of_ship){
-        if (p_length >= 1 && p_length <= 4)
-            length = p_length;
-        else
-            length = 1;
+    Ship(Length_of_the_ship p_length, Location p_location_of_ship);
 
-        segments = new int[length];
-        for (int i = 0; i < length; i++)
-            segments[i] = 2;
-        location_of_ship = p_location_of_ship;
-    }
+    Ship(Length_of_the_ship p_length);
 
-    Ship(int p_length): Ship(p_length, Horizontal){}
+    Ship();
 
-    Ship(){length = 0;}
+    ~Ship();
 
-    ~Ship(){
-        delete[] segments;
-    }
+    void shoot_to_segment(int coordinate);
 
-    void shoot_to_segment(int coordinate){
-        segments[coordinate]--; 
-    }
+    Location get_location();
 
-    Location get_location(){
-        return location_of_ship;
-    }
+    void set_location(Location location);
 
-    int get_length(){
-        return length;
-    }
+    int get_length();
 
-    int* get_segments(){
-        return segments;
-    }
+    Statment_of_the_ship* get_segments();
 
-    void print_statment_of_ship(){
-        for (int i = 0; i < length; i++)
-            cout << segments[i] << " ";
-        cout << '\n';
-
-    }
+    void print_statment_of_ship();
 };
