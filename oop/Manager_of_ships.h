@@ -8,49 +8,24 @@ class Manager_of_ships
 {
 private:
     int count = 0;
-    Ship** ships;
+    std::vector<Ship*> ships;
 
 public:
-    Manager_of_ships(int ships_count, int* sizes){
-        ships = new Ship*[ships_count];
-        for (int i = 0; i < ships_count; i++){
-            ships[i] = new Ship(sizes[i]);
-        }
-        count = ships_count;
-    }
+    Manager_of_ships(int ships_count, Length_of_the_ship* sizes);
 
-    ~Manager_of_ships(){
-        delete[] ships;
-    }
+    ~Manager_of_ships();
 
-    Manager_of_ships() : Manager_of_ships(0, {}){}
+    Manager_of_ships();
 
-    Ship** get_arr_of_ships(){
-        return ships;
-    }
+    std::vector<Ship*> get_arr_of_ships();
 
-    int get_count(){
-        return count;
-    }
+    int get_count();
 
-    void add_ship(int length, Location location){
-        ships = (Ship**)realloc(ships, (++count) * sizeof(Ship*));
-        ships[count - 1] = new Ship(length, location);
-    }
+    void add_ship(Length_of_the_ship length, Location location);
 
-    void add_ship(Ship* ship){
-        ships = (Ship**)realloc(ships, (++count) * sizeof(Ship*));
-        ships[count - 1] = ship;
-    }
+    void add_ship(Ship* ship);
 
-    void remove_ship(int index){
+    void remove_ship(int index);
 
-    }
-
-    void print_ships(){
-        for (int i = 0; i < count; i++){
-            std::cout << i + 1 << ":";
-            (*ships[i]).print_statment_of_ship();
-        }
-    }
+    void print_ships();
 };
