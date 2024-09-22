@@ -14,6 +14,9 @@ private:
     Manager_of_ships* list_of_ships;
     std::map<Ship*, std::vector<Coords>>coords_of_ship;
 
+    void copy_elements(const Playground& obj);
+    void move_elements(Playground&& other);
+
 public:
     Playground(int p_width, int p_heigth);
 
@@ -34,4 +37,12 @@ public:
     void shoot(Coords coord);
 
     void print_ground();
+
+    Playground(const Playground& obj);
+
+    Playground& operator=(const Playground& obj);
+
+    Playground(Playground&& obj);
+
+    Playground& operator=(Playground&& obj);
 };

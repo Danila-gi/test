@@ -15,7 +15,7 @@ Playground::Playground(int p_width, int p_heigth){
 Playground::Playground(){}
 
 Playground::~Playground(){
-    for(int i = 0; i < height; ++i)
+    for(int i = 0; i < height; i++)
         delete[] arr_of_ground[i];
     delete[] arr_of_ground;
     delete list_of_ships;
@@ -146,4 +146,62 @@ void Playground::print_ground(){
             std::cout << arr_of_ground[i][j] << " ";
         std::cout << "|\n";
     }
+}
+
+void Playground::copy_elements(const Playground& obj){
+    height = obj.height;
+    width = obj.width;
+    arr_of_ground = new Statment_of_the_coord*[height];
+    for (int i = 0; i < height; i++){
+        arr_of_ground[i] = new Statment_of_the_coord[width];
+        for (int j = 0; j < width; j++)
+            arr_of_ground[i][j] = obj.arr_of_ground[i][j];
+    }
+
+    list_of_ships = new Manager_of_ships(*obj.list_of_ships);
+
+    coords_of_ship = obj.coords_of_ship;
+}
+
+Playground::Playground(const Playground& obj){
+    copy_elements(obj);
+    std::cout<<"Copy1"<<std::endl;
+}
+
+Playground& Playground::operator=(const Playground& obj){
+    copy_elements(obj);
+    std::cout<<"Copy2"<<std::endl;
+    return *this;
+}
+
+void Playground::move_elements(Playground&& obj){
+    height = obj.height;
+    width = obj.width;
+    arr_of_ground = new Statment_of_the_coord*[height];
+    for (int i = 0; i < height; i++){
+        arr_of_ground[i] = new Statment_of_the_coord[width];
+        for (int j = 0; j < width; j++)
+            arr_of_ground[i][j] = obj.arr_of_ground[i][j];
+    }
+
+    list_of_ships = new Manager_of_ships(*obj.list_of_ships);
+
+    coords_of_ship = obj.coords_of_ship;
+
+    obj.arr_of_ground = nullptr; 
+    obj.list_of_ships = nullptr;
+    obj.width = 0; 
+    obj.height = 0;
+}
+
+Playground::Playground(Playground&& obj){
+    move_elements(static_cast<Playground&&>(obj));
+    std::cout<<"Move1"<<std::endl;
+}
+
+Playground& Playground::operator=(Playground&& obj){
+    move_elements(static_cast<Playground&&>(obj));
+    std::cout<<"Move2"<<std::endl;
+    return *this;
+
 }

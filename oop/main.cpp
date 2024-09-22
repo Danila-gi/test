@@ -24,5 +24,7 @@ int main(){
     p1.return_manager()->print_ships();
     std::cout<<"-------"<<std::endl;
     m1.print_ships();
+    Playground P = std::move(p1);
+    P.print_ground();
     return 0;
 }
