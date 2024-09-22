@@ -14,8 +14,11 @@ Playground::Playground(int p_width, int p_heigth){
 
 Playground::Playground(){}
 
-void Playground::set_manager(Manager_of_ships* manager){
-    list_of_ships = manager;
+Playground::~Playground(){
+    for(int i = 0; i < height; ++i)
+        delete[] arr_of_ground[i];
+    delete[] arr_of_ground;
+    delete list_of_ships;
 }
 
 bool Playground::check_point(Coords coord){
@@ -38,11 +41,11 @@ bool Playground::check_point(Coords coord){
     
 }
 
-void Playground::set_coords(std::vector<Coords> coords){
-    for (int i = 0; i < list_of_ships->get_count(); i++){
+void Playground::set_manager_with_coords(Manager_of_ships* manager, std::vector<Coords> coords){
+    for (int i = 0; i < manager->get_count(); i++){
         bool flag = true;
         std::vector<Coords> mas_of_coords;
-        Ship* ship = list_of_ships->get_arr_of_ships()[i];
+        Ship* ship = manager->get_arr_of_ships()[i];
         if (ship->get_location() == Horizontal){
             for (int j = 0; j < ship->get_length(); j++){
                 if (check_point(coords[i]))
@@ -64,17 +67,18 @@ void Playground::set_coords(std::vector<Coords> coords){
             }
         }
 
-        if (!flag)
-            return;
-
-        coords_of_ship[list_of_ships->get_arr_of_ships()[i]] = mas_of_coords;
-        this->put_new_ships(ship);
+        if (flag){
+            list_of_ships->add_ship(ship);
+            coords_of_ship[ship] = mas_of_coords;
+            this->put_new_ships(ship);
+        }
     }
 }
 
-void Playground::get_ship(Ship* ship, Coords coord){
+void Playground::get_ship(Ship* ship, Coords coord, Location location){
     std::vector<Coords> mas_of_coords;
     bool flag = true;
+    ship->set_location(location);
     if (ship->get_location() == Horizontal){
         for (int j = 0; j < ship->get_length(); j++){
             if (check_point({coord.x + j, coord.y}))
@@ -109,10 +113,8 @@ Manager_of_ships* Playground::return_manager(){
 }
 
 void Playground::put_new_ships(Ship* ship){
-    for (int i = 0; i<list_of_ships->get_count(); i++){
-        for (Coords j: coords_of_ship[ship])
-            arr_of_ground[j.y][j.x] = SHIP;
-    }
+    for (Coords j: coords_of_ship[ship])
+        arr_of_ground[j.y][j.x] = SHIP;
 }
 
 void Playground::shoot(Coords coord){

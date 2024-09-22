@@ -19,13 +19,13 @@ public:
 
     Playground();
 
+    ~Playground();
+
     bool check_point(Coords coord);
 
-    void set_manager(Manager_of_ships* manager);
+    void set_manager_with_coords(Manager_of_ships* manager, std::vector<Coords> coords);
 
-    void set_coords(std::vector<Coords> coords);
-
-    void get_ship(Ship* ship, Coords coord);
+    void get_ship(Ship* ship, Coords coord, Location location);
 
     Manager_of_ships* return_manager();
 
