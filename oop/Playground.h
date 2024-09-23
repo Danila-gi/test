@@ -14,6 +14,7 @@ private:
     Manager_of_ships* list_of_ships;
     std::map<Ship*, std::vector<Coords>>coords_of_ship;
 
+    void put_new_ships(Ship* ship);
     void copy_elements(const Playground& obj);
     void move_elements(Playground&& other);
 
@@ -31,8 +32,6 @@ public:
     void get_ship(Ship* ship, Coords coord, Location location);
 
     Manager_of_ships* return_manager();
-
-    void put_new_ships(Ship* ship);
 
     void shoot(Coords coord);
 
