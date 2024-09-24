@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include "Enum_arguments.h"
+#include <vector>
 
 class Ship
 {
 private:
     Length_of_the_ship length;
-    Statement_of_the_ship* segments;
+    std::vector<Statement_of_the_ship> segments;
     Location location_of_ship;
 
 public:
@@ -22,13 +23,13 @@ public:
 
     void shoot_to_segment(int coordinate);
 
-    Location get_location();
+    Location get_location() const;
 
     void set_location(Location location);
 
-    int get_length();
+    int get_length() const;
 
-    Statement_of_the_ship* get_segments();
+    std::vector<Statement_of_the_ship> get_segments() const;
 
     void print_statement_of_ship();
 };

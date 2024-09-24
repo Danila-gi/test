@@ -9,8 +9,7 @@
 class Manager_of_ships
 {
 private:
-    int count = 0;
-    std::vector<Ship*> ships;
+    std::vector<Ship> ships;
 
 public:
     Manager_of_ships(int ships_count, Length_of_the_ship* sizes);
@@ -19,13 +18,13 @@ public:
 
     Manager_of_ships();
 
-    std::vector<Ship*> get_arr_of_ships();
+    std::vector<Ship> get_arr_of_ships() const;
 
-    int get_count();
+    int get_count_of_ships() const;
 
     void add_ship(Length_of_the_ship length, Location location);
 
-    void add_ship(Ship* ship);
+    void shoot_to_ship(int index_of_ship, int index_of_segment);
 
     void remove_ship(int index);
 

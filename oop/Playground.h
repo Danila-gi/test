@@ -7,6 +7,7 @@
 #include "Enum_arguments.h"
 #include <map>
 #include <vector>
+#include <memory>
 
 class Playground{
 private:
@@ -14,12 +15,10 @@ private:
     int height;
     Statement_of_the_coord** arr_of_ground;
     Manager_of_ships* list_of_ships;
-    std::map<Ship*, std::vector<Coords>>coords_of_ship;
+    std::map<int, std::vector<Coords>>coords_of_ship;
 
-    void put_new_ships(Ship* ship);
-    void copy_elements(const Playground& obj);
-    void move_elements(Playground&& other);
-    void check_ship(Ship* ship, Coords coord);
+    void put_new_ships(int index);
+    void check_ship(Ship ship, int index, Coords coord);
 
 public:
     Playground(int p_width, int p_heigth);
@@ -32,21 +31,13 @@ public:
 
     void set_manager_with_coords(Manager_of_ships* manager, std::vector<Coords> coords);
 
-    void get_ship(Ship* ship, Coords coord);
+    void get_ship(Length_of_the_ship length, Location location, Coords coord);
 
-    Manager_of_ships* return_manager();
+    Manager_of_ships return_manager() const;
 
     void shoot(Coords coord);
 
     void print_ground();
-
-    Playground(const Playground& obj);
-
-    Playground& operator=(const Playground& obj);
-
-    Playground(Playground&& obj);
-
-    Playground& operator=(Playground&& obj);
 };
 
 #endif
