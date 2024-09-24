@@ -5,6 +5,7 @@
 
 int main(){
     Ship* s1 = new Ship(THREE, Vertical);
+    s1->print_statement_of_ship();
     Length_of_the_ship l[] = {THREE, THREE, ONE, TWO};
     Manager_of_ships m1 = Manager_of_ships(4, l);
     m1.add_ship(TWO, Horizontal);

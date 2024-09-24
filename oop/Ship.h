@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHIP_H
+#define SHIP_H
+
 #include <iostream>
 #include "Enum_arguments.h"
 
@@ -30,3 +32,5 @@ public:
 
     void print_statement_of_ship();
 };
+
+#endif

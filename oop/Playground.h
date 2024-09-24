@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLAYGROUND_H
+#define PLAYGROUND_H
+
 #include <iostream>
 #include "Ship.h"
 #include "Manager_of_ships.h"
@@ -46,3 +48,5 @@ public:
 
     Playground& operator=(Playground&& obj);
 };
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MANAGER_H
+#define MANAGER_H
+
 #include <iostream>
 #include "Ship.h"
 #include "Enum_arguments.h"
@@ -29,3 +31,5 @@ public:
 
     void print_ships();
 };
+
+#endif
