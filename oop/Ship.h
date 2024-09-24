@@ -6,7 +6,7 @@ class Ship
 {
 private:
     Length_of_the_ship length;
-    Statment_of_the_ship* segments;
+    Statement_of_the_ship* segments;
     Location location_of_ship;
 
 public:
@@ -26,7 +26,7 @@ public:
 
     int get_length();
 
-    Statment_of_the_ship* get_segments();
+    Statement_of_the_ship* get_segments();
 
-    void print_statment_of_ship();
+    void print_statement_of_ship();
 };

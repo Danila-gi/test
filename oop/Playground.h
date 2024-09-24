@@ -10,13 +10,14 @@ class Playground{
 private:
     int width;
     int height;
-    Statment_of_the_coord** arr_of_ground;
+    Statement_of_the_coord** arr_of_ground;
     Manager_of_ships* list_of_ships;
     std::map<Ship*, std::vector<Coords>>coords_of_ship;
 
     void put_new_ships(Ship* ship);
     void copy_elements(const Playground& obj);
     void move_elements(Playground&& other);
+    void check_ship(Ship* ship, Coords coord);
 
 public:
     Playground(int p_width, int p_heigth);
@@ -29,7 +30,7 @@ public:
 
     void set_manager_with_coords(Manager_of_ships* manager, std::vector<Coords> coords);
 
-    void get_ship(Ship* ship, Coords coord, Location location);
+    void get_ship(Ship* ship, Coords coord);
 
     Manager_of_ships* return_manager();
 

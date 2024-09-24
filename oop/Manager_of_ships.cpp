@@ -38,6 +38,6 @@ void Manager_of_ships::remove_ship(int index){
 void Manager_of_ships::print_ships(){
     for (int i = 0; i < count; i++){
         std::cout << i + 1 << ":";
-        (*ships[i]).print_statment_of_ship();
+        (*ships[i]).print_statement_of_ship();
     }
 }

@@ -13,7 +13,7 @@ int main(){
     std::vector<Coords> c = {{2, 2}, {3, 4}, {0, 0}, {6, 2}, {0, 7}};
     Playground p1 = Playground(8, 8);
     p1.set_manager_with_coords(&m1, c);
-    p1.get_ship(s1, {7, 4}, Vertical);
+    p1.get_ship(s1, {7, 4});
     p1.print_ground();
     p1.shoot({2, 2});
     p1.shoot({6, 6});

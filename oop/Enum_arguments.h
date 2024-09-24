@@ -11,13 +11,13 @@ enum Length_of_the_ship{
     FOUR = 4
 };
 
-enum Statment_of_the_ship{
+enum Statement_of_the_ship{
     INTACT = 2,
     DAMAGED = 1,
     DESTROYED = 0
 };
 
-enum Statment_of_the_coord{
+enum Statement_of_the_coord{
     UNKNOWN = 2,
     EMPTY = 1,
     SHIP = 0
