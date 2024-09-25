@@ -1,5 +1,4 @@
 #include "Ship.h"
-#include <vector>
 
 Ship::Ship(Length_of_the_ship p_length, Location p_location_of_ship)
 :location_of_ship(p_location_of_ship)

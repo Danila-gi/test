@@ -7,7 +7,6 @@
 #include "Enum_arguments.h"
 #include <map>
 #include <vector>
-#include <memory>
 
 class Playground{
 private:
@@ -29,13 +28,19 @@ public:
 
     bool check_point(Coords coord);
 
-    void get_ship(Length_of_the_ship length, Location location, Coords coord);
+    void add_ship(Length_of_the_ship length, Location location, Coords coord);
 
     Manager_of_ships return_manager() const;
 
     void shoot(Coords coord);
 
     void print_ground();
+
+    Playground(const Playground &obj);
+    Playground(Playground &&obj);
+
+    Playground& operator=(const Playground &obj);
+    Playground& operator=(Playground &&obj);
 };
 
 #endif

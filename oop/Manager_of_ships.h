@@ -12,7 +12,7 @@ private:
     std::vector<Ship> ships;
 
 public:
-    Manager_of_ships(int ships_count, Length_of_the_ship* sizes);
+    Manager_of_ships(int ships_count, Length_of_the_ship sizes[]);
 
     Manager_of_ships();
 

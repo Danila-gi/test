@@ -1,6 +1,6 @@
 #include "Manager_of_ships.h"
 
-Manager_of_ships::Manager_of_ships(int ships_count, Length_of_the_ship* sizes){
+Manager_of_ships::Manager_of_ships(int ships_count, Length_of_the_ship sizes[]){
     for (int i = 0; i < ships_count; i++)
         ships.push_back(Ship(sizes[i]));
 }
@@ -20,10 +20,8 @@ void Manager_of_ships::add_ship(Length_of_the_ship length, Location location){
 }
 
 void Manager_of_ships::shoot_to_ship(int index_of_ship, int index_of_segment){
-    if (index_of_ship >= 0 && index_of_ship < ships.size()){
-        if (index_of_segment >= 0 && index_of_segment < ships[index_of_ship].get_length())
-            ships[index_of_ship].shoot_to_segment(index_of_segment);
-    }
+    if (index_of_ship >= 0 && index_of_ship < ships.size())
+        ships[index_of_ship].shoot_to_segment(index_of_segment);
 }
 
 void Manager_of_ships::set_location_for_the_ship(int index_of_ship, Location location){
@@ -32,7 +30,8 @@ void Manager_of_ships::set_location_for_the_ship(int index_of_ship, Location loc
 }
 
 void Manager_of_ships::remove_ship(int index){
-    ships.erase(ships.begin() + index);
+    if (index >= 0 && index < ships.size())
+        ships.erase(ships.begin() + index);
 }
 
 void Manager_of_ships::print_ships(){

@@ -12,8 +12,8 @@ int main(){
 
     std::vector<Coords> c = {{2, 2}, {3, 4}, {0, 0}, {6, 1}, {2, 6}};
     Playground p1 = Playground(8, 8, m1, c);
-    p1.get_ship(THREE, Vertical, {7, 4});
-    p1.get_ship(FOUR, Vertical, {0, 4});
+    p1.add_ship(THREE, Vertical, {7, 4});
+    p1.add_ship(FOUR, Vertical, {0, 4});
 
     p1.shoot({6, 1});
     p1.shoot({3, 2});
