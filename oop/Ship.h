@@ -19,8 +19,6 @@ public:
 
     Ship();
 
-    ~Ship();
-
     void shoot_to_segment(int coordinate);
 
     Location get_location() const;

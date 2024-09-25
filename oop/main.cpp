@@ -14,8 +14,11 @@ int main(){
     Playground p1 = Playground(8, 8, m1, c);
     p1.get_ship(THREE, Vertical, {7, 4});
     p1.get_ship(FOUR, Vertical, {0, 4});
-    p1.shoot({2, 2});
+
+    p1.shoot({6, 1});
+    p1.shoot({3, 2});
     p1.shoot({7, 6});
+    p1.shoot({0, 0});
     p1.shoot({0, 0});
     p1.shoot({0, 7});
     p1.shoot({6, 4});

@@ -1,7 +1,9 @@
 #include "Ship.h"
 #include <vector>
 
-Ship::Ship(Length_of_the_ship p_length, Location p_location_of_ship){
+Ship::Ship(Length_of_the_ship p_length, Location p_location_of_ship)
+:location_of_ship(p_location_of_ship)
+{
     if (p_length >= ONE && p_length <= FOUR)
         length = p_length;
     else
@@ -9,15 +11,11 @@ Ship::Ship(Length_of_the_ship p_length, Location p_location_of_ship){
 
     for (int i = 0; i < length; i++)
         segments.push_back(INTACT);
-    location_of_ship = p_location_of_ship;
 }
 
 Ship::Ship(Length_of_the_ship p_length): Ship(p_length, Horizontal){}
 
 Ship::Ship(): Ship(ONE){}
-
-Ship::~Ship(){
-}
 
 void Ship::shoot_to_segment(int coordinate){
     if (segments[coordinate] != DESTROYED && coordinate >= 0 && coordinate < length)

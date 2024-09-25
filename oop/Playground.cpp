@@ -3,26 +3,35 @@
 #include <vector>
 #include <memory>
 
-Playground::Playground(int p_width, int p_heigth)
+Playground::Playground(int p_width, int p_heigth, Manager_of_ships& manager, std::vector<Coords> coords)
+:list_of_ships(manager), height(p_heigth), width(p_width)
 {
     if (p_heigth <= 0 || p_width <= 0)
         exit(0);
-    height = p_heigth;
-    width = p_width;
     arr_of_ground = new Statement_of_the_coord*[height];
     for (int i = 0; i < height; i++){
         arr_of_ground[i] = new Statement_of_the_coord[width];
         for (int j = 0; j < width; j++)
-            arr_of_ground[i][j] = EMPTY;
+            arr_of_ground[i][j] = UNKNOWN;
     }
-    list_of_ships = new Manager_of_ships;
+
+    int i = 0;
+    int j = 0;
+    while (i < list_of_ships.get_count_of_ships()){
+        if (j >= coords.size()){
+            list_of_ships.remove_ship(i);
+            continue;
+        }
+        if (check_ship(list_of_ships.get_arr_of_ships()[i], i, coords[j]))
+            i++;
+        j++;
+    }
 }
 
 Playground::~Playground(){
     for(int i = 0; i < height; i++)
         delete[] arr_of_ground[i];
     delete[] arr_of_ground;
-    delete list_of_ships;
 }
 
 bool Playground::check_point(Coords coord){
@@ -45,7 +54,7 @@ bool Playground::check_point(Coords coord){
     
 }
 
-void Playground::check_ship(Ship ship, int index, Coords coord){
+bool Playground::check_ship(Ship ship, int index, Coords coord){
     std::vector<Coords> mas_of_coords;
     bool flag = true;
     if (ship.get_location() == Horizontal){
@@ -74,26 +83,21 @@ void Playground::check_ship(Ship ship, int index, Coords coord){
         coords_of_ship[index] = mas_of_coords;
 
         this->put_new_ships(index);
+        return true;
     }
     else{
-        list_of_ships->remove_ship(index);
-    }
-}
-
-void Playground::set_manager_with_coords(Manager_of_ships* manager, std::vector<Coords> coords){
-    list_of_ships = manager;
-    for (int i = 0; i < list_of_ships->get_count_of_ships(); i++){
-        check_ship(list_of_ships->get_arr_of_ships()[i], i, coords[i]);
+        list_of_ships.remove_ship(index);
+        return false;
     }
 }
 
 void Playground::get_ship(Length_of_the_ship length, Location location, Coords coord){
-    list_of_ships->add_ship(length, location);
-    check_ship(Ship(length, location), list_of_ships->get_count_of_ships() - 1, coord);
+    list_of_ships.add_ship(length, location);
+    check_ship(Ship(length, location), list_of_ships.get_count_of_ships() - 1, coord);
 }
 
 Manager_of_ships Playground::return_manager() const{
-    return *list_of_ships;
+    return list_of_ships;
 }
 
 void Playground::put_new_ships(int index){
@@ -102,14 +106,18 @@ void Playground::put_new_ships(int index){
 }
 
 void Playground::shoot(Coords coord){
+    if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height){
+        std::cout<<"Incorrect coords"<<std::endl;
+        return;
+    }
     int index;
     if (arr_of_ground[coord.y][coord.x] == SHIP){
-        for (int i = 0; i < list_of_ships->get_count_of_ships(); i++){
+        for (int i = 0; i < list_of_ships.get_count_of_ships(); i++){
             index = 0;
             for (Coords c: coords_of_ship[i]){
                 if (c.x == coord.x && c.y == coord.y){
-                    list_of_ships->shoot_to_ship(i, index);
-                    std::cout << "popal epta " << coord.x << ":" <<coord.y<< std::endl;
+                    list_of_ships.shoot_to_ship(i, index);
+                    std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
                     index = -1;
                     break;
                 }
@@ -119,8 +127,10 @@ void Playground::shoot(Coords coord){
                 break;
         }
     }
-    else
-        std::cout << "sosi huy loh" << std::endl;
+    else{
+        arr_of_ground[coord.y][coord.x] = EMPTY;
+        std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
+    }
 }
 
 void Playground::print_ground(){

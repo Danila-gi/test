@@ -14,8 +14,6 @@ private:
 public:
     Manager_of_ships(int ships_count, Length_of_the_ship* sizes);
 
-    ~Manager_of_ships();
-
     Manager_of_ships();
 
     std::vector<Ship> get_arr_of_ships() const;
@@ -25,6 +23,8 @@ public:
     void add_ship(Length_of_the_ship length, Location location);
 
     void shoot_to_ship(int index_of_ship, int index_of_segment);
+
+    void set_location_for_the_ship(int index_of_ship, Location location);
 
     void remove_ship(int index);
 
