@@ -4,14 +4,14 @@ Playground::Playground(int p_width, int p_heigth, Manager_of_ships& manager, std
 :list_of_ships(manager), height(p_heigth), width(p_width)
 {
     if (p_heigth <= 0 || p_width <= 0)
-        exit(0);
+        exit(1);
     arr_of_ground = new Statement_of_the_coord*[height];
     if (arr_of_ground == NULL)
-        exit(0);
+        exit(1);
     for (int i = 0; i < height; i++){
         arr_of_ground[i] = new Statement_of_the_coord[width];
         if (arr_of_ground[i] == NULL)
-            exit(0);
+            exit(1);
         for (int j = 0; j < width; j++)
             arr_of_ground[i][j] = UNKNOWN;
     }
@@ -148,11 +148,9 @@ Playground::Playground(const Playground &obj)
 {
     arr_of_ground = new Statement_of_the_coord*[height];
     if (arr_of_ground == NULL)
-        exit(0);
+        exit(1);
     for (int i = 0; i < height; i++){
         arr_of_ground[i] = new Statement_of_the_coord[width];
-        if (arr_of_ground[i] == NULL)
-            exit(0);
         for (int j = 0; j < width; j++)
             arr_of_ground[i][j] = obj.arr_of_ground[i][j];
     }
@@ -160,23 +158,29 @@ Playground::Playground(const Playground &obj)
 
 Playground::Playground(Playground &&obj)
     : width(obj.width), height(obj.height), list_of_ships(obj.list_of_ships),
-    coords_of_ship(std::move(obj.coords_of_ship)), arr_of_ground(obj.arr_of_ground)
+    coords_of_ship(std::move(obj.coords_of_ship)), arr_of_ground(nullptr)
 {
-    obj.arr_of_ground = nullptr;
     obj.width = 0;
     obj.height = 0;
+    std::swap(arr_of_ground, obj.arr_of_ground);
 }
 
 Playground& Playground::operator=(const Playground &obj)
 {
     if (this != &obj)
     {
+        for(int i = 0; i < height; i++)
+            delete[] arr_of_ground[i];
+        delete[] arr_of_ground;
+
         width = obj.width;
         height = obj.height;
         list_of_ships = obj.list_of_ships;
         coords_of_ship = obj.coords_of_ship;
 
         arr_of_ground = new Statement_of_the_coord*[height];
+        if (arr_of_ground == NULL)
+            exit(1);
         for (int i = 0; i < height; i++){
             arr_of_ground[i] = new Statement_of_the_coord[width];
             for (int j = 0; j < width; j++)
@@ -195,16 +199,7 @@ Playground& Playground::operator=(Playground &&obj)
         list_of_ships = obj.list_of_ships;
         coords_of_ship = std::move(obj.coords_of_ship);
 
-        for (int i = 0; i < height; ++i) {
-            delete[] arr_of_ground[i];
-        }
-        delete[] arr_of_ground;
-
-        arr_of_ground = obj.arr_of_ground;
-
-        obj.arr_of_ground = nullptr;
-        obj.width = 0;
-        obj.height = 0;
+        std::swap(arr_of_ground, obj.arr_of_ground);
     }
     return *this;
 }
