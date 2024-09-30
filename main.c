@@ -1,148 +1,229 @@
-class Node:
-    def __init__(self, array=[]):
-        self.arr = array.copy()
-        self.next = None
+def calculate_min_run(n):
+    r = 0
+    while n >= 16:
+        r |= n & 1
+        n >>= 1
+    return n + r
 
 
-class UnrolledLinkedList:
-    def __init__(self, arr=[]):
-        self.head = None
-        self.length = 0
-        self.len_of_node_array = 16
+def return_format_arr(arr):
+    return ' '.join(list(map(str, arr)))
 
-        self.make_linked_list(arr)
 
-    def make_linked_list(self, arr):
-        if len(arr) == 0:
-            return
-        self.length = 0
-        k = 0
-        lis = []
-        index = 0
-        flag_head = False
-        el = self.head
-        while index < len(arr):
-            if k < self.len_of_node_array:
-                lis.append(arr[index])
-                k += 1
-                index += 1
-            if k >= self.len_of_node_array or index == len(arr):
-                if not flag_head:
-                    self.head = Node(lis)
-                    self.length += 1
-                    flag_head = True
-                    el = self.head
-                else:
-                    el.next = Node(lis)
-                    self.length += 1
-                    el = el.next
-                lis = []
-                k = 0
-
-    def push(self, element):
-        if self.head == None:
-            self.head = Node([element])
-            return True
-        el = self.head
-        while el.next != None:
-            el = el.next
-        if len(el.arr) >= self.len_of_node_array:
-            massive = el.arr
-            el.arr = massive[:self.len_of_node_array // 2]
-            el.next = Node(massive[self.len_of_node_array // 2:] + [element])
-            self.length += 1
-            return True
-
-        el.arr.append(element)
-        return True
-
-    def insert(self, element, index):
-        el = self.head
-        start_index = len(el.arr)
-        while start_index < index:
-            el = el.next
-            start_index += len(el.arr)
-        if el is None:
-            return False
-
-        el.arr.insert(index - start_index, element)
-
-        if len(el.arr) <= self.len_of_node_array:
-            return True
-
-        half_length = self.len_of_node_array // 2
-        new_array = el.arr[half_length:]
-        el.arr = el.arr[:half_length]
-
-        if el.next != None and len(el.next.arr) + len(new_array) <= self.len_of_node_array:
-            el.next.arr = new_array + el.next.arr
+def find_index_of_element(T, N, arr):
+    left, right = 0, N
+    while left < right:
+        if (left + right) % 2 == 0:
+            mid = (left + right) // 2 - 1
         else:
-            tmp = el.next
-            el.next = Node(new_array)
-            el.next.next = tmp
-            self.length += 1
+            mid = (left + right) // 2
+        if abs(arr[mid]) < abs(T):
+            right = mid
+        else:
+            left = mid + 1
+    return left
 
-        return True
 
-    def delete_number(self, index):
-        el, start_index, index_node = self.find_node_by_index_of_element(index)
-        el_next = el.next
-        index_node_next = index_node + 1
-        del el.arr[index - start_index]
-        if len(el.arr) == 0:
-            self.delete_arr(index_node)
-            return
-        if el_next != None:
-            if len(el_next.arr) + len(el.arr) <= self.len_of_node_array:
-                el.arr += el_next.arr
-                self.delete_arr(index_node_next)
+class Stack:
+    def __init__(self):
+        self.count_of_merge = 0
+        self.blocks = []
 
-    def find_node_by_index_of_element(self, index):
-        index_node = 0
-        if index < 0:
-            return None, -1, -1
-        el = self.head
-        k = len(el.arr)
-        while k <= index:
-            el = el.next
-            index_node += 1
-            if el == None:
-                return None, -1, -1
-            k += len(el.arr)
-        return (el, k - len(el.arr), index_node)
+    def push(self, block):
+        if len(self.blocks) == 0:
+            self.blocks.append(block)
 
-    def delete_arr(self, index):
-        if index == 0:
-            self.head = self.head.next
-            self.length -= 1
-            return
+        else:
+            self.blocks.insert(0, block)
+            flag1 = len(self.blocks[1]) > len(self.blocks[0])
+            if len(self.blocks) == 2:
+                while not flag1:
+                    if len(self.blocks) == 1:
+                        break
+                    self.blocks[0] = merge_arr(self.blocks[0], self.blocks[1],
+                                               self.count_of_merge)  # self.blocks[0] += self.blocks[1]
+                    print(f"Merge {self.count_of_merge}:", return_format_arr(self.blocks[0]))
+                    self.count_of_merge += 1
+                    del self.blocks[1]
+            else:
+                flag2 = self.blocks[2] > self.blocks[1] + self.blocks[0]
+                while (not flag1 or not flag2) and len(self.blocks) >= 2:
+                    if len(self.blocks) == 3 and len(self.blocks[2]) < len(self.blocks[0]):
+                        self.blocks[2] = merge_arr(self.blocks[2], self.blocks[1],
+                                                   self.count_of_merge)  # self.blocks[2] += self.blocks[1]
+                        print(f"Merge {self.count_of_merge}:", return_format_arr(self.blocks[2]))
+                        self.count_of_merge += 1
+                    else:
+                        self.blocks[0] = merge_arr(self.blocks[0], self.blocks[1],
+                                                   self.count_of_merge)  # self.blocks[0] += self.blocks[1]
+                        print(f"Merge {self.count_of_merge}:", return_format_arr(self.blocks[0]))
+                        self.count_of_merge += 1
+                    del self.blocks[1]
+                    if len(self.blocks) == 1:
+                        flag1 = True
+                    else:
+                        flag1 = len(self.blocks[1]) > len(self.blocks[0])
+                    if len(self.blocks) <= 2:
+                        flag2 = True
+                    else:
+                        flag2 = len(self.blocks[2]) > len(self.blocks[1]) + len(self.blocks[0])
 
-        el = self.head
-        k = 0
-        while k < index - 1 and el.next != None:
-            el = el.next
+    def pop(self):
+        del self.blocks[0]
+
+
+def merge_with_stack(a):
+    s = Stack()
+    for i in a:
+        s.push(i)
+    count_of_merge = s.count_of_merge
+    if len(s.blocks) == 1:
+        return s.blocks[0]
+    else:
+        while len(s.blocks) > 1:
+            if len(s.blocks) == 3 and len(s.blocks[2]) < len(s.blocks[0]):
+                s.blocks[2] = merge_arr(s.blocks[2], s.blocks[1], s.count_of_merge)  # s.blocks[2] += s.blocks[1]
+                print(f"Merge {count_of_merge}:", return_format_arr(s.blocks[2]))
+                count_of_merge += 1
+            else:
+                s.blocks[0] = merge_arr(s.blocks[0], s.blocks[1], s.count_of_merge)  # s.blocks[0] += s.blocks[1]
+                print(f"Merge {count_of_merge}:", return_format_arr(s.blocks[0]))
+                count_of_merge += 1
+            del s.blocks[1]
+        return s.blocks[0]
+
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+
+        while j >= 0 and abs(arr[j]) < abs(key):
+            arr[j + 1] = arr[j]
+            j -= 1
+
+        arr[j + 1] = key
+    return arr
+
+
+def merge_arr(N_array, M_array, number_of_merge):
+    count_of_golops = 0
+    n, m = len(N_array), len(M_array)
+    k_n = 0
+    k_m = 0
+    index_n = 0
+    index_m = 0
+    result = []
+    while index_n < n and index_m < m:
+        if abs(N_array[index_n]) > abs(M_array[index_m]):
+            result.append(N_array[index_n])
+            k_n += 1
+            k_m = 0
+            index_n += 1
+
+        else:
+            result.append(M_array[index_m])
+            k_n = 0
+            k_m += 1
+            index_m += 1
+
+        if k_n == 3:
+            ind = find_index_of_element(M_array[index_m], n - index_n, N_array[index_n:].copy()) + index_n
+            count_of_golops += 1
+            result.extend(N_array[index_n:ind])
+            index_n = ind
+            k_n = 0
+
+        elif k_m == 3:
+            ind = find_index_of_element(N_array[index_n], m - index_m, M_array[index_m:].copy()) + index_m
+            count_of_golops += 1
+            result.extend(M_array[index_m:ind])
+            index_m = ind
+            k_m = 0
+
+    if index_m < m:
+        while index_m < m:
+            result.append(M_array[index_m])
+            index_m += 1
+    elif index_n < n:
+        while index_n < n:
+            result.append(N_array[index_n])
+            index_n += 1
+
+    print(f"Gallops {number_of_merge}:", count_of_golops)
+    return result
+
+
+def check_order(arr):
+    flag_increase = True
+    flag_decrease = True
+    for i in range(len(arr) - 1):
+        if abs(arr[i + 1]) > abs(arr[i]):
+            flag_decrease = False
+        elif abs(arr[i + 1]) < abs(arr[i]):
+            flag_increase = False
+        if not flag_increase and not flag_decrease:
+            break
+    return (flag_increase, flag_decrease)
+
+
+def TimeSort(arr, n):
+    min_run = calculate_min_run(n)
+    Parts = []
+    part = []
+    k = 0
+    index = 0
+    while index < len(arr):
+        if k < min_run:
+            part.append(arr[index])
             k += 1
+            index += 1
+        else:
+            flag_increase, flag_decrease = check_order(part)
+            if flag_increase and flag_decrease:
+                while abs(arr[index]) == abs(part[-1]):
+                    part.append(arr[index])
+                    index += 1
+                Parts.append(part)
+                part = []
+                k = 0
+                continue
 
-        el.next = el.next.next
-        self.length -= 1
+            while index < len(arr) and ((flag_increase and abs(arr[index]) > abs(part[-1])) or (
+                    flag_decrease and abs(arr[index]) < abs(part[-1]))):
+                part.append(arr[index])
+                index += 1
 
-    def find_index_of_number(self, number):
-        k = 0
-        index = 0
-        el = self.head
-        while el != None:
-            if number in el.arr:
-                return index + el.arr.index(number)
-            index += len(el.arr)
-            el = el.next
-            k += 1
-        return None
+            if flag_increase:
+                part.reverse()
 
-    def print_list(self):
-        k = 0
-        el = self.head
-        while el != None:
-            string = '\t'.join([str(x) for x in el.arr])
-            print(f"Node {k}: {string}")
-            el = el.next
-            k += 1
+            if not (flag_increase or flag_decrease):
+                part = insertion_sort(part)
+
+            Parts.append(part)
+            part = []
+            k = 0
+
+    if len(part) != 0:
+        flag_increase, flag_decrease = check_order(part)
+        if flag_increase:
+            part.reverse()
+
+        if not (flag_increase or flag_decrease):
+            part = insertion_sort(part)
+
+        Parts.append(part)
+
+    for j in range(len(Parts)):
+        print(f"Part {j}: {return_format_arr(Parts[j])}")
+
+    arr = merge_with_stack(Parts)
+    if len(Parts) == 1:
+        print()
+    return arr
+
+
+n = int(input())
+arr = list(map(int, input().split()))
+arr = TimeSort(arr, n)
+print("Answer:", return_format_arr(arr))
