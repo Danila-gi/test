@@ -55,11 +55,11 @@ bool Playground::check_point(Coords coord){
     
 }
 
-bool Playground::check_ship(Ship ship, int index, Coords coord){
+bool Playground::check_ship(Ship* ship, int index, Coords coord){
     std::vector<Coords> mas_of_coords;
     bool flag = true;
-    if (ship.get_location() == Horizontal){
-        for (int j = 0; j < ship.get_length(); j++){
+    if (ship->get_location() == Horizontal){
+        for (int j = 0; j < ship->get_length(); j++){
             if (check_point({coord.x + j, coord.y}))
                 mas_of_coords.push_back({coord.x + j, coord.y});
             else{
@@ -69,7 +69,7 @@ bool Playground::check_ship(Ship ship, int index, Coords coord){
         }
     }
     else{
-        for (int j = 0; j < ship.get_length(); j++){
+        for (int j = 0; j < ship->get_length(); j++){
             if (check_point({coord.x, coord.y + j}))
                 mas_of_coords.push_back({coord.x, coord.y + j});
             else{
@@ -80,7 +80,7 @@ bool Playground::check_ship(Ship ship, int index, Coords coord){
     }
 
     if (flag){
-        coords_of_ship[index] = mas_of_coords;
+        coords_of_ship[ship] = mas_of_coords;
 
         this->put_new_ships(index);
         return true;
@@ -93,7 +93,7 @@ bool Playground::check_ship(Ship ship, int index, Coords coord){
 
 void Playground::add_ship(Length_of_the_ship length, Location location, Coords coord){
     list_of_ships.add_ship(length, location);
-    check_ship(Ship(length, location), list_of_ships.get_count_of_ships() - 1, coord);
+    check_ship(list_of_ships.get_ship(list_of_ships.get_count_of_ships() - 1), list_of_ships.get_count_of_ships() - 1, coord);
 }
 
 Manager_of_ships Playground::return_manager() const{
@@ -101,7 +101,7 @@ Manager_of_ships Playground::return_manager() const{
 }
 
 void Playground::put_new_ships(int index){
-    for (Coords j: coords_of_ship[index])
+    for (Coords j: coords_of_ship[list_of_ships.get_ship(index)])
         arr_of_ground[j.y][j.x] = SHIP;
 }
 
@@ -112,12 +112,12 @@ void Playground::shoot(Coords coord){
     }
     int index;
     if (arr_of_ground[coord.y][coord.x] == SHIP){
-        for (int i = 0; i < list_of_ships.get_count_of_ships(); i++){
+        for (const auto& pair: coords_of_ship){
             index = 0;
-            for (Coords c: coords_of_ship[i]){
+            for (Coords c: coords_of_ship[pair.first]){
                 if (c.x == coord.x && c.y == coord.y){
                     //list_of_ships.shoot_to_ship(i, index);
-                    list_of_ships.get_ship(i).shoot_to_segment(index);
+                    pair.first->shoot_to_segment(index);
                     std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
                     index = -1;
                     break;

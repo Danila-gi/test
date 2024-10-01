@@ -7,8 +7,8 @@ Manager_of_ships::Manager_of_ships(int ships_count, Length_of_the_ship sizes[]){
 
 Manager_of_ships::Manager_of_ships() : Manager_of_ships(0, {}){}
 
-Ship& Manager_of_ships::get_ship(int index){
-    return ships[index];
+Ship* Manager_of_ships::get_ship(int index){
+    return &ships[index];
 }
 
 int Manager_of_ships::get_count_of_ships() const{

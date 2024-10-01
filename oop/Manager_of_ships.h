@@ -16,7 +16,7 @@ public:
 
     Manager_of_ships();
 
-    Ship& get_ship(int index);
+    Ship* get_ship(int index);
 
     int get_count_of_ships() const;
 
