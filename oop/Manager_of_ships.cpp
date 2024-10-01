@@ -7,8 +7,8 @@ Manager_of_ships::Manager_of_ships(int ships_count, Length_of_the_ship sizes[]){
 
 Manager_of_ships::Manager_of_ships() : Manager_of_ships(0, {}){}
 
-std::vector<Ship> Manager_of_ships::get_arr_of_ships() const{
-    return ships;
+Ship& Manager_of_ships::get_ship(int index){
+    return ships[index];
 }
 
 int Manager_of_ships::get_count_of_ships() const{
@@ -17,11 +17,6 @@ int Manager_of_ships::get_count_of_ships() const{
 
 void Manager_of_ships::add_ship(Length_of_the_ship length, Location location){
     ships.push_back(Ship(length, location));
-}
-
-void Manager_of_ships::shoot_to_ship(int index_of_ship, int index_of_segment){
-    if (index_of_ship >= 0 && index_of_ship < ships.size())
-        ships[index_of_ship].shoot_to_segment(index_of_segment);
 }
 
 void Manager_of_ships::set_location_for_the_ship(int index_of_ship, Location location){

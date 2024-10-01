@@ -28,5 +28,6 @@ int main(){
     p1.return_manager().print_ships();
     std::cout<<"-------"<<std::endl;
     m1.print_ships();
+
     return 0;
 }

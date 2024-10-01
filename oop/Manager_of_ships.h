@@ -16,13 +16,11 @@ public:
 
     Manager_of_ships();
 
-    std::vector<Ship> get_arr_of_ships() const;
+    Ship& get_ship(int index);
 
     int get_count_of_ships() const;
 
     void add_ship(Length_of_the_ship length, Location location);
-
-    void shoot_to_ship(int index_of_ship, int index_of_segment);
 
     void set_location_for_the_ship(int index_of_ship, Location location);
 

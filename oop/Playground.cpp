@@ -23,7 +23,7 @@ Playground::Playground(int p_width, int p_heigth, Manager_of_ships& manager, std
             list_of_ships.remove_ship(i);
             continue;
         }
-        if (check_ship(list_of_ships.get_arr_of_ships()[i], i, coords[j]))
+        if (check_ship(list_of_ships.get_ship(i), i, coords[j]))
             i++;
         j++;
     }
@@ -116,7 +116,8 @@ void Playground::shoot(Coords coord){
             index = 0;
             for (Coords c: coords_of_ship[i]){
                 if (c.x == coord.x && c.y == coord.y){
-                    list_of_ships.shoot_to_ship(i, index);
+                    //list_of_ships.shoot_to_ship(i, index);
+                    list_of_ships.get_ship(i).shoot_to_segment(index);
                     std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
                     index = -1;
                     break;
