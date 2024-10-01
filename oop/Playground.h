@@ -29,6 +29,7 @@ public:
     bool check_point(Coords coord);
 
     void add_ship(Length_of_the_ship length, Location location, Coords coord);
+    void add_ship(Ship* ship, Coords coord);
 
     Manager_of_ships return_manager() const;
 

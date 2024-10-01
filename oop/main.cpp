@@ -15,6 +15,9 @@ int main(){
     p1.add_ship(THREE, Vertical, {7, 4});
     p1.add_ship(FOUR, Vertical, {0, 4});
 
+    Ship* ship = new Ship(ONE, Vertical);
+    p1.add_ship(ship, {3, 0});
+
     p1.shoot({6, 1});
     p1.shoot({3, 2});
     p1.shoot({7, 6});

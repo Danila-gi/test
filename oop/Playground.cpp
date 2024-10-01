@@ -96,6 +96,11 @@ void Playground::add_ship(Length_of_the_ship length, Location location, Coords c
     check_ship(list_of_ships.get_ship(list_of_ships.get_count_of_ships() - 1), list_of_ships.get_count_of_ships() - 1, coord);
 }
 
+void Playground::add_ship(Ship* ship, Coords coord){
+    list_of_ships.add_ship(static_cast<Length_of_the_ship>(ship->get_length()), ship->get_location());
+    check_ship(list_of_ships.get_ship(list_of_ships.get_count_of_ships() - 1), list_of_ships.get_count_of_ships() - 1, coord);
+}
+
 Manager_of_ships Playground::return_manager() const{
     return list_of_ships;
 }

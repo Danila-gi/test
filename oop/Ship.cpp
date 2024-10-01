@@ -46,15 +46,3 @@ void Ship::print_statement_of_ship(){
     std::cout << "| Location=" << location_of_ship<<std::endl;
 
 }
-
-
-
-/*namespace std
-{
-    
-    bool operator<(const std::reference_wrapper<Ship>& a, const std::reference_wrapper<Ship>& b)
-    {
-        return a.get().get_length() < b.get().get_length();
-    }
-
-}*/

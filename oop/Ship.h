@@ -29,16 +29,7 @@ public:
 
     std::vector<Statement_of_the_ship> get_segments() const;
 
-    //bool operator<(const std::reference_wrapper<Ship> &other) const;
-
     void print_statement_of_ship();
 };
-
-/*namespace std
-{
-    
-bool operator<(const std::reference_wrapper<Ship>& a, const std::reference_wrapper<Ship>& b);
-
-}*/
 
 #endif
