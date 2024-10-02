@@ -1,7 +1,7 @@
 #include "Playground.h"
 
-Playground::Playground(int p_width, int p_heigth, Manager_of_ships& manager, std::vector<Coords> coords)
-:list_of_ships(manager), height(p_heigth), width(p_width)
+Playground::Playground(int p_width, int p_heigth)
+:height(p_heigth), width(p_width)
 {
     if (p_heigth <= 0 || p_width <= 0)
         exit(1);
@@ -14,18 +14,6 @@ Playground::Playground(int p_width, int p_heigth, Manager_of_ships& manager, std
             exit(1);
         for (int j = 0; j < width; j++)
             arr_of_ground[i][j] = UNKNOWN;
-    }
-
-    int i = 0;
-    int j = 0;
-    while (i < list_of_ships.get_count_of_ships()){
-        if (j >= coords.size()){
-            list_of_ships.remove_ship(i);
-            continue;
-        }
-        if (check_ship(list_of_ships.get_ship(i), i, coords[j]))
-            i++;
-        j++;
     }
 }
 
@@ -55,7 +43,7 @@ bool Playground::check_point(Coords coord){
     
 }
 
-bool Playground::check_ship(Ship* ship, int index, Coords coord){
+bool Playground::check_ship(Ship* ship, Coords coord){
     std::vector<Coords> mas_of_coords;
     bool flag = true;
     if (ship->get_location() == Horizontal){
@@ -82,31 +70,20 @@ bool Playground::check_ship(Ship* ship, int index, Coords coord){
     if (flag){
         coords_of_ship[ship] = mas_of_coords;
 
-        this->put_new_ships(index);
+        this->put_new_ships(ship);
         return true;
     }
     else{
-        list_of_ships.remove_ship(index);
         return false;
     }
 }
 
-void Playground::add_ship(Length_of_the_ship length, Location location, Coords coord){
-    list_of_ships.add_ship(length, location);
-    check_ship(list_of_ships.get_ship(list_of_ships.get_count_of_ships() - 1), list_of_ships.get_count_of_ships() - 1, coord);
-}
-
 void Playground::add_ship(Ship* ship, Coords coord){
-    list_of_ships.add_ship(static_cast<Length_of_the_ship>(ship->get_length()), ship->get_location());
-    check_ship(list_of_ships.get_ship(list_of_ships.get_count_of_ships() - 1), list_of_ships.get_count_of_ships() - 1, coord);
+    check_ship(ship, coord);
 }
 
-Manager_of_ships Playground::return_manager() const{
-    return list_of_ships;
-}
-
-void Playground::put_new_ships(int index){
-    for (Coords j: coords_of_ship[list_of_ships.get_ship(index)])
+void Playground::put_new_ships(Ship* ship){
+    for (Coords j: coords_of_ship[ship])
         arr_of_ground[j.y][j.x] = SHIP;
 }
 
@@ -149,8 +126,7 @@ void Playground::print_ground(){
 }
 
 Playground::Playground(const Playground &obj)
-    : width(obj.width), height(obj.height), list_of_ships(obj.list_of_ships),
-    coords_of_ship(obj.coords_of_ship)
+    : width(obj.width), height(obj.height), coords_of_ship(obj.coords_of_ship)
 {
     arr_of_ground = new Statement_of_the_coord*[height];
     if (arr_of_ground == NULL)
@@ -163,8 +139,7 @@ Playground::Playground(const Playground &obj)
 }
 
 Playground::Playground(Playground &&obj)
-    : width(obj.width), height(obj.height), list_of_ships(obj.list_of_ships),
-    coords_of_ship(std::move(obj.coords_of_ship)), arr_of_ground(nullptr)
+    : width(obj.width), height(obj.height), coords_of_ship(std::move(obj.coords_of_ship)), arr_of_ground(nullptr)
 {
     obj.width = 0;
     obj.height = 0;
@@ -181,7 +156,6 @@ Playground& Playground::operator=(const Playground &obj)
 
         width = obj.width;
         height = obj.height;
-        list_of_ships = obj.list_of_ships;
         coords_of_ship = obj.coords_of_ship;
 
         arr_of_ground = new Statement_of_the_coord*[height];
@@ -202,7 +176,6 @@ Playground& Playground::operator=(Playground &&obj)
     {
         width = obj.width;
         height = obj.height;
-        list_of_ships = obj.list_of_ships;
         coords_of_ship = std::move(obj.coords_of_ship);
 
         std::swap(arr_of_ground, obj.arr_of_ground);

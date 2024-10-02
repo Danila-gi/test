@@ -13,14 +13,13 @@ private:
     int width;
     int height;
     Statement_of_the_coord** arr_of_ground;
-    Manager_of_ships& list_of_ships;
     std::map<Ship*, std::vector<Coords>>coords_of_ship;
 
-    void put_new_ships(int index);
-    bool check_ship(Ship* ship, int index, Coords coord);
+    void put_new_ships(Ship* ship);
+    bool check_ship(Ship* ship, Coords coord);
 
 public:
-    Playground(int p_width, int p_heigth, Manager_of_ships& manager, std::vector<Coords> coords);
+    Playground(int p_width, int p_heigth);
 
     Playground();
 
@@ -28,10 +27,7 @@ public:
 
     bool check_point(Coords coord);
 
-    void add_ship(Length_of_the_ship length, Location location, Coords coord);
     void add_ship(Ship* ship, Coords coord);
-
-    Manager_of_ships return_manager() const;
 
     void shoot(Coords coord);
 
