@@ -126,7 +126,7 @@ void Playground::print_ground(){
 }
 
 Playground::Playground(const Playground &obj)
-    : width(obj.width), height(obj.height), coords_of_ship(obj.coords_of_ship)
+    : width(obj.width), height(obj.height)
 {
     arr_of_ground = new Statement_of_the_coord*[height];
     if (arr_of_ground == NULL)
@@ -136,6 +136,8 @@ Playground::Playground(const Playground &obj)
         for (int j = 0; j < width; j++)
             arr_of_ground[i][j] = obj.arr_of_ground[i][j];
     }
+
+    coords_of_ship = obj.coords_of_ship;
 }
 
 Playground::Playground(Playground &&obj)
