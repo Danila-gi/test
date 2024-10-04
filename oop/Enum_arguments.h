@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ENUM_H
+#define ENUM_H
+
 enum Location{
     Horizontal,
     Vertical
@@ -27,3 +29,5 @@ typedef struct Coords{
     int x;
     int y;
 }Coords;
+
+#endif

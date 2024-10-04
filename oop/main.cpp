@@ -4,11 +4,10 @@
 #include "Playground.h"
 
 int main(){
-    Length_of_the_ship l[] = {THREE, THREE, ONE, TWO};
+    std::vector<Length_of_the_ship> l = {THREE, THREE, ONE, TWO};
     Manager_of_ships m_empty = Manager_of_ships();
     Manager_of_ships m1 = Manager_of_ships(4, l);
     m1.add_ship(TWO, Vertical);
-    m1.set_location_for_the_ship(3, Vertical);
 
     std::vector<Coords> c = {{2, 2}, {3, 4}, {0, 0}, {6, 1}, {2, 6}};
     Playground p1 = Playground(8, 8);

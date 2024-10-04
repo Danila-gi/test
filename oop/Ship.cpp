@@ -37,9 +37,6 @@ std::vector<Statement_of_the_ship> Ship::get_segments() const{
     return segments;
 }
 
-//bool Ship::operator<(const std::reference_wrapper<Ship> &other) const
-//{ return this->get_length() < other.get().get_length(); }
-
 void Ship::print_statement_of_ship(){
     for (int i = 0; i < length; i++)
         std::cout << segments[i] << " ";

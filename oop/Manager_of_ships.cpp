@@ -1,15 +1,24 @@
 #include "Manager_of_ships.h"
 
-Manager_of_ships::Manager_of_ships(int ships_count, Length_of_the_ship sizes[]){
-    for (int i = 0; i < ships_count; i++)
-        ships.push_back(Ship(sizes[i]));
+Manager_of_ships::Manager_of_ships(int ships_count, std::vector<Length_of_the_ship> sizes){
+    for (int i = 0; i < ships_count; i++){
+        Ship* ship = new Ship(sizes[i]);
+        if (ship == nullptr)
+            std::exit(1);
+        ships.push_back(ship);
+    }
 }
 
 Manager_of_ships::Manager_of_ships() : Manager_of_ships(0, {}){}
 
+Manager_of_ships::~Manager_of_ships(){
+    for (int i = 0; i < ships.size(); i++)
+        delete ships[i];
+}
+
 Ship* Manager_of_ships::get_ship(int index){
     if (index >= 0 && index < this->get_count_of_ships())
-        return &ships[index];
+        return ships[index];
     return nullptr;
 }
 
@@ -18,12 +27,10 @@ int Manager_of_ships::get_count_of_ships() const{
 }
 
 void Manager_of_ships::add_ship(Length_of_the_ship length, Location location){
-    ships.push_back(Ship(length, location));
-}
-
-void Manager_of_ships::set_location_for_the_ship(int index_of_ship, Location location){
-    if (index_of_ship >= 0 && index_of_ship < ships.size())
-        ships[index_of_ship].set_location(location);
+    Ship* ship = new Ship(length, location);
+    if (ship == nullptr)
+        std::exit(1);
+    ships.push_back(ship);
 }
 
 void Manager_of_ships::remove_ship(int index){
@@ -34,6 +41,6 @@ void Manager_of_ships::remove_ship(int index){
 void Manager_of_ships::print_ships(){
     for (int i = 0; i < ships.size(); i++){
         std::cout << i + 1 << ":";
-        ships[i].print_statement_of_ship();
+        (*ships[i]).print_statement_of_ship();
     }
 }

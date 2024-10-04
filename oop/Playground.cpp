@@ -4,18 +4,20 @@ Playground::Playground(int p_width, int p_heigth)
 :height(p_heigth), width(p_width)
 {
     if (p_heigth <= 0 || p_width <= 0)
-        exit(1);
+        std::exit(1);
     arr_of_ground = new Statement_of_the_coord*[height];
-    if (arr_of_ground == NULL)
-        exit(1);
+    if (arr_of_ground == nullptr)
+        std::exit(1);
     for (int i = 0; i < height; i++){
         arr_of_ground[i] = new Statement_of_the_coord[width];
-        if (arr_of_ground[i] == NULL)
-            exit(1);
+        if (arr_of_ground[i] == nullptr)
+            std::exit(1);
         for (int j = 0; j < width; j++)
             arr_of_ground[i][j] = UNKNOWN;
     }
 }
+
+Playground::Playground():Playground(0, 0){}
 
 Playground::~Playground(){
     for(int i = 0; i < height; i++)
@@ -69,8 +71,6 @@ bool Playground::check_ship(Ship* ship, Coords coord){
 
     if (flag){
         coords_of_ship[ship] = mas_of_coords;
-
-        this->put_new_ships(ship);
         return true;
     }
     else{
@@ -79,7 +79,8 @@ bool Playground::check_ship(Ship* ship, Coords coord){
 }
 
 void Playground::add_ship(Ship* ship, Coords coord){
-    check_ship(ship, coord);
+    if (check_ship(ship, coord));
+        this->put_new_ships(ship);
 }
 
 void Playground::put_new_ships(Ship* ship){
@@ -98,7 +99,6 @@ void Playground::shoot(Coords coord){
             index = 0;
             for (Coords c: coords_of_ship[pair.first]){
                 if (c.x == coord.x && c.y == coord.y){
-                    //list_of_ships.shoot_to_ship(i, index);
                     pair.first->shoot_to_segment(index);
                     std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
                     index = -1;
@@ -129,10 +129,12 @@ Playground::Playground(const Playground &obj)
     : width(obj.width), height(obj.height)
 {
     arr_of_ground = new Statement_of_the_coord*[height];
-    if (arr_of_ground == NULL)
-        exit(1);
+    if (arr_of_ground == nullptr)
+        std::exit(1);
     for (int i = 0; i < height; i++){
         arr_of_ground[i] = new Statement_of_the_coord[width];
+        if (arr_of_ground[i] == nullptr)
+            std::exit(1);
         for (int j = 0; j < width; j++)
             arr_of_ground[i][j] = obj.arr_of_ground[i][j];
     }
