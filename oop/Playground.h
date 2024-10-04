@@ -3,8 +3,7 @@
 
 #include <iostream>
 #include "Ship.h"
-#include "Manager_of_ships.h"
-#include "Enum_arguments.h"
+#include "Enum_arguments_for_playground.h"
 #include <map>
 #include <vector>
 

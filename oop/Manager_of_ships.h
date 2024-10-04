@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include "Ship.h"
-#include "Enum_arguments.h"
 #include <vector>
 
 class Manager_of_ships

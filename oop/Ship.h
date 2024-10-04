@@ -2,7 +2,7 @@
 #define SHIP_H
 
 #include <iostream>
-#include "Enum_arguments.h"
+#include "Enum_arguments_for_ship.h"
 #include <vector>
 
 class Ship
