@@ -2,7 +2,7 @@
 #define PLAYGROUND_H
 
 #include <iostream>
-#include "../headers/Ship.h"
+#include "Ship.h"
 #include <map>
 #include <vector>
 

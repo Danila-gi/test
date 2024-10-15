@@ -98,6 +98,11 @@ void Playground::shoot(Coords coord){
             index = 0;
             for (Coords c: coords_of_ship[pair.first]){
                 if (c.x == coord.x && c.y == coord.y){
+                    if (pair.first->is_destroyed()){
+                        std::cout<<"Ship has already destroyed"<<std::endl;
+                        index = -1;
+                        break;
+                    }
                     pair.first->shoot_to_segment(index);
                     std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
                     index = -1;

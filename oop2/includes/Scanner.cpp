@@ -1,17 +1,21 @@
 #include "../headers/Scanner.h"
 
-void Scanner::perform_ability(Playground& playground){
-    throw "Incorrect arguments";
+Scanner::Scanner(Coords p_coords):coords(p_coords){}
+
+Scanner::Scanner():Scanner({0, 0}){}
+
+void Scanner::set_new_coords(Coords p_coords){
+    coords = p_coords;
 }
 
-void Scanner::perform_ability(Playground& playground, Coords coord){
-    for (int Y = coord.y; Y < playground.height && Y < coord.y + 2; Y++){
-        for (int X = coord.x; X < playground.width && X < coord.x + 2; X++){
+bool Scanner::perform_ability(Playground& playground){
+    for (int Y = coords.y; Y < playground.height && Y < coords.y + 2; Y++){
+        for (int X = coords.x; X < playground.width && X < coords.x + 2; X++){
             if (playground.arr_of_ground[Y][X] == SHIP)
-                std::cout<<"S ";
-            else
-                std::cout<<"E ";
+                return true;
         }
-        std::cout<<std::endl;
     }
+    return false;
 }
+
+Scanner::~Scanner(){}

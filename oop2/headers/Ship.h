@@ -46,6 +46,8 @@ public:
 
     Statement_of_the_ship get_segment_by_index(int index) const;
 
+    bool is_destroyed();
+
     void print_statement_of_ship();
 };
 

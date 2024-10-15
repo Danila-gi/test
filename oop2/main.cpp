@@ -5,6 +5,10 @@
 #include "headers/Double_atack.h"
 #include "headers/Scanner.h"
 #include "headers/Shelling.h"
+#include "headers/Double_atack_builder.h"
+#include "headers/Scanner_builder.h"
+#include "headers/Shelling_builder.h"
+#include "headers/Manager_of_abilities.h"
 
 int main(){
     std::vector<Length_of_the_ship> l = {THREE, THREE, ONE, TWO, TWO, THREE, FOUR, ONE};
@@ -33,14 +37,20 @@ int main(){
     m1.print_ships();
     std::cout<<"-------"<<std::endl;
 
-    Double_atack da;
-    da.perform_ability(p1, {7, 1});
+    Manager_of_abilities m_ab;
+    auto b = m_ab.get_ability();
+    if (b->is_need_arguments()){
+        Coords data = {3, 3};
+        auto ex = b->make_ability(data);
+        ex->perform_ability(p1);
+    }
+    else{
+        b->make_ability();
+        auto ex = b->make_ability();
+        ex->perform_ability(p1);
+    }
 
-    Shelling sh;
-    sh.perform_ability(p1);
     m1.print_ships();
 
-    Scanner sc;
-    sc.perform_ability(p1, {0, 6});
     return 0;
 }

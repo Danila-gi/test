@@ -6,11 +6,9 @@
 
 class Interface_of_abilities{
 public:
-    virtual void perform_ability(Playground& playground) {};
+    virtual bool perform_ability(Playground& playground) = 0;
     
-    virtual void perform_ability(Playground& playground, Coords coords) {};
-
-    virtual ~Interface_of_abilities() {};
+    virtual ~Interface_of_abilities() = 0;
 };
 
 

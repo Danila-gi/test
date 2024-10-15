@@ -39,6 +39,14 @@ Statement_of_the_ship Ship::get_segment_by_index(int index) const{
     return segments[0];
 }
 
+bool Ship::is_destroyed(){
+    for (int i = 0; i < length; i++){
+        if (segments[i] != DESTROYED)
+            return false;
+    }
+    return true;
+}
+
 void Ship::print_statement_of_ship(){
     for (int i = 0; i < length; i++)
         std::cout << segments[i] << " ";
