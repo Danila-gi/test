@@ -1,7 +1,7 @@
 #include "../headers/Playground.h"
 
-Playground::Playground(int p_width, int p_heigth)
-:height(p_heigth), width(p_width)
+Playground::Playground(int p_width, int p_heigth, Command* p_command)
+:height(p_heigth), width(p_width), command(p_command)
 {
     if (p_heigth <= 0 || p_width <= 0){
         std::cout<<"Incorrect sizes"<<std::endl;
@@ -16,7 +16,7 @@ Playground::Playground(int p_width, int p_heigth)
     }
 }
 
-Playground::Playground():Playground(0, 0){}
+Playground::Playground():Playground(0, 0, nullptr){}
 
 Playground::~Playground(){
     for(int i = 0; i < height; i++)
@@ -52,6 +52,7 @@ bool Playground::check_ship(Ship* ship, Coords coord){
             if (check_point({coord.x + j, coord.y}))
                 mas_of_coords.push_back({coord.x + j, coord.y});
             else{
+                throw ShipPlacmentException();
                 flag = false;
                 break;
             }
@@ -62,6 +63,7 @@ bool Playground::check_ship(Ship* ship, Coords coord){
             if (check_point({coord.x, coord.y + j}))
                 mas_of_coords.push_back({coord.x, coord.y + j});
             else{
+                throw ShipPlacmentException();
                 flag = false;
                 break;
             }
@@ -77,6 +79,10 @@ bool Playground::check_ship(Ship* ship, Coords coord){
     }
 }
 
+void Playground::add_new_ability_for_skills(){
+    command->add_ability();
+}
+
 void Playground::add_ship(Ship& ship, Coords coord){
     if (check_ship(&ship, coord));
         this->put_new_ships(&ship);
@@ -89,8 +95,7 @@ void Playground::put_new_ships(Ship* ship){
 
 void Playground::shoot(Coords coord){
     if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height){
-        std::cout<<"Incorrect coords"<<std::endl;
-        return;
+        throw AtackException();
     }
     int index;
     if (arr_of_ground[coord.y][coord.x] == SHIP){
@@ -106,6 +111,10 @@ void Playground::shoot(Coords coord){
                     pair.first->shoot_to_segment(index);
                     std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
                     index = -1;
+                    if (pair.first->is_destroyed()){
+                        std::cout<<"Nice, you have destroyed a ship!\n";
+                        add_new_ability_for_skills();
+                    }
                     break;
                 }
                 index++;

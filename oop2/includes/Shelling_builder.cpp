@@ -1,9 +1,11 @@
-#include "../headers/Scanner_builder.h"
+#include "../headers/Shelling_builder.h"
 
-std::shared_ptr<Interface_of_abilities> Scanner_builder::make_ability(Coords coords){
-    return std::make_shared<Scanner>(coords);
+std::shared_ptr<Interface_of_abilities> Shelling_builder::make_ability(Coords coords){
+    auto p_builder = std::make_shared<Shelling>();
+    //std::cout<<"New shelling "<<p_builder.get()<<std::endl;
+    return p_builder;
 }
 
-bool Scanner_builder::is_need_arguments(){return true;}
+bool Shelling_builder::is_need_arguments(){return false;}
 
-Scanner_builder::~Scanner_builder(){}
+Shelling_builder::~Shelling_builder(){}

@@ -9,17 +9,19 @@
 #include "Double_atack_builder.h"
 #include "Shelling_builder.h"
 #include "Scanner_builder.h"
+#include "NoAbilitiesException.h"
+#include "Command.h"
 
-class Manager_of_abilities{
+class Manager_of_abilities: public Command{
 private:
-    std::vector<Interface_of_builders*> vector_of_abilities;
+    std::vector<std::shared_ptr<Interface_of_builders>> vector_of_abilities;
 
 public:
     Manager_of_abilities();
 
     void add_ability();
 
-    Interface_of_builders* get_ability();
+    std::shared_ptr<Interface_of_builders> get_ability();
 };
 
 #endif
