@@ -52,7 +52,7 @@ int main(){
 
     auto get = m_a.get_ability();
     if (get->is_need_arguments()){
-        auto ex = get->make_ability({4, 0});
+        auto ex = get->make_ability({7, 1});
         std::cout<<ex->perform_ability(p1)<<std::endl;
     }
     else{

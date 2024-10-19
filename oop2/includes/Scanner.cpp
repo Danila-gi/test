@@ -18,5 +18,3 @@ bool Scanner::perform_ability(Playground& playground){
     }
     return false;
 }
-
-Scanner::~Scanner(){}

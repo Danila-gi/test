@@ -139,15 +139,11 @@ void Playground::print_ground(){
 }
 
 Playground::Playground(const Playground &obj)
-    : width(obj.width), height(obj.height)
+    : width(obj.width), height(obj.height), command(obj.command)
 {
     arr_of_ground = new Statement_of_the_coord*[height];
-    if (arr_of_ground == nullptr)
-        std::exit(1);
     for (int i = 0; i < height; i++){
         arr_of_ground[i] = new Statement_of_the_coord[width];
-        if (arr_of_ground[i] == nullptr)
-            std::exit(1);
         for (int j = 0; j < width; j++)
             arr_of_ground[i][j] = obj.arr_of_ground[i][j];
     }
@@ -161,6 +157,7 @@ Playground::Playground(Playground &&obj)
     obj.width = 0;
     obj.height = 0;
     std::swap(arr_of_ground, obj.arr_of_ground);
+    std::swap(command, obj.command);
 }
 
 Playground& Playground::operator=(const Playground &obj)
@@ -180,6 +177,7 @@ Playground& Playground::operator=(const Playground &obj)
             arr_of_ground[i] = new Statement_of_the_coord[width];
             for (int j = 0; j < width; j++)
                 arr_of_ground[i][j] = obj.arr_of_ground[i][j];
+        command = obj.command;
         }
     }
     return *this;
@@ -194,6 +192,7 @@ Playground& Playground::operator=(Playground &&obj)
         std::swap(coords_of_ship, obj.coords_of_ship);
 
         std::swap(arr_of_ground, obj.arr_of_ground);
+        std::swap(command, obj.command);
     }
     return *this;
 }

@@ -16,8 +16,6 @@ public:
     void set_new_coords(Coords coords);
 
     bool perform_ability(Playground& playground);
-
-    ~Double_atack();
 };
 
 

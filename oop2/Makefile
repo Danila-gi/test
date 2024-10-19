@@ -1,9 +1,9 @@
 CC=g++
 CFLAGS=-c
 
-all: Ship.o Manager_of_ships.o Playground.o Interface_of_abilities.o Interface_of_builders.o Double_atack.o Scanner.o Shelling.o \
+all: Ship.o Manager_of_ships.o Playground.o Double_atack.o Scanner.o Shelling.o \
 Double_atack_builder.o Scanner_builder.o Shelling_builder.o Manager_of_abilities.o NoAbilitiesException.o ShipPlacmentException.o AtackException.o main.o
-	$(CC) main.o Ship.o Manager_of_ships.o Playground.o Interface_of_abilities.o Interface_of_builders.o Double_atack.o Scanner.o Shelling.o \
+	$(CC) main.o Ship.o Manager_of_ships.o Playground.o Double_atack.o Scanner.o Shelling.o \
 	 Double_atack_builder.o Scanner_builder.o Shelling_builder.o Manager_of_abilities.o NoAbilitiesException.o ShipPlacmentException.o AtackException.o -o oop
 
 Ship.o: includes/Ship.cpp
@@ -14,12 +14,6 @@ Manager_of_ships.o: includes/Manager_of_ships.cpp
 
 Playground.o: includes/Playground.cpp
 	$(CC) $(CFLAGS)  includes/Playground.cpp
-
-Interface_of_abilities.o: includes/Interface_of_abilities.cpp
-	$(CC) $(CFLAGS)  includes/Interface_of_abilities.cpp
-
-Interface_of_builders.o: includes/Interface_of_builders.cpp
-	$(CC) $(CFLAGS)  includes/Interface_of_builders.cpp
 
 Double_atack.o: includes/Double_atack.cpp
 	$(CC) $(CFLAGS)  includes/Double_atack.cpp

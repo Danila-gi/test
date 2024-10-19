@@ -11,8 +11,6 @@ public:
     std::shared_ptr<Interface_of_abilities> make_ability(Coords coords = {0, 0}) override;
 
     bool is_need_arguments();
-
-    ~Scanner_builder();
 };
 
 
