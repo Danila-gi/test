@@ -52,7 +52,7 @@ bool Playground::check_ship(Ship* ship, Coords coord){
             if (check_point({coord.x + j, coord.y}))
                 mas_of_coords.push_back({coord.x + j, coord.y});
             else{
-                throw ShipPlacmentException();
+                throw ShipPlacmentException(coord.x + j, coord.y);
                 flag = false;
                 break;
             }
@@ -63,7 +63,7 @@ bool Playground::check_ship(Ship* ship, Coords coord){
             if (check_point({coord.x, coord.y + j}))
                 mas_of_coords.push_back({coord.x, coord.y + j});
             else{
-                throw ShipPlacmentException();
+                throw ShipPlacmentException(coord.x, coord.y + j);
                 flag = false;
                 break;
             }
@@ -95,7 +95,7 @@ void Playground::put_new_ships(Ship* ship){
 
 void Playground::shoot(Coords coord){
     if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height){
-        throw AtackException();
+        throw AtackException(coord.x, coord.y);
     }
     int index;
     if (arr_of_ground[coord.y][coord.x] == SHIP){
