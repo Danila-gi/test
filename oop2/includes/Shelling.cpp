@@ -11,11 +11,11 @@ bool Shelling::perform_ability(Playground& playground){
         std::vector<Coords> coords;
         int index = 0;
         for (const auto& pair : playground.coords_of_ship) {
-            if (pair.first->is_destroyed()){
-                index = -1;
-                break;
-            }
             if (index == rand_index_for_key) {
+                if (pair.first->is_destroyed()){
+                    index = -1;
+                    break;
+                }
                 coords = pair.second;
                 break;
             }

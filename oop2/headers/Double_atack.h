@@ -13,8 +13,6 @@ public:
 
     Double_atack(Coords coords);
 
-    void set_new_coords(Coords coords);
-
     bool perform_ability(Playground& playground);
 };
 
