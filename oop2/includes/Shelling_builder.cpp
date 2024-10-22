@@ -2,7 +2,6 @@
 
 std::shared_ptr<Interface_of_abilities> Shelling_builder::make_ability(Coords coords){
     auto p_builder = std::make_shared<Shelling>();
-    //std::cout<<"New shelling "<<p_builder.get()<<std::endl;
     return p_builder;
 }
 

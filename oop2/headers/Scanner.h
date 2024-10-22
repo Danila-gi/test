@@ -15,6 +15,8 @@ public:
     Scanner(Coords coords);
 
     bool perform_ability(Playground& playground);
+
+    ~Scanner() = default;
 };
 
 

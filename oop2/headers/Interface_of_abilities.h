@@ -7,6 +7,8 @@
 class Interface_of_abilities{
 public:
     virtual bool perform_ability(Playground& playground) = 0;
+
+    virtual ~Interface_of_abilities() = 0;
 };
 
 

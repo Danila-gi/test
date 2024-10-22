@@ -11,6 +11,8 @@ public:
     virtual std::shared_ptr<Interface_of_abilities> make_ability(Coords coords = {0, 0}) = 0;
 
     virtual bool is_need_arguments() = 0;
+
+    virtual ~Interface_of_builders() = 0;
 };
 
 #endif

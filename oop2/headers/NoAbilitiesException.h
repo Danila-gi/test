@@ -5,7 +5,7 @@
 
 class NoAbilitiesException : public std::runtime_error {
 public:
-    explicit NoAbilitiesException(const std::string& message = "You haven't got any abilities!");
+    NoAbilitiesException(const std::string& message = "You haven't got any abilities!");
 };
 
 #endif

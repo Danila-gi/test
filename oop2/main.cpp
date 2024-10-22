@@ -60,7 +60,7 @@ int main(){
         ex->perform_ability(p1);
     }
 
-    //auto get1 = m_a.get_ability();
+    // auto get1 = m_a.get_ability();
 
     m1.print_ships();
 

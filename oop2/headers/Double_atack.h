@@ -14,6 +14,8 @@ public:
     Double_atack(Coords coords);
 
     bool perform_ability(Playground& playground);
+
+    ~Double_atack() = default;
 };
 
 

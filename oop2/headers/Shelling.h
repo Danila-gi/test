@@ -14,6 +14,8 @@ public:
     Shelling();
 
     bool perform_ability(Playground& playground);
+
+    ~Shelling() = default;
 };
 
 
