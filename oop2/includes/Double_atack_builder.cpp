@@ -2,7 +2,6 @@
 
 std::shared_ptr<Interface_of_abilities> Double_atack_builder::make_ability(Coords coords){
     auto p_builder = std::make_shared<Double_atack>(coords);
-    //std::cout<<"New double "<<p_builder.get()<<std::endl;
     return p_builder;
 }
 

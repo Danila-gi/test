@@ -25,6 +25,9 @@ int main(){
     for (int i = 0; i < m1.get_count_of_ships(); i++)
         p1.add_ship(m1.get_ship(i), c[i]);
 
+
+    try
+    {
     p1.shoot({6, 1});
     p1.shoot({3, 2});
     p1.shoot({7, 6});
@@ -33,6 +36,9 @@ int main(){
     p1.shoot({0, 7});
     p1.shoot({6, 4});
     p1.shoot({3, 1});
+    } catch(AtackException &err){
+        std::cout << "Error: " << err.what() << std::endl;
+    }
 
     p1.print_ground();
     m1.print_ships();
@@ -52,7 +58,7 @@ int main(){
 
     auto get = m_a.get_ability();
     if (get->is_need_arguments()){
-        auto ex = get->make_ability({7, 1});
+        auto ex = get->make_ability({7, 4});
         std::cout<<ex->perform_ability(p1)<<std::endl;
     }
     else{
@@ -60,7 +66,14 @@ int main(){
         ex->perform_ability(p1);
     }
 
-    // auto get1 = m_a.get_ability();
+    try
+    {
+        auto get1 = m_a.get_ability();
+    } catch (NoAbilitiesException &err) 
+    {
+        std::cout << "Error: " << err.what() << std::endl;
+    }
+
 
     m1.print_ships();
 
