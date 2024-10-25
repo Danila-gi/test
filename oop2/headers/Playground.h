@@ -25,6 +25,7 @@ class Playground{
 private:
     int width;
     int height;
+    int count_of_ships;
     Command* command;
     Statement_of_the_coord** arr_of_ground;
     std::map<Ship*, std::vector<Coords>> coords_of_ship;
@@ -36,9 +37,6 @@ private:
     void add_new_ability_for_skills();
 
 public:
-    friend class Scanner;
-    friend class Shelling;
-
     Playground(int p_width, int p_heigth, Command* p_command);
 
     Playground();
@@ -47,9 +45,17 @@ public:
 
     void add_ship(Ship& ship, Coords coord);
 
-    void shoot(Coords coord);
+    bool shoot(Coords coord);
 
     void print_ground();
+
+    int get_ships_count() const;
+
+    int get_width_of_playground() const;
+
+    int get_height_of_playground() const;
+
+    Statement_of_the_coord get_statment_of_coord(Coords coord) const;
 
     Playground(const Playground &obj);
     Playground(Playground &&obj);

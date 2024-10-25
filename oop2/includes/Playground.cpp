@@ -84,8 +84,10 @@ void Playground::add_new_ability_for_skills(){
 }
 
 void Playground::add_ship(Ship& ship, Coords coord){
-    if (check_ship(&ship, coord));
+    if (check_ship(&ship, coord)){
         this->put_new_ships(&ship);
+        count_of_ships++;
+    }
 }
 
 void Playground::put_new_ships(Ship* ship){
@@ -93,7 +95,7 @@ void Playground::put_new_ships(Ship* ship){
         arr_of_ground[j.y][j.x] = SHIP;
 }
 
-void Playground::shoot(Coords coord){
+bool Playground::shoot(Coords coord){
     if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height){
         throw AtackException(coord.x, coord.y);
     }
@@ -105,8 +107,7 @@ void Playground::shoot(Coords coord){
                 if (c.x == coord.x && c.y == coord.y){
                     if (pair.first->is_destroyed()){
                         std::cout<<"Ship has already destroyed"<<std::endl;
-                        index = -1;
-                        break;
+                        return false;
                     }
                     pair.first->shoot_to_segment(index);
                     std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
@@ -115,18 +116,15 @@ void Playground::shoot(Coords coord){
                         std::cout<<"Nice, you have destroyed a ship!\n";
                         add_new_ability_for_skills();
                     }
-                    break;
+                    return true;
                 }
                 index++;
             }
-            if (index == -1)
-                break;
         }
     }
-    else{
-        arr_of_ground[coord.y][coord.x] = EMPTY;
-        std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
-    }
+    arr_of_ground[coord.y][coord.x] = EMPTY;
+    std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
+    return false;
 }
 
 void Playground::print_ground(){
@@ -136,6 +134,22 @@ void Playground::print_ground(){
             std::cout << arr_of_ground[i][j] << " ";
         std::cout << "|\n";
     }
+}
+
+int Playground::get_ships_count() const{
+    return count_of_ships;
+}
+
+int Playground::get_width_of_playground() const{
+    return width;
+}
+
+int Playground::get_height_of_playground() const{
+    return height;
+}
+
+Statement_of_the_coord Playground::get_statment_of_coord(Coords coord) const{
+    return arr_of_ground[coord.y][coord.x];
 }
 
 Playground::Playground(const Playground &obj)

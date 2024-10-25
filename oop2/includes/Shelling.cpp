@@ -4,29 +4,22 @@ Shelling::Shelling() : generator(std::random_device{}()) {}
 
 bool Shelling::perform_ability(Playground& playground){
     std::cout<<"Shelling process..\n";
+    if (playground.get_ships_count() == 0)
+        return false;
     while (true){
-        std::uniform_int_distribution<int> distribution(0, playground.coords_of_ship.size() - 1);
-        const int rand_index_for_key = distribution(generator);
+        std::uniform_int_distribution<int> distribution_width(0, playground.get_width_of_playground() - 1);
+        std::uniform_int_distribution<int> distribution_height(0, playground.get_height_of_playground() - 1);
+        const int rand_coord_x = distribution_width(generator);
+        const int rand_coord_y = distribution_height(generator);
 
-        std::vector<Coords> coords;
-        int index = 0;
-        for (const auto& pair : playground.coords_of_ship) {
-            if (index == rand_index_for_key) {
-                if (pair.first->is_destroyed()){
-                    index = -1;
-                    break;
-                }
-                coords = pair.second;
-                break;
+        if (playground.get_statment_of_coord({rand_coord_x, rand_coord_y}) == SHIP){
+            if (!playground.shoot({rand_coord_x, rand_coord_y})){
+                continue;
             }
-            index++;
         }
-        if (index == -1)
+        else{
             continue;
-
-        std::uniform_int_distribution<int> vector_distribution(0, coords.size() - 1);
-        int rand_index_for_vector = vector_distribution(generator);
-        playground.shoot(coords[rand_index_for_vector]);
+        }
         return true;
     }
 

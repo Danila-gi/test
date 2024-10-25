@@ -15,6 +15,7 @@
 class Manager_of_abilities: public Command{
 private:
     std::vector<std::shared_ptr<Interface_of_builders>> vector_of_abilities;
+    std::vector<std::shared_ptr<Interface_of_builders>> vector_for_add_new_ability;
 
 public:
     Manager_of_abilities();
