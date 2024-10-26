@@ -9,18 +9,20 @@
 #include "headers/Scanner_builder.h"
 #include "headers/Shelling_builder.h"
 #include "headers/Manager_of_abilities.h"
+#include "headers/Add_ability.h"
 
 int main(){
     std::vector<Length_of_the_ship> l = {THREE, THREE, ONE, TWO, TWO, THREE, FOUR, ONE};
     Manager_of_ships m1 = Manager_of_ships(8, l);
     Manager_of_abilities m_a;
+    Add_ability* command = new Add_ability(m_a);
     m1.get_ship(4).set_orientation(Vertical);
     m1.get_ship(5).set_orientation(Vertical);
     m1.get_ship(6).set_orientation(Vertical);
     m1.get_ship(7).set_orientation(Vertical);
 
     std::vector<Coords> c = {{2, 2}, {3, 4}, {0, 0}, {6, 1}, {2, 6}, {7, 4}, {0, 4}, {4, 0}};
-    Playground p1 = Playground(8, 8, &m_a);
+    Playground p1 = Playground(8, 8, command);
 
     for (int i = 0; i < m1.get_count_of_ships(); i++)
         p1.add_ship(m1.get_ship(i), c[i]);
@@ -53,6 +55,8 @@ int main(){
         else{
             auto ex = get->make_ability();
             ex->perform_ability(p1);
+            if (std::shared_ptr<Double_atack> double_attack_ptr = std::dynamic_pointer_cast<Double_atack>(ex))
+                p1.shoot({4, 0});
         }
     }
 
@@ -64,6 +68,8 @@ int main(){
     else{
         auto ex = get->make_ability();
         ex->perform_ability(p1);
+        if (std::shared_ptr<Double_atack> double_attack_ptr = std::dynamic_pointer_cast<Double_atack>(ex))
+            p1.shoot({7, 4});
     }
 
     try

@@ -5,13 +5,8 @@
 #include "Playground.h"
 
 class Double_atack: public Interface_of_abilities{
-private:
-    Coords coords;
-
 public:
-    Double_atack();
-
-    Double_atack(Coords coords);
+    Double_atack() = default;
 
     bool perform_ability(Playground& playground);
 

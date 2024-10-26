@@ -12,15 +12,14 @@
 #include "NoAbilitiesException.h"
 #include "Command.h"
 
-class Manager_of_abilities: public Command{
+class Manager_of_abilities{
 private:
     std::vector<std::shared_ptr<Interface_of_builders>> vector_of_abilities;
-    std::vector<std::shared_ptr<Interface_of_builders>> vector_for_add_new_ability;
 
 public:
     Manager_of_abilities();
 
-    void add_ability();
+    void push_ability(std::shared_ptr<Interface_of_builders> builder);
 
     std::shared_ptr<Interface_of_builders> get_ability();
 };

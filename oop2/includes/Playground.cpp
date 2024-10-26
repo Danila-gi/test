@@ -1,7 +1,7 @@
 #include "../headers/Playground.h"
 
 Playground::Playground(int p_width, int p_heigth, Command* p_command)
-:height(p_heigth), width(p_width), command(p_command)
+:height(p_heigth), width(p_width), command(p_command), double_atack(false)
 {
     if (p_heigth <= 0 || p_width <= 0){
         std::cout<<"Incorrect sizes"<<std::endl;
@@ -23,6 +23,8 @@ Playground::~Playground(){
         delete[] arr_of_ground[i];
     delete[] arr_of_ground;
 }
+
+void Playground::set_double_atack(){double_atack = true;}
 
 bool Playground::check_point(Coords coord){
     int X = coord.x;
@@ -80,7 +82,7 @@ bool Playground::check_ship(Ship* ship, Coords coord){
 }
 
 void Playground::add_new_ability_for_skills(){
-    command->add_ability();
+    command->execute();
 }
 
 void Playground::add_ship(Ship& ship, Coords coord){
@@ -107,10 +109,19 @@ bool Playground::shoot(Coords coord){
                 if (c.x == coord.x && c.y == coord.y){
                     if (pair.first->is_destroyed()){
                         std::cout<<"Ship has already destroyed"<<std::endl;
+                        double_atack = false;
                         return false;
                     }
-                    pair.first->shoot_to_segment(index);
-                    std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
+                    if (double_atack){
+                        pair.first->shoot_to_segment(index);
+                        pair.first->shoot_to_segment(index);
+                        std::cout << "good double hit " << coord.x << ":" << coord.y << std::endl;
+                        double_atack = false;
+                    }
+                    else{
+                        pair.first->shoot_to_segment(index);
+                        std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
+                    }
                     index = -1;
                     if (pair.first->is_destroyed()){
                         std::cout<<"Nice, you have destroyed a ship!\n";

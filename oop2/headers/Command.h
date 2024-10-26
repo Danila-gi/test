@@ -3,7 +3,7 @@
 
 class Command{
 public:
-    virtual void add_ability() = 0;
+    virtual void execute() = 0;
 };
 
 #endif

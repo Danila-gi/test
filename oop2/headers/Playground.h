@@ -26,6 +26,7 @@ private:
     int width;
     int height;
     int count_of_ships;
+    bool double_atack;
     Command* command;
     Statement_of_the_coord** arr_of_ground;
     std::map<Ship*, std::vector<Coords>> coords_of_ship;
@@ -42,6 +43,8 @@ public:
     Playground();
 
     ~Playground();
+
+    void set_double_atack();
 
     void add_ship(Ship& ship, Coords coord);
 
