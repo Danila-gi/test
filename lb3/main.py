@@ -59,17 +59,7 @@ def left_rotate(x):
 
     return y
 
-
-def insert(val, node):
-    if node is None:
-        return Node(val)
-    elif val < node.val:
-        node.left = insert(val, node.left)
-    else:
-        node.right = insert(val, node.right)
-
-    node.height = 1 + max(get_height(node.left), get_height(node.right))
-
+def balance_node(node, val):
     balance = get_height(node.left) - get_height(node.right)
     if balance > 1 and val < node.left.val:
         return right_rotate(node)
@@ -84,8 +74,21 @@ def insert(val, node):
     if balance < -1 and val < node.right.val:
         node.right = right_rotate(node.right)
         return left_rotate(node)
-
     return node
+
+
+
+def insert(val, node):
+    if node is None:
+        return Node(val)
+    elif val < node.val:
+        node.left = insert(val, node.left)
+    else:
+        node.right = insert(val, node.right)
+
+    node.height = 1 + max(get_height(node.left), get_height(node.right))
+
+    return balance_node(node, val)
 
 
 def minimum(root):
@@ -118,22 +121,26 @@ def delete(node, val):
 
     node.height = 1 + max(get_height(node.left), get_height(node.right))
 
-    balance = get_height(node.left) - get_height(node.right)
-    if balance > 1 and val < node.left.val:
-        return right_rotate(node)
+    return balance_node(node, val)
 
-    if balance < -1 and val > node.right.val:
-        return left_rotate(node)
+def delete_minimum(node):
+    if node is None:
+        return None
+    if node.left is None:
+        return node.right
+    node.left = delete_minimum(node.left)
+    node.height = 1 + max(get_height(node.left), get_height(node.right))
+    return balance_node(node, node.val)
 
-    if balance > 1 and val > node.left.val:
-        node.left = left_rotate(node.left)
-        return right_rotate(node)
 
-    if balance < -1 and val < node.right.val:
-        node.right = right_rotate(node.right)
-        return left_rotate(node)
-
-    return node
+def delete_maximum(node):
+    if node is None:
+        return None
+    if node.right is None:
+        return node.left
+    node.right = delete_maximum(node.right)
+    node.height = 1 + max(get_height(node.left), get_height(node.right))
+    return balance_node(node, node.val)
 
 
 arr = [456, -125, -180, 553, 957, -181, 585, 263, -982]
