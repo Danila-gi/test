@@ -26,10 +26,14 @@ private:
     int width;
     int height;
     int count_of_ships;
-    bool double_atack;
     Command* command;
     Statement_of_the_coord** arr_of_ground;
     std::map<Ship*, std::vector<Coords>> coords_of_ship;
+
+    using ShootFunc = bool (Playground::*)(Coords coord);
+    ShootFunc original_shoot;
+    bool shoot_with_double_damage(Coords coord);
+    bool shoot_with_one_damage(Coords coord);
 
 
     void put_new_ships(Ship* ship);

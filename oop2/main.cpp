@@ -27,7 +27,6 @@ int main(){
     for (int i = 0; i < m1.get_count_of_ships(); i++)
         p1.add_ship(m1.get_ship(i), c[i]);
 
-
     try
     {
     p1.shoot({6, 1});
