@@ -8,7 +8,7 @@
 
 class Interface_of_builders{
 public:
-    virtual std::shared_ptr<Interface_of_abilities> make_ability(Coords coords = {0, 0}) = 0;
+    virtual std::shared_ptr<Interface_of_abilities> make_ability() = 0;
 
     virtual bool is_need_arguments() = 0;
 

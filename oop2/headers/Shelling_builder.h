@@ -8,7 +8,7 @@
 
 class Shelling_builder: public Interface_of_builders{
 public:
-    std::shared_ptr<Interface_of_abilities> make_ability(Coords coords = {0, 0});
+    std::shared_ptr<Interface_of_abilities> make_ability();
 
     bool is_need_arguments();
 

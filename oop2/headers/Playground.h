@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "Ship.h"
-#include "Command.h"
+#include "Command_ability.h"
 #include "ShipPlacmentException.h"
 #include "AtackException.h"
 #include <map>
@@ -26,14 +26,14 @@ private:
     int width;
     int height;
     int count_of_ships;
-    Command* command;
+    Command_ability* command;
     Statement_of_the_coord** arr_of_ground;
     std::map<Ship*, std::vector<Coords>> coords_of_ship;
 
-    using ShootFunc = bool (Playground::*)(Coords coord);
+    using ShootFunc = void (Playground::*)(Coords coord, Ship* ship, int index);
     ShootFunc original_shoot;
-    bool shoot_with_double_damage(Coords coord);
-    bool shoot_with_one_damage(Coords coord);
+    void shoot_with_double_damage(Coords coord, Ship* ship, int index);
+    void shoot_with_one_damage(Coords coord, Ship* ship, int index);
 
 
     void put_new_ships(Ship* ship);
@@ -42,7 +42,7 @@ private:
     void add_new_ability_for_skills();
 
 public:
-    Playground(int p_width, int p_heigth, Command* p_command);
+    Playground(int p_width, int p_heigth, Command_ability* p_command);
 
     Playground();
 

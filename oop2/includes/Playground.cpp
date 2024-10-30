@@ -1,6 +1,6 @@
 #include "../headers/Playground.h"
 
-Playground::Playground(int p_width, int p_heigth, Command* p_command)
+Playground::Playground(int p_width, int p_heigth, Command_ability* p_command)
 :height(p_heigth), width(p_width), command(p_command), original_shoot(&Playground::shoot_with_one_damage)
 {
     if (p_heigth <= 0 || p_width <= 0){
@@ -81,10 +81,6 @@ bool Playground::check_ship(Ship* ship, Coords coord){
     }
 }
 
-void Playground::add_new_ability_for_skills(){
-    command->execute();
-}
-
 void Playground::add_ship(Ship& ship, Coords coord){
     if (check_ship(&ship, coord)){
         this->put_new_ships(&ship);
@@ -97,75 +93,48 @@ void Playground::put_new_ships(Ship* ship){
         arr_of_ground[j.y][j.x] = SHIP;
 }
 
-bool Playground::shoot_with_one_damage(Coords coord){
-    if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height){
-        throw AtackException(coord.x, coord.y);
-    }
-    int index;
-    if (arr_of_ground[coord.y][coord.x] == SHIP){
-        for (const auto& pair: coords_of_ship){
-            index = 0;
-            for (Coords c: coords_of_ship[pair.first]){
-                if (c.x == coord.x && c.y == coord.y){
-                    if (pair.first->is_destroyed()){
-                        std::cout<<"Ship has already destroyed"<<std::endl;
-                        return false;
-                    }
-                    pair.first->shoot_to_segment(index);
-                    std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
-                    index = -1;
-                    if (pair.first->is_destroyed()){
-                        std::cout<<"Nice, you have destroyed a ship!\n";
-                        add_new_ability_for_skills();
-                    }
-                    return true;
-                }
-                index++;
-            }
-        }
-    }
-    arr_of_ground[coord.y][coord.x] = EMPTY;
-    std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
-    return false;
+void Playground::shoot_with_one_damage(Coords coord, Ship* ship, int index){
+    ship->shoot_to_segment(index);
+    std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
 }
 
-bool Playground::shoot_with_double_damage(Coords coord){
-    if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height){
-        throw AtackException(coord.x, coord.y);
-    }
-    int index;
-    if (arr_of_ground[coord.y][coord.x] == SHIP){
-        for (const auto& pair: coords_of_ship){
-            index = 0;
-            for (Coords c: coords_of_ship[pair.first]){
-                if (c.x == coord.x && c.y == coord.y){
-                    if (pair.first->is_destroyed()){
-                        std::cout<<"Ship has already destroyed"<<std::endl;
-                        original_shoot = &Playground::shoot_with_one_damage;
-                        return false;
-                    }
-                    pair.first->shoot_to_segment(index);
-                    pair.first->shoot_to_segment(index);
-                    std::cout << "good double hit " << coord.x << ":" << coord.y << std::endl;
-                    index = -1;
-                    if (pair.first->is_destroyed()){
-                        std::cout<<"Nice, you have destroyed a ship!\n";
-                        add_new_ability_for_skills();
-                    }
-                    original_shoot = &Playground::shoot_with_one_damage;
-                    return true;
-                }
-                index++;
-            }
-        }
-    }
-    arr_of_ground[coord.y][coord.x] = EMPTY;
-    std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
-    return false;
+void Playground::shoot_with_double_damage(Coords coord, Ship* ship, int index){
+    ship->shoot_to_segment(index);
+    ship->shoot_to_segment(index);
+    std::cout << "good double hit " << coord.x << ":" << coord.y << std::endl;
+    original_shoot = &Playground::shoot_with_one_damage;
 }
 
 bool Playground::shoot(Coords coord) {
-    return (this->*original_shoot)(coord);
+    if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height){
+        throw AtackException(coord.x, coord.y);
+    }
+    int index;
+    if (arr_of_ground[coord.y][coord.x] == SHIP){
+        for (const auto& pair: coords_of_ship){
+            index = 0;
+            for (Coords c: coords_of_ship[pair.first]){
+                if (c.x == coord.x && c.y == coord.y){
+                    if (pair.first->is_destroyed()){
+                        std::cout<<"Ship has already destroyed"<<std::endl;
+                        return false;
+                    }
+                    (this->*original_shoot)(coord, pair.first, index);
+                    index = -1;
+                    if (pair.first->is_destroyed()){
+                        std::cout<<"Nice, you have destroyed a ship!\n";
+                        command->add_ability();
+                    }
+                    return true;
+                }
+                index++;
+            }
+        }
+    }
+    arr_of_ground[coord.y][coord.x] = EMPTY;
+    std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
+    return false;
+    //return (this->*original_shoot)(coord);
 }
 
 void Playground::print_ground(){

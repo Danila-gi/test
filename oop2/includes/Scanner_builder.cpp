@@ -1,8 +1,9 @@
 #include "../headers/Scanner_builder.h"
 
-std::shared_ptr<Interface_of_abilities> Scanner_builder::make_ability(Coords coords){
-    auto p_builder = std::make_shared<Scanner>(coords);
-    //std::cout<<"New scanner "<<p_builder.get()<<std::endl;
+Scanner_builder::Scanner_builder(Command_coords* p_command):command(p_command){}
+
+std::shared_ptr<Interface_of_abilities> Scanner_builder::make_ability(){
+    auto p_builder = std::make_shared<Scanner>(command->get_coords());
     return p_builder;
 }
 

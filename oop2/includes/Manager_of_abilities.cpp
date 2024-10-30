@@ -1,10 +1,12 @@
 #include "../headers/Manager_of_abilities.h"
 
-Manager_of_abilities::Manager_of_abilities()
+Manager_of_abilities::Manager_of_abilities(Command_coords* p_command)
 {
     vector_of_abilities.push_back(std::make_shared<Shelling_builder>());
-    vector_of_abilities.push_back(std::make_shared<Scanner_builder>());
+    vector_of_abilities.push_back(std::make_shared<Scanner_builder>(p_command));
     vector_of_abilities.push_back(std::make_shared<Double_atack_builder>());
+
+    test_vector_for_getting_objects = vector_of_abilities;
 
     std::random_device rd;
     std::mt19937 g(rd());
@@ -24,4 +26,8 @@ std::shared_ptr<Interface_of_builders> Manager_of_abilities::get_ability(){
     auto builder = vector_of_abilities.back();
     vector_of_abilities.pop_back();
     return builder;
+}
+
+std::vector<std::shared_ptr<Interface_of_builders>> Manager_of_abilities::get_vector_of_three_abilities() const{
+    return test_vector_for_getting_objects;
 }

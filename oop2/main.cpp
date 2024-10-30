@@ -10,11 +10,14 @@
 #include "headers/Shelling_builder.h"
 #include "headers/Manager_of_abilities.h"
 #include "headers/Add_ability.h"
+#include "headers/Get_coords.h"
 
 int main(){
     std::vector<Length_of_the_ship> l = {THREE, THREE, ONE, TWO, TWO, THREE, FOUR, ONE};
     Manager_of_ships m1 = Manager_of_ships(8, l);
-    Manager_of_abilities m_a;
+    Coords coords_for_scanner;
+    Get_coords* get_cor = new Get_coords(coords_for_scanner);
+    Manager_of_abilities m_a(get_cor);
     Add_ability* command = new Add_ability(m_a);
     m1.get_ship(4).set_orientation(Vertical);
     m1.get_ship(5).set_orientation(Vertical);
@@ -48,7 +51,8 @@ int main(){
     for (int i = 0; i < 4; i++){
         auto get = m_a.get_ability();
         if (get->is_need_arguments()){
-            auto ex = get->make_ability({4, 0});
+            coords_for_scanner = {4, 0};
+            auto ex = get->make_ability();
             std::cout<<ex->perform_ability(p1)<<std::endl;
         }
         else{
@@ -61,7 +65,8 @@ int main(){
 
     auto get = m_a.get_ability();
     if (get->is_need_arguments()){
-        auto ex = get->make_ability({7, 4});
+        coords_for_scanner = {7, 4};
+        auto ex = get->make_ability();
         std::cout<<ex->perform_ability(p1)<<std::endl;
     }
     else{
