@@ -1,7 +1,8 @@
 #include "../headers/Playground.h"
 
 Playground::Playground(int p_width, int p_heigth, Command_ability* p_command)
-:height(p_heigth), width(p_width), command(p_command), original_shoot(&Playground::shoot_with_one_damage)
+:height(p_heigth), width(p_width), command(p_command),
+original_shoot([this](Coords coord, Ship* ship, int index){return this->shoot_with_n_damage(coord, ship, index, 1);})
 {
     if (p_heigth <= 0 || p_width <= 0){
         std::cout<<"Incorrect sizes"<<std::endl;
@@ -23,8 +24,6 @@ Playground::~Playground(){
         delete[] arr_of_ground[i];
     delete[] arr_of_ground;
 }
-
-void Playground::set_double_atack(){original_shoot = &Playground::shoot_with_double_damage;}
 
 bool Playground::check_point(Coords coord){
     int X = coord.x;
@@ -93,16 +92,22 @@ void Playground::put_new_ships(Ship* ship){
         arr_of_ground[j.y][j.x] = SHIP;
 }
 
-void Playground::shoot_with_one_damage(Coords coord, Ship* ship, int index){
-    ship->shoot_to_segment(index);
-    std::cout << "good hit " << coord.x << ":" << coord.y << std::endl;
+void Playground::set_multiple_attack(int num_attacks) {
+    original_shoot = [this, num_attacks](Coords coord, Ship* ship, int index) {
+        return shoot_with_n_damage(coord, ship, index, num_attacks);
+    };
 }
 
-void Playground::shoot_with_double_damage(Coords coord, Ship* ship, int index){
-    ship->shoot_to_segment(index);
-    ship->shoot_to_segment(index);
-    std::cout << "good double hit " << coord.x << ":" << coord.y << std::endl;
-    original_shoot = &Playground::shoot_with_one_damage;
+bool Playground::shoot_with_n_damage(Coords coord, Ship* ship, int index, int damage){
+    for (int i = 0; i < damage; i++)
+        ship->shoot_to_segment(index);
+    if (damage == 1){
+        std::cout<< "good hit " << coord.x << ":" << coord.y << std::endl;
+        return true;
+    }
+    std::cout<< "good " << damage << "-force hit " << coord.x << ":" << coord.y << std::endl;
+    set_multiple_attack(1);
+    return true;
 }
 
 bool Playground::shoot(Coords coord) {
@@ -117,9 +122,10 @@ bool Playground::shoot(Coords coord) {
                 if (c.x == coord.x && c.y == coord.y){
                     if (pair.first->is_destroyed()){
                         std::cout<<"Ship has already destroyed"<<std::endl;
+                        set_multiple_attack(1);
                         return false;
                     }
-                    (this->*original_shoot)(coord, pair.first, index);
+                    original_shoot(coord, pair.first, index);
                     index = -1;
                     if (pair.first->is_destroyed()){
                         std::cout<<"Nice, you have destroyed a ship!\n";

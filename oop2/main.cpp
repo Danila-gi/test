@@ -11,13 +11,16 @@
 #include "headers/Manager_of_abilities.h"
 #include "headers/Add_ability.h"
 #include "headers/Get_coords.h"
+#include "headers/Ability_maker.h"
 
 int main(){
     std::vector<Length_of_the_ship> l = {THREE, THREE, ONE, TWO, TWO, THREE, FOUR, ONE};
     Manager_of_ships m1 = Manager_of_ships(8, l);
+
     Coords coords_for_scanner;
     Get_coords* get_cor = new Get_coords(coords_for_scanner);
-    Manager_of_abilities m_a(get_cor);
+    Ability_maker maker = Ability_maker(get_cor);
+    Manager_of_abilities m_a(maker);
     Add_ability* command = new Add_ability(m_a);
     m1.get_ship(4).set_orientation(Vertical);
     m1.get_ship(5).set_orientation(Vertical);
