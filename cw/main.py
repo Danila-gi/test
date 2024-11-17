@@ -35,8 +35,9 @@ class ProctoringSystem:
         return heap.find_node(record)
 
     def print_records_of_group(self, group):
+        print("Group:", group)
         for i in self.hash_groups.find(group).get_nodes_in_right_order():
-            print(i.student_name)
+            print(i.student_name, i.suspicion)
 
     def add_group(self, group):
         self.hash_groups.insert(group, Heap())
@@ -52,10 +53,11 @@ class ProctoringSystem:
         return self.hash_groups.find(group)
 
     def print_top10_records(self):
+        print("Top 10")
         for i in self.top_records:
             if i is None:
                 break
-            print(i.student_name)
+            print(i.student_name, i.group_number, i.suspicion)
 
 
 sys = ProctoringSystem()
@@ -70,10 +72,29 @@ sys.add_record("hhhh", 88, 3342)
 sys.add_record("Pushtk", 1, 3342)
 sys.add_record("Dinar TTT", 22, 3342)
 
-sys.del_record("Dinar TTT", 3342)
+sys.add_record("gdfsf", 57, 3343)
+sys.add_record("dgfd Stdsfasepan", 48, 3343)
+sys.add_record("yyui", 21, 3343)
+sys.add_record("IIII", 99, 3343)
+
+sys.add_record("suigd", 45, 3381)
+sys.add_record("fhfgh fhfg", 19, 3381)
+sys.add_record("fhf fhfd", 34, 3381)
+sys.add_record("fh df s", 78, 3381)
+sys.add_record(";'sk sudhg", 2, 3381)
+sys.add_record("!!!!", 22, 3381)
+sys.add_record("gdfgjo dojbg", 57, 3381)
+sys.add_record("SSRTT", 43, 3381)
+sys.add_record("SSRF", 81, 3381)
+sys.add_record("ugff cdf", 49, 3381)
+
 
 sys.print_groups()
 print('-----------')
 sys.print_records_of_group(3342)
+print('-----------')
+sys.print_records_of_group(3343)
+print('-----------')
+sys.print_records_of_group(3381)
 print('--------')
 sys.print_top10_records()
