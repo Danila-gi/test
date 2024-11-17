@@ -31,11 +31,12 @@ class Heap:
     def add_node(self, node):
         if self.heap_size == 0:
             self.heap.append(node)
+            self.heap_size += 1
         else:
             self.heap.append(node)
+            self.heap_size += 1
             for i in range((self.heap_size // 2) - 1, -1, -1):
                 self._heapify_down(self.heap, self.heap_size, i)
-        self.heap_size += 1
 
     def remove_node(self, node):
         i = 0
