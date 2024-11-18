@@ -3,10 +3,10 @@ CFLAGS=-c
 
 all: Ship.o Manager_of_ships.o Playground.o Interface_of_abilities.o Interface_of_builders.o Double_atack.o Scanner.o Shelling.o \
 Double_atack_builder.o Scanner_builder.o Shelling_builder.o Manager_of_abilities.o NoAbilitiesException.o ShipPlacmentException.o AtackException.o \
-Add_ability.o Get_coords.o main.o
+Add_ability.o Get_coords.o Ability_maker.o Paint.o Player.o Enemy.o Game.o main.o
 	$(CC) main.o Ship.o Manager_of_ships.o Playground.o Interface_of_abilities.o Interface_of_builders.o Double_atack.o Scanner.o Shelling.o \
 	 Double_atack_builder.o Scanner_builder.o Shelling_builder.o Manager_of_abilities.o NoAbilitiesException.o ShipPlacmentException.o AtackException.o \
-	 Add_ability.o Get_coords.o -o oop
+	 Add_ability.o Get_coords.o Ability_maker.o Paint.o Player.o Enemy.o Game.o -o oop
 
 Ship.o: includes/Ship.cpp
 	$(CC) $(CFLAGS)  includes/Ship.cpp
@@ -50,6 +50,9 @@ Add_ability.o: includes/Add_ability.cpp
 Get_coords.o: includes/Get_coords.cpp
 	$(CC) $(CFLAGS)  includes/Get_coords.cpp
 
+Ability_maker.o: includes/Ability_maker.cpp
+	$(CC) $(CFLAGS)  includes/Ability_maker.cpp
+
 NoAbilitiesException.o: includes/NoAbilitiesException.cpp
 	$(CC) $(CFLAGS)  includes/NoAbilitiesException.cpp
 
@@ -58,6 +61,18 @@ ShipPlacmentException.o: includes/ShipPlacmentException.cpp
 
 AtackException.o: includes/AtackException.cpp
 	$(CC) $(CFLAGS)  includes/AtackException.cpp
+
+Paint.o: includes/Paint.cpp
+	$(CC) $(CFLAGS)  includes/Paint.cpp
+
+Player.o: includes/Player.cpp
+	$(CC) $(CFLAGS)  includes/Player.cpp
+
+Enemy.o: includes/Enemy.cpp
+	$(CC) $(CFLAGS)  includes/Enemy.cpp
+
+Game.o: includes/Game.cpp
+	$(CC) $(CFLAGS)  includes/Game.cpp
 
 main.o: main.cpp
 	$(CC) $(CFLAGS)  main.cpp

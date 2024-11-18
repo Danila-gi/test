@@ -12,21 +12,21 @@
 #include "NoAbilitiesException.h"
 #include "Command_ability.h"
 #include "Command_coords.h"
+#include "Ability_maker.h"
 
 class Manager_of_abilities{
 private:
     std::vector<std::shared_ptr<Interface_of_builders>> vector_of_abilities;
 
-    Command_coords* command;
+    Ability_maker& maker;
 
 public:
-    Manager_of_abilities(Command_coords* p_command);
+    Manager_of_abilities() = default;
+    Manager_of_abilities(Ability_maker& maker);
 
-    void push_ability(std::shared_ptr<Interface_of_builders> builder);
+    void push_ability(Name_of_builder builder);
 
     std::shared_ptr<Interface_of_builders> get_ability();
-
-    std::vector<std::shared_ptr<Interface_of_builders>> get_vector_of_three_abilities() const;
 };
 
 #endif

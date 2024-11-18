@@ -3,6 +3,7 @@
 
 #include "Command_ability.h"
 #include "Manager_of_abilities.h"
+#include "Ability_maker.h"
 
 class Add_ability: public Command_ability{
 private:

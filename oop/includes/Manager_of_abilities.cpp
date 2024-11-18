@@ -1,10 +1,10 @@
 #include "../headers/Manager_of_abilities.h"
 
-Manager_of_abilities::Manager_of_abilities(Command_coords* p_command):command(p_command)
+Manager_of_abilities::Manager_of_abilities(Ability_maker& maker):maker(maker)
 {
-    vector_of_abilities.push_back(std::make_shared<Shelling_builder>());
-    vector_of_abilities.push_back(std::make_shared<Scanner_builder>(command));
-    vector_of_abilities.push_back(std::make_shared<Double_atack_builder>());
+    vector_of_abilities.push_back(maker.get_builder(DoubleAtack));
+    vector_of_abilities.push_back(maker.get_builder(Scanner));
+    vector_of_abilities.push_back(maker.get_builder(Shelling));
 
     std::random_device rd;
     std::mt19937 g(rd());
@@ -13,9 +13,9 @@ Manager_of_abilities::Manager_of_abilities(Command_coords* p_command):command(p_
 
 }
 
-void Manager_of_abilities::push_ability(std::shared_ptr<Interface_of_builders> builder){
+void Manager_of_abilities::push_ability(Name_of_builder builder){
     std::cout<<"You get new ability!\n";
-    vector_of_abilities.push_back(builder);
+    vector_of_abilities.push_back(maker.get_builder(builder));
 }
 
 std::shared_ptr<Interface_of_builders> Manager_of_abilities::get_ability(){
@@ -24,11 +24,4 @@ std::shared_ptr<Interface_of_builders> Manager_of_abilities::get_ability(){
     auto builder = vector_of_abilities.back();
     vector_of_abilities.pop_back();
     return builder;
-}
-
-std::vector<std::shared_ptr<Interface_of_builders>> Manager_of_abilities::get_vector_of_three_abilities() const{
-    std::vector<std::shared_ptr<Interface_of_builders>> vector_for_add_new_ability = {std::make_shared<Shelling_builder>(), 
-                                                                                        std::make_shared<Scanner_builder>(command),  
-                                                                                        std::make_shared<Double_atack_builder>()};
-    return vector_for_add_new_ability;
 }

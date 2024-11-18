@@ -2,6 +2,6 @@
 
 bool Double_atack::perform_ability(Playground& playground){
     std::cout<<"Double atack process...\n";
-    playground.set_double_atack();
+    playground.set_multiple_attack(2);
     return true;
 }
