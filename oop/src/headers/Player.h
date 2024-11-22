@@ -24,6 +24,11 @@ private:
     std::vector<Orientation> orientations_of_ships;
 public:
     Player();
+    ~Player();
+
+    void set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships, 
+    std::vector<Coords> coords_of_ships, std::vector<Orientation> orientations_of_ships);
+
 
     void perform_shoot(Playground& enemy_playground, Coords coord);
 

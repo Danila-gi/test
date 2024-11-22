@@ -29,6 +29,8 @@ private:
 public:
     Game();
 
+    void input_ships();
+
     void play();
 
     void start_new_game();

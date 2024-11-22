@@ -17,7 +17,7 @@
 
 int main(){
     Game game;
-    game.play();
+    game.start_new_game();
 
     return 0;
 }

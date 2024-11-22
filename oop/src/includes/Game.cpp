@@ -3,15 +3,25 @@
 Game::Game(){
     this->player = std::make_shared<Player>();
     this->enemy = std::make_shared<Enemy>();
+    this->game_state = new Game_state(player, enemy, current_round);
     this->painter = Paint();
-    current_round = 1;
-    is_player_turn = true;
-    game_state = new Game_state(player, enemy, is_player_turn, current_round);
+}
 
-    this->load_game("../game.txt");
+void Game::input_ships(){
+    int ships_count = 10;
+    std::vector<Length_of_the_ship> length_of_ships = {FOUR, THREE, THREE, TWO, TWO, TWO, ONE, ONE, ONE, ONE};
+    std::vector<Length_of_the_ship> l_for_enemy = {TWO, ONE};
+    std::vector<Coords> coords_of_ships = {{2, 2}, {3, 4}, {0, 0}, {6, 0}, {1, 6}, {7, 4}, {0, 4}, {4, 0}, {9, 0}, {7, 7}};
+    std::vector<Orientation> orientations_of_ships = {Horizontal, Vertical, Vertical, Horizontal, Vertical, Horizontal, Vertical, Vertical, Horizontal, Horizontal};
+
+    this->player->set_arguments(10, 10, length_of_ships, coords_of_ships, orientations_of_ships);
+    this->enemy->set_arguments(10, 10, l_for_enemy);
+    this->game_state = new Game_state(player, enemy, current_round);
+    this->enemy->put_ships();
 }
 
 void Game::play(){
+    std::cout << "Round number: " << current_round << std::endl;
     while (true)
     {
         if (is_player_turn){
@@ -78,15 +88,26 @@ void Game::enemy_turn(){
 void Game::start_next_round(){
     std::cout<<"Start new round!"<<std::endl;
     current_round++;
-    this->enemy = std::make_shared<Enemy>();
-    game_state = new Game_state(player, enemy, is_player_turn, current_round);
+    this->enemy->clear_ships();
+    this->enemy->put_ships();
+    game_state = new Game_state(player, enemy, current_round);
     this->play();
 }
 
 void Game::start_new_game(){
+    current_round = 1;
+    is_player_turn = true;
+
     std::cout<<"Start new game!"<<std::endl;
-    this->player = std::make_shared<Player>();
-    this->enemy = std::make_shared<Enemy>();
+    int choose_start;
+    std::cout << "Choose. Input ships (0) or load game (1)" << std::endl;
+    std::cin >> choose_start;
+    if (choose_start == 0){
+        input_ships();
+    }
+    else if (choose_start == 1){
+        this->load_game("../game.txt");
+    }
     this->play();
 }
 
@@ -97,7 +118,7 @@ void Game::save_game(const std::string& filename) {
 void Game::load_game(const std::string& filename) {
     auto tempPlayer = std::make_shared<Player>();
     auto tempEnemy = std::make_shared<Enemy>();
-    Game_state tempGameState(tempPlayer, tempEnemy, 1, true);
+    Game_state tempGameState(tempPlayer, tempEnemy, current_round);
 
     tempGameState.load(filename);
 

@@ -1,12 +1,20 @@
 #include "../headers/Enemy.h"
 
 Enemy::Enemy(){
-    length_of_ships = {TWO, ONE};
-    ships_manager = new Manager_of_ships(2, length_of_ships);
+}
 
-    playground = new Playground(10, 10, nullptr);
+Enemy::~Enemy(){
+    delete ships_manager;
+    delete playground;
+}
 
-    this->put_ships();
+void Enemy::set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships){
+    this->length_of_ships = length_of_ships;
+    this->coords_of_ships = coords_of_ships;
+    this->orientations_of_ships = orientations_of_ships;
+
+    playground = new Playground(height, width, nullptr);
+    ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 }
 
 void Enemy::perform_shoot(Playground& enemy_playground, Coords coord){
@@ -15,6 +23,16 @@ void Enemy::perform_shoot(Playground& enemy_playground, Coords coord){
 
 Playground& Enemy::get_playground(){
     return *playground;
+}
+
+void Enemy::clear_ships(){
+    ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
+    coords_of_ships.clear();
+
+    int old_height = playground->get_height_of_playground();
+    int old_width = playground->get_width_of_playground();
+
+    playground = new Playground(old_height, old_width, nullptr);
 }
 
 void Enemy::put_ships(){
@@ -59,6 +77,7 @@ void Enemy::serialize(std::ostream& os) const {
         os << "\n";
     }
     playground->serialize(os);
+    //std::cout<<"ok\n";
 
     for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
         os << coords_of_ships[i].x << " " << coords_of_ships[i].y << "\n";
@@ -68,13 +87,12 @@ void Enemy::serialize(std::ostream& os) const {
 void Enemy::deserialize(std::istream& is) {
     int ships_count;
     is >> ships_count;
-    std::vector<Length_of_the_ship> length;
     for (int i = 0; i < ships_count; i++){
         int l;
         is >> l;
-        length.push_back(static_cast<Length_of_the_ship>(l));
+        length_of_ships.push_back(static_cast<Length_of_the_ship>(l));
     }
-    ships_manager = new Manager_of_ships(ships_count, length);
+    ships_manager = new Manager_of_ships(ships_count, length_of_ships);
 
     for (int i = 0; i < ships_count; i++){
         int orientation;
@@ -92,11 +110,15 @@ void Enemy::deserialize(std::istream& is) {
             }
         }
     }
+    int width, height;
+    is >> height >> width;
+    playground = new Playground(height, width, nullptr);
     playground->deserialize(is);
 
     for (int i = 0; i < ships_count; i++){
         int x, y;
         is >> x >> y;
         playground->add_ship(ships_manager->get_ship(i), {x, y});
+        coords_of_ships.push_back({x, y});
     }
 }

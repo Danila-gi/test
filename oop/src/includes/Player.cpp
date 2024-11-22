@@ -1,19 +1,34 @@
 #include "../headers/Player.h"
 
-Player::Player(){
-    length_of_ships = {FOUR, THREE, THREE, TWO, TWO, TWO, ONE, ONE, ONE, ONE};
-    coords_of_ships = {{2, 2}, {3, 4}, {0, 0}, {6, 0}, {1, 6}, {7, 4}, {0, 4}, {4, 0}, {9, 0}, {7, 7}};
-    orientations_of_ships = {Horizontal, Vertical, Vertical, Horizontal, Vertical, Horizontal, Vertical, Vertical, Horizontal, Horizontal};
-    ships_manager = new Manager_of_ships(10, length_of_ships);
+//Player::Player(){}
 
+Player::Player(){
     get_cor = new Get_coords(coords_for_scanner);
     maker = new Ability_maker(get_cor);
     ability_manager = new Manager_of_abilities(*maker);
     add_abil = new Add_ability(*ability_manager);
+}
 
-    playground = new Playground(10, 10, nullptr);
+Player::~Player(){
+    delete ships_manager;
+    delete get_cor;
+    delete maker;
+    delete ability_manager;
+    delete add_abil;
+    delete playground;
+}
+
+void Player::set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, 
+std::vector<Orientation> orientations_of_ships){
+    this->length_of_ships = length_of_ships;
+    this->coords_of_ships = coords_of_ships;
+    this->orientations_of_ships = orientations_of_ships;
+
+    playground = new Playground(height, width, nullptr);
+    ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 
     this->put_ships();
+
 }
 
 void Player::perform_shoot(Playground& enemy_playground, Coords coord){
@@ -79,13 +94,12 @@ void Player::serialize(std::ostream& os) const {
         }
         os << "\n";
     }
-
     playground->serialize(os);
 
     for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
         os << coords_of_ships[i].x << " " << coords_of_ships[i].y << "\n";
     }
-
+    
     os << ability_manager->get_names_of_abilies().size() << " ";
     for (int i = 0; i < ability_manager->get_names_of_abilies().size(); i++)
         os << ability_manager->get_names_of_abilies()[i] << " ";
@@ -96,13 +110,12 @@ void Player::serialize(std::ostream& os) const {
 void Player::deserialize(std::istream& is) {
     int ships_count;
     is >> ships_count;
-    std::vector<Length_of_the_ship> length;
     for (int i = 0; i < ships_count; i++){
         int l;
         is >> l;
-        length.push_back(static_cast<Length_of_the_ship>(l));
+        length_of_ships.push_back(static_cast<Length_of_the_ship>(l));
     }
-    ships_manager = new Manager_of_ships(ships_count, length);
+    ships_manager = new Manager_of_ships(ships_count, length_of_ships);
 
     for (int i = 0; i < ships_count; i++){
         int orientation;
@@ -120,6 +133,9 @@ void Player::deserialize(std::istream& is) {
             }
         }
     }
+    int width, height;
+    is >> height >> width;
+    playground = new Playground(height, width, nullptr);
     playground->deserialize(is);
 
     for (int i = 0; i < ships_count; i++){
@@ -127,6 +143,7 @@ void Player::deserialize(std::istream& is) {
         is >> x >> y;
         //std::cout<<x<<" "<<y<<" "<<ships_manager->get_ship(i).get_orientation()<<std::endl;
         playground->add_ship(ships_manager->get_ship(i), {x, y});
+        coords_of_ships.push_back({x, y});
     }
 
     ability_manager->clear_manager();

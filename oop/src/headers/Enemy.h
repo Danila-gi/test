@@ -17,10 +17,14 @@ private:
     std::vector<Orientation> orientations_of_ships;
 public:
     Enemy();
+    ~Enemy();
 
+    void set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships);
     void perform_shoot(Playground& enemy_playground, Coords coord);
 
     void put_ships();
+
+    void clear_ships();
 
     Playground& get_playground();
 

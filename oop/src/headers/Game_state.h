@@ -9,11 +9,11 @@ class Game_state {
 private:
     std::shared_ptr<Player> player;
     std::shared_ptr<Enemy> enemy;
-    int current_round;
-    bool is_player_turn;
+    int& current_round;
+    //bool is_player_turn;
 
 public:
-    Game_state(std::shared_ptr<Player> player, std::shared_ptr<Enemy> enemy, bool is_player_turn, int current_round);
+    Game_state(std::shared_ptr<Player> player, std::shared_ptr<Enemy> enemy, int& current_round);
     void save(const std::string& filename) const;
     void load(const std::string& filename);
     friend std::ostream& operator<<(std::ostream& os, const Game_state& state);

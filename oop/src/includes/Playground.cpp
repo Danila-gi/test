@@ -259,7 +259,6 @@ void Playground::serialize(std::ostream& os) const {
 }
 
 void Playground::deserialize(std::istream& is) {
-    is >> width >> height;
     count_of_ships = 0;
 
     arr_of_ground = new Statement_of_the_coord*[height];
