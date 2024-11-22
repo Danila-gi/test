@@ -7,6 +7,7 @@
 #include "Manager_of_ships.h"
 #include "Get_coords.h"
 #include "Add_ability.h"
+#include "FileWrapper.h"
 
 class Player{
 private:
@@ -38,8 +39,8 @@ public:
 
     void put_ships();
 
-    void serialize(std::ostream& os) const;
-    void deserialize(std::istream& is);
+    void serialize(FileWrapper& file) const;
+    void deserialize(FileWrapper& file);
 };
 
 #endif

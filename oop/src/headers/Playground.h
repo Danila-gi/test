@@ -11,6 +11,7 @@
 #include <vector>
 #include <cstdint>
 #include <fstream>
+#include "FileWrapper.h"
 
 enum Statement_of_the_coord{
     UNKNOWN = 2,
@@ -64,8 +65,8 @@ public:
     Playground& operator=(const Playground &obj);
     Playground& operator=(Playground &&obj);
 
-    void serialize(std::ostream& os) const;
-    void deserialize(std::istream& is);
+    void serialize(FileWrapper& file) const;
+    void deserialize(FileWrapper& file);
 };
 
 

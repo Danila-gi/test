@@ -82,48 +82,60 @@ void Player::put_ships(){
     }    
 }
 
-void Player::serialize(std::ostream& os) const {
-    os << ships_manager->get_count_of_ships() << "\n";
-    for (int i = 0; i < ships_manager->get_count_of_ships(); i++)
-        os << static_cast<int>(length_of_ships[i]) << " ";
-    os << "\n";
-    for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
-        os << static_cast<int>(ships_manager->get_ship(i).get_orientation()) << " ";
-        for (int j = 0; j < ships_manager->get_ship(i).get_length(); j++){
-            os << static_cast<int>(ships_manager->get_ship(i).get_segment_by_index(j)) << " ";
-        }
-        os << "\n";
-    }
-    playground->serialize(os);
+void Player::serialize(FileWrapper& file) const {
+    file.write(ships_manager->get_count_of_ships());
+    file.write('\n');
 
     for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
-        os << coords_of_ships[i].x << " " << coords_of_ships[i].y << "\n";
+        file.write(static_cast<int>(length_of_ships[i]));
+        file.write(' ');
+    }
+    file.write('\n');
+
+    for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
+        file.write(static_cast<int>(ships_manager->get_ship(i).get_orientation()));
+        file.write(' ');
+        for (int j = 0; j < ships_manager->get_ship(i).get_length(); j++){
+            file.write(static_cast<int>(ships_manager->get_ship(i).get_segment_by_index(j)));
+            file.write(' ');
+        }
+        file.write('\n');
+    }
+    playground->serialize(file);
+
+    for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
+        file.write(coords_of_ships[i].x);
+        file.write(' ');
+        file.write(coords_of_ships[i].y);
+        file.write('\n');
     }
     
-    os << ability_manager->get_names_of_abilies().size() << " ";
-    for (int i = 0; i < ability_manager->get_names_of_abilies().size(); i++)
-        os << ability_manager->get_names_of_abilies()[i] << " ";
-    os << "\n";
-    //os << "--------------\n";
+    file.write(static_cast<int>(ability_manager->get_names_of_abilies().size()));
+    file.write(' ');
+    for (int i = 0; i < ability_manager->get_names_of_abilies().size(); i++){
+        file.write(static_cast<int>(ability_manager->get_names_of_abilies()[i]));
+        file.write(' ');
+    }
+    file.write('\n');
 }
 
-void Player::deserialize(std::istream& is) {
+void Player::deserialize(FileWrapper& file) {
     int ships_count;
-    is >> ships_count;
+    file.read(ships_count);
     for (int i = 0; i < ships_count; i++){
         int l;
-        is >> l;
+        file.read(l);
         length_of_ships.push_back(static_cast<Length_of_the_ship>(l));
     }
     ships_manager = new Manager_of_ships(ships_count, length_of_ships);
 
     for (int i = 0; i < ships_count; i++){
         int orientation;
-        is >> orientation;
+        file.read(orientation);
         ships_manager->get_ship(i).set_orientation(static_cast<Orientation>(orientation));
         for (int j = 0; j < ships_manager->get_ship(i).get_length(); j++){
             int segment;
-            is >> segment;
+            file.read(segment);
             if (segment == 1){
                 ships_manager->get_ship(i).shoot_to_segment(j);
             }
@@ -134,24 +146,26 @@ void Player::deserialize(std::istream& is) {
         }
     }
     int width, height;
-    is >> height >> width;
+    file.read(height);
+    file.read(width);
+
     playground = new Playground(height, width, nullptr);
-    playground->deserialize(is);
+    playground->deserialize(file);
 
     for (int i = 0; i < ships_count; i++){
         int x, y;
-        is >> x >> y;
-        //std::cout<<x<<" "<<y<<" "<<ships_manager->get_ship(i).get_orientation()<<std::endl;
+        file.read(x);
+        file.read(y);
         playground->add_ship(ships_manager->get_ship(i), {x, y});
         coords_of_ships.push_back({x, y});
     }
 
     ability_manager->clear_manager();
     int count_abilities;
-    is >> count_abilities;
+    file.read(count_abilities);
     for (int i = 0; i < count_abilities; i++){
         int name;
-        is >> name;
+        file.read(name);
         ability_manager->push_ability(static_cast<Name_of_builder>(name));
     }
 }

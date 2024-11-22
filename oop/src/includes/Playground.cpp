@@ -248,17 +248,22 @@ Playground& Playground::operator=(Playground &&obj)
     return *this;
 }
 
-void Playground::serialize(std::ostream& os) const {
-    os << height << " " << width << "\n";
+void Playground::serialize(FileWrapper& file) const {
+    file.write(height);
+    file.write(' ');
+    file.write(width);
+    file.write('\n');
+
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
-            os << static_cast<int>(arr_of_ground[i][j]) << " ";
+            file.write(static_cast<int>(arr_of_ground[i][j]));
+            file.write(' ');
         }
-        os << "\n";
+        file.write('\n');
     }
 }
 
-void Playground::deserialize(std::istream& is) {
+void Playground::deserialize(FileWrapper& file) {
     count_of_ships = 0;
 
     arr_of_ground = new Statement_of_the_coord*[height];
@@ -266,7 +271,7 @@ void Playground::deserialize(std::istream& is) {
         arr_of_ground[i] = new Statement_of_the_coord[width];
         for (int j = 0; j < height; ++j) {
             int value;
-            is >> value;
+            file.read(value);
             if (value == 1)
                 arr_of_ground[i][j] = EMPTY;
             else

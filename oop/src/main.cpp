@@ -14,6 +14,7 @@
 #include "headers/Ability_maker.h"
 #include "headers/Paint.h"
 #include "headers/Game.h"
+#include "headers/FileWrapper.h"
 
 int main(){
     Game game;

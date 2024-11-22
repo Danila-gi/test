@@ -6,6 +6,7 @@
 #include "Manager_of_abilities.h"
 #include "Manager_of_ships.h"
 #include "Add_ability.h"
+#include "FileWrapper.h"
 
 class Enemy{
 private:
@@ -28,8 +29,8 @@ public:
 
     Playground& get_playground();
 
-    void serialize(std::ostream& os) const;
-    void deserialize(std::istream& is);
+    void serialize(FileWrapper& file) const;
+    void deserialize(FileWrapper& file);
 };
 
 #endif
