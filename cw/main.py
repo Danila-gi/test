@@ -1,5 +1,4 @@
-from heap import *
-from hash import *
+from hash import HashTable, Record
 
 
 class ProctoringSystem:
@@ -8,7 +7,7 @@ class ProctoringSystem:
         self.top_records = [None] * 10
 
     def add_record(self, student, suspicion, group):
-        record = Record(suspicion, student, group)
+        record = Record(suspicion, student)
         self.hash_groups.insert(group, record)
 
         for i in range(10):
@@ -18,10 +17,9 @@ class ProctoringSystem:
                     del self.top_records[-1]
                 break
 
-    def del_record(self, student, group):
+    def del_record(self, record: Record, group):
         heap = self.hash_groups.find(group)
-        record = Record(None, student, group)
-        heap.remove_node(record)
+        heap.delete_record(record)
 
         for i in range(10):
             if record == self.top_records[i]:
@@ -31,16 +29,15 @@ class ProctoringSystem:
 
     def find_record(self, student, group):
         heap = self.hash_groups.find(group)
-        record = Record(None, student, group)
-        return heap.find_node(record)
+        record = Record(None, student)
+        return heap.find_record(record)
 
     def print_records_of_group(self, group):
         print("Group:", group)
-        for i in self.hash_groups.find(group).get_nodes_in_right_order():
-            print(i.student_name, i.suspicion)
+        self.hash_groups.find(group).print_descending()
 
     def add_group(self, group):
-        self.hash_groups.insert(group, Heap())
+        self.hash_groups.insert(group)
 
     def remove_group(self, group):
         self.hash_groups.remove(group)
@@ -57,7 +54,11 @@ class ProctoringSystem:
         for i in self.top_records:
             if i is None:
                 break
-            print(i.student_name, i.group_number, i.suspicion)
+            print(i.student_name, i.suspicion)
+
+    def find_most_suspicion(self, n, group):
+        res = self.hash_groups.find(group).find_most_suspicion(n)
+        return res
 
 
 sys = ProctoringSystem()
@@ -71,6 +72,12 @@ sys.add_record("dfgdfg", 56, 3342)
 sys.add_record("hhhh", 88, 3342)
 sys.add_record("Pushtk", 1, 3342)
 sys.add_record("Dinar TTT", 22, 3342)
+
+node = sys.find_record("Dinar TTT", 3342)
+sys.del_record(node, 3342)
+
+sys.add_record("lll", 56, 3342)
+sys.add_record("res", 39, 3342)
 
 sys.add_record("gdfsf", 57, 3343)
 sys.add_record("dgfd Stdsfasepan", 48, 3343)
@@ -86,7 +93,13 @@ sys.add_record("!!!!", 22, 3381)
 sys.add_record("gdfgjo dojbg", 57, 3381)
 sys.add_record("SSRTT", 43, 3381)
 sys.add_record("SSRF", 81, 3381)
+sys.add_record("io", 19, 3381)
+sys.add_record("io1", 19, 3381)
 sys.add_record("ugff cdf", 49, 3381)
+sys.add_record("io4", 19, 3381)
+
+node = sys.find_record("io1", 3381)
+print(node.student_name, node.suspicion)
 
 
 sys.print_groups()
@@ -98,3 +111,5 @@ print('-----------')
 sys.print_records_of_group(3381)
 print('--------')
 sys.print_top10_records()
+print('----------')
+print(sys.find_most_suspicion(3, 3381))
