@@ -1,7 +1,5 @@
 #include "../headers/Player.h"
 
-//Player::Player(){}
-
 Player::Player(){
     get_cor = new Get_coords(coords_for_scanner);
     maker = new Ability_maker(get_cor);
@@ -24,7 +22,7 @@ std::vector<Orientation> orientations_of_ships){
     this->coords_of_ships = coords_of_ships;
     this->orientations_of_ships = orientations_of_ships;
 
-    playground = new Playground(height, width, nullptr);
+    playground = new Playground(height, width);
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 
     this->put_ships();
@@ -149,7 +147,7 @@ void Player::deserialize(FileWrapper& file) {
     file.read(height);
     file.read(width);
 
-    playground = new Playground(height, width, nullptr);
+    playground = new Playground(height, width);
     playground->deserialize(file);
 
     for (int i = 0; i < ships_count; i++){

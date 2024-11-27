@@ -16,18 +16,15 @@
 class Game{
 private:
     Game_state* game_state;
-    std::shared_ptr<Player> player;
-    std::shared_ptr<Enemy> enemy;
     Paint painter;
 
-    void get_ships_for_player(Manager_of_ships& manager);
-    void get_ships_for_enemy(Manager_of_ships& manager, Playground playground_player);
-
     bool is_player_turn;
-    int current_round;
+    bool is_game_end;
 
 public:
     Game();
+
+    ~Game();
 
     void input_ships();
 

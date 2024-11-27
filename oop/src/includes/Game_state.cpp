@@ -1,7 +1,10 @@
 #include "../headers/Game_state.h"
 
-Game_state::Game_state(std::shared_ptr<Player> player, std::shared_ptr<Enemy> enemy, int& current_round):
-player(player), enemy(enemy), current_round(current_round) {}
+Game_state::Game_state(){
+    this->player = std::make_shared<Player>();
+    this->enemy = std::make_shared<Enemy>();
+    current_round = 1;
+}
 
 void Game_state::save(const std::string& filename) const{
     FileWrapper file(filename, std::ios::out | std::ios::trunc);
@@ -34,5 +37,6 @@ FileWrapper& operator>>(FileWrapper& file, Game_state& state) {
     return file;
 }
 
-std::shared_ptr<Player> Game_state::getPlayer() const { return player; }
-std::shared_ptr<Enemy> Game_state::getEnemy() const { return enemy; }
+std::shared_ptr<Player> Game_state::getPlayer() { return player; }
+std::shared_ptr<Enemy> Game_state::getEnemy() { return enemy; }
+int& Game_state::get_current_round() {return current_round;}

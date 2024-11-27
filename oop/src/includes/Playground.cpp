@@ -1,7 +1,7 @@
 #include "../headers/Playground.h"
 
-Playground::Playground(int p_width, int p_heigth, Command_ability* p_command)
-:height(p_heigth), width(p_width), command(p_command),
+Playground::Playground(int p_width, int p_heigth)
+:height(p_heigth), width(p_width),
 original_shoot([this](Coords coord, Ship* ship, int index){return this->shoot_with_n_damage(coord, ship, index, 1);})
 {
     if (p_heigth <= 0 || p_width <= 0){
@@ -16,9 +16,10 @@ original_shoot([this](Coords coord, Ship* ship, int index){return this->shoot_wi
             arr_of_ground[i][j] = UNKNOWN;
     }
     count_of_ships = 0;
+    command = nullptr;
 }
 
-Playground::Playground():Playground(0, 0, nullptr){}
+Playground::Playground():Playground(0, 0){}
 
 Playground::~Playground(){
     for(int i = 0; i < height; i++)
@@ -131,7 +132,8 @@ bool Playground::shoot(Coords coord) {
                     index = -1;
                     if (pair.first->is_destroyed() && command){
                         std::cout<<"Nice, you have destroyed a ship!\n";
-                        command->add_ability();
+                        if (command)
+                            command->add_ability();
                         count_of_ships--;
                     }
                     return true;

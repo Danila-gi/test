@@ -5,7 +5,7 @@
 #include <fstream>
 
 class FileWrapper {
-    mutable std::fstream file;
+    std::fstream file;
 public:
     FileWrapper(const std::string& filename, std::ios::openmode mode);
 

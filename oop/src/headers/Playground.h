@@ -44,7 +44,7 @@ private:
     //void add_new_ability_for_skills();
 
 public:
-    Playground(int p_width, int p_heigth, Command_ability* p_command);
+    Playground(int p_width, int p_heigth);
     Playground();
     ~Playground();
 

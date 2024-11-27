@@ -13,7 +13,7 @@ void Enemy::set_arguments(int height, int width, std::vector<Length_of_the_ship>
     this->coords_of_ships = coords_of_ships;
     this->orientations_of_ships = orientations_of_ships;
 
-    playground = new Playground(height, width, nullptr);
+    playground = new Playground(height, width);
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 }
 
@@ -32,7 +32,7 @@ void Enemy::clear_ships(){
     int old_height = playground->get_height_of_playground();
     int old_width = playground->get_width_of_playground();
 
-    playground = new Playground(old_height, old_width, nullptr);
+    playground = new Playground(old_height, old_width);
 }
 
 void Enemy::put_ships(){
@@ -123,7 +123,7 @@ void Enemy::deserialize(FileWrapper& file) {
     file.read(height);
     file.read(width);
 
-    playground = new Playground(height, width, nullptr);
+    playground = new Playground(height, width);
     playground->deserialize(file);
 
     for (int i = 0; i < ships_count; i++){
