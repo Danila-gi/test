@@ -1,26 +1,38 @@
+"""Модуль, содержащий реализацию АВЛ-дерева с дополнительными классами"""
+
+
 class Record:
+    """Класс записи студента. Содержит необходимые поля и сравнения объектов"""
+
     def __init__(self, suspicion: int = None, student_name: str = None):
+        """Инициализация данных"""
         self.suspicion = suspicion
         self.student_name = student_name
 
     def __eq__(self, other):
+        """Проверка на равенство"""
         if self.suspicion is None or other.suspicion is None:
             return self.student_name == other.student_name
         return self.suspicion == other.suspicion and self.student_name == other.student_name
 
     def __gt__(self, other):
+        """Проверка на >"""
         if self.suspicion != other.suspicion:
             return self.suspicion > other.suspicion
         return self.student_name > other.student_name
 
     def __lt__(self, other):
+        """Проверка на <"""
         if self.suspicion != other.suspicion:
             return self.suspicion < other.suspicion
         return self.student_name < other.student_name
 
 
 class AVLNode:
+    """Класс узла АВЛ-древа"""
+
     def __init__(self, record: Record):
+        """Инициализация данных"""
         self.record = record
         self.left = None
         self.right = None
@@ -61,10 +73,12 @@ class AVLTree:
         y.height = 1 + max(self._get_height(y.left), self._get_height(y.right))
         x.height = 1 + max(self._get_height(x.left), self._get_height(x.right))
 
-        if y == self.max_node and t2:
-            self.max_node = t2
-        elif y == self.max_node and not t2:
+        '''if self.max_node == y and x.record > y.record:
             self.max_node = x
+        elif self.max_node == y.right and x.record > y.right.record:
+            self.max_node = x
+        elif self.max_node == y.left and x.record > y.left.record:
+            self.max_node = x'''
 
         return x
 
@@ -82,8 +96,12 @@ class AVLTree:
         x.height = 1 + max(self._get_height(x.left), self._get_height(x.right))
         y.height = 1 + max(self._get_height(y.left), self._get_height(y.right))
 
-        if x == self.max_node:
+        '''if self.max_node == x and y.record > x.record:
             self.max_node = y
+        elif self.max_node == x.left and y.record > x.left.record:
+            self.max_node = y
+        elif self.max_node == x.right and y.record > x.right.record:
+            self.max_node = y'''
 
         return y
 
@@ -127,7 +145,6 @@ class AVLTree:
     def delete(self, node, record: Record):
         if not node:
             return node
-
         if record < node.record:
             node.left = self.delete(node.left, record)
         elif record > node.record:
@@ -137,13 +154,13 @@ class AVLTree:
                 if node.right:
                     node.right.parent = node.parent
                 if node == self.max_node:
-                    self.max_node = self._find_new_max(self.root)
+                    self.max_node = node.parent
                 return node.right
             elif not node.right:
                 if node.left:
                     node.left.parent = node.parent
                 if node == self.max_node:
-                    self.max_node = self._find_new_max(self.root)
+                    self.max_node = self._find_new_max(node.left)
                 return node.left
 
             temp = self._get_min_value_node(node.right)
@@ -217,16 +234,19 @@ class AVLTree:
         current = self.max_node
 
         while current and len(result) < number_of_most:
-            result.append(current.record)
-
-            if current.left:
-                current = self._find_max(current.left)
-            else:
-                current = current.parent
+            result.append([current.record.suspicion, current.record.student_name])
+            current = self._find_next_smallest(current)
 
         return result
 
-    def _find_max(self, node):
-        while node and node.right:
-            node = node.right
-        return node
+    def _find_next_smallest(self, node: AVLNode):
+        if node.left:
+            current = node.left
+            while current.right:
+                current = current.right
+            return current
+        else:
+            current = node
+            while current.parent and current == current.parent.left:
+                current = current.parent
+            return current.parent

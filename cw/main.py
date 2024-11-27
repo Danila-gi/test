@@ -3,12 +3,13 @@ from hash import HashTable, Record
 
 class ProctoringSystem:
     def __init__(self):
-        self.hash_groups = HashTable()  # хэш-таблица группа: куча группы
+        self.hash_groups = HashTable()  # хэш-таблица группа: авл-дерево группы
         self.top_records = [None] * 10
 
     def add_record(self, student, suspicion, group):
         record = Record(suspicion, student)
         self.hash_groups.insert(group, record)
+        #print(student, suspicion, self.hash_groups.find(group).find_most_suspicion(40))
 
         for i in range(10):
             if self.top_records[i] is None or record.suspicion > self.top_records[i].suspicion:
@@ -18,23 +19,34 @@ class ProctoringSystem:
                 break
 
     def del_record(self, record: Record, group):
-        heap = self.hash_groups.find(group)
-        heap.delete_record(record)
+        if not record:
+            print("Incorrect record!")
+            return
+        tree = self.hash_groups.find(group)
+        tree.delete_record(record)
+        #print(self.hash_groups.find(group).find_most_suspicion(40))
 
         for i in range(10):
-            if record == self.top_records[i]:
+            if self.top_records[i] and record == self.top_records[i]:
                 del self.top_records[i]
                 self.top_records.append(None)
                 break
 
     def find_record(self, student, group):
-        heap = self.hash_groups.find(group)
+        tree = self.hash_groups.find(group)
+        if not tree:
+            print("Incorrect group!")
+            return
         record = Record(None, student)
-        return heap.find_record(record)
+        return tree.find_record(record)
 
     def print_records_of_group(self, group):
         print("Group:", group)
-        self.hash_groups.find(group).print_descending()
+        tree = self.hash_groups.find(group)
+        if not tree:
+            print("Incorrect group!")
+            return
+        tree.print_descending()
 
     def add_group(self, group):
         self.hash_groups.insert(group)
@@ -63,53 +75,21 @@ class ProctoringSystem:
 
 sys = ProctoringSystem()
 sys.add_group(3342)
-sys.add_group(3343)
+sys.add_group(3442)
 sys.add_group(3381)
+names = ['Janet Jones', 'Constance Rodriguez', 'Margaret Hayes', 'Kyle Harris', 'Mark Mack', 'Rhonda Johnson',
+         'Barbara Haynes', 'Mary Patton', 'Lauren Mason', 'Timothy Miller', 'Marc Bennett', 'Ellen Ryan',
+         'John Gonzales', 'Henry Collins', 'Carol Patrick', 'Jeffrey Kelly', 'Jennifer Wilson', 'Mark Gregory',
+         'Stephanie Fowler', 'Lloyd Gregory', 'Martin Shaw', 'Margaret Perry', 'Sharon Jones', 'Kenneth Garcia',
+         'Jean Moore', 'Louise Johnson', 'Richard Rose', 'Michael Roberson', 'Mary White', 'Brian Houston']
 
-sys.add_record("Ivanov Danila", 34, 3342)
-sys.add_record("Ivanov Stepan", 11, 3342)
-sys.add_record("dfgdfg", 56, 3342)
-sys.add_record("hhhh", 88, 3342)
-sys.add_record("Pushtk", 1, 3342)
-sys.add_record("Dinar TTT", 22, 3342)
+susp = [53, 16, 75, 47, 37, 24, 53, 75, 79, 99, 31, 74, 25, 92, 32, 53, 1, 69, 94, 70, 80, 31, 27, 11, 75, 39, 20, 28, 58, 45]
+for i in range(30):
+    sys.add_record(names[i], susp[i], 3342)
 
-node = sys.find_record("Dinar TTT", 3342)
+node = sys.find_record('Timothy Miller', 3342)
+print(node.student_name, node.suspicion)
 sys.del_record(node, 3342)
 
-sys.add_record("lll", 56, 3342)
-sys.add_record("res", 39, 3342)
-
-sys.add_record("gdfsf", 57, 3343)
-sys.add_record("dgfd Stdsfasepan", 48, 3343)
-sys.add_record("yyui", 21, 3343)
-sys.add_record("IIII", 99, 3343)
-
-sys.add_record("suigd", 45, 3381)
-sys.add_record("fhfgh fhfg", 19, 3381)
-sys.add_record("fhf fhfd", 34, 3381)
-sys.add_record("fh df s", 78, 3381)
-sys.add_record(";'sk sudhg", 2, 3381)
-sys.add_record("!!!!", 22, 3381)
-sys.add_record("gdfgjo dojbg", 57, 3381)
-sys.add_record("SSRTT", 43, 3381)
-sys.add_record("SSRF", 81, 3381)
-sys.add_record("io", 19, 3381)
-sys.add_record("io1", 19, 3381)
-sys.add_record("ugff cdf", 49, 3381)
-sys.add_record("io4", 19, 3381)
-
-node = sys.find_record("io1", 3381)
-print(node.student_name, node.suspicion)
-
-
-sys.print_groups()
-print('-----------')
 sys.print_records_of_group(3342)
-print('-----------')
-sys.print_records_of_group(3343)
-print('-----------')
-sys.print_records_of_group(3381)
-print('--------')
-sys.print_top10_records()
-print('----------')
-print(sys.find_most_suspicion(3, 3381))
+print(sys.find_most_suspicion(7, 3342))
