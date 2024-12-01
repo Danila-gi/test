@@ -1,95 +1,82 @@
-from hash import HashTable, Record
+"""Модуль, содержащий систему по работе с системой прокторинга"""
+
+from hash import HashTable, Record, AVLTree
 
 
 class ProctoringSystem:
     def __init__(self):
         self.hash_groups = HashTable()  # хэш-таблица группа: авл-дерево группы
-        self.top_records = [None] * 10
+        self.top_records = AVLTree()  # авл-дерево всех записей
 
-    def add_record(self, student, suspicion, group):
+    def add_record(self, student: str, suspicion: int, group: int):
+        """Добавление записи в группу. Если не найдена группа - программа не выполняется"""
         record = Record(suspicion, student)
-        self.hash_groups.insert(group, record)
-        #print(student, suspicion, self.hash_groups.find(group).find_most_suspicion(40))
 
-        for i in range(10):
-            if self.top_records[i] is None or record.suspicion > self.top_records[i].suspicion:
-                self.top_records.insert(i, record)
-                if len(self.top_records) > 10:
-                    del self.top_records[-1]
-                break
-
-    def del_record(self, record: Record, group):
-        if not record:
-            print("Incorrect record!")
-            return
-        tree = self.hash_groups.find(group)
-        tree.delete_record(record)
-        #print(self.hash_groups.find(group).find_most_suspicion(40))
-
-        for i in range(10):
-            if self.top_records[i] and record == self.top_records[i]:
-                del self.top_records[i]
-                self.top_records.append(None)
-                break
-
-    def find_record(self, student, group):
         tree = self.hash_groups.find(group)
         if not tree:
             print("Incorrect group!")
             return
-        record = Record(None, student)
+        tree.insert_record(record)
+
+        self.top_records.insert_record(record)
+
+    def del_record(self, record: Record, group: int):
+        """Удаление записи из группы. Если не найдена группа или неправильно передана
+        запись - программа не выполняется"""
+        if not record or not record.student_name or not record.suspicion:
+            print("Incorrect record!")
+            return
+        tree = self.hash_groups.find(group)
+        if not tree:
+            print("Incorrect group!")
+            return
+
+        tree.delete_record(record)
+
+        self.top_records.delete_record(record)
+
+    def find_record(self, group, student: str = None, suspicion: int = None):
+        """Нахождение записи в дереве группы. Если не найдена группа - программа не выполняется"""
+        tree = self.hash_groups.find(group)
+        if not tree:
+            print("Incorrect group!")
+            return
+        record = Record(suspicion, student)
         return tree.find_record(record)
 
-    def print_records_of_group(self, group):
+    def print_records_of_group(self, group: int):
+        """Вывод записей переданной группы в убывающем порядке.
+        Если группа не найдена - программа не выполняется"""
         print("Group:", group)
         tree = self.hash_groups.find(group)
         if not tree:
             print("Incorrect group!")
             return
-        tree.print_descending()
+        return tree.print_descending()
 
-    def add_group(self, group):
-        self.hash_groups.insert(group)
+    def add_group(self, group: int):
+        """Добавление группы в хэш-таблицу"""
+        self.hash_groups.add_group(group)
 
-    def remove_group(self, group):
+    def remove_group(self, group: int):
+        """Удаление группы из хэш-таблицы, если она найдется"""
         self.hash_groups.remove(group)
 
     def print_groups(self):
+        """Вывод всех групп из таблицы"""
+        print("All groups:")
         for i in self.hash_groups.get_all_keys():
             print(i)
 
-    def find_group(self, group):
+    def find_group(self, group: int):
+        """Нахождение авл-дерева переданной группы"""
         return self.hash_groups.find(group)
 
     def print_top10_records(self):
-        print("Top 10")
-        for i in self.top_records:
-            if i is None:
-                break
-            print(i.student_name, i.suspicion)
+        """Вывод 10 самых подозрительных записей всех групп"""
+        return self.top_records.find_most_suspicion(10)
 
-    def find_most_suspicion(self, n, group):
+    def find_most_suspicion(self, n: int, group: int):
+        """Нахождение самых подозрительных записей группы"""
         res = self.hash_groups.find(group).find_most_suspicion(n)
         return res
-
-
-sys = ProctoringSystem()
-sys.add_group(3342)
-sys.add_group(3442)
-sys.add_group(3381)
-names = ['Janet Jones', 'Constance Rodriguez', 'Margaret Hayes', 'Kyle Harris', 'Mark Mack', 'Rhonda Johnson',
-         'Barbara Haynes', 'Mary Patton', 'Lauren Mason', 'Timothy Miller', 'Marc Bennett', 'Ellen Ryan',
-         'John Gonzales', 'Henry Collins', 'Carol Patrick', 'Jeffrey Kelly', 'Jennifer Wilson', 'Mark Gregory',
-         'Stephanie Fowler', 'Lloyd Gregory', 'Martin Shaw', 'Margaret Perry', 'Sharon Jones', 'Kenneth Garcia',
-         'Jean Moore', 'Louise Johnson', 'Richard Rose', 'Michael Roberson', 'Mary White', 'Brian Houston']
-
-susp = [53, 16, 75, 47, 37, 24, 53, 75, 79, 99, 31, 74, 25, 92, 32, 53, 1, 69, 94, 70, 80, 31, 27, 11, 75, 39, 20, 28, 58, 45]
-for i in range(30):
-    sys.add_record(names[i], susp[i], 3342)
-
-node = sys.find_record('Timothy Miller', 3342)
-print(node.student_name, node.suspicion)
-sys.del_record(node, 3342)
-
-sys.print_records_of_group(3342)
-print(sys.find_most_suspicion(7, 3342))

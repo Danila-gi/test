@@ -3,15 +3,9 @@
 from tree import AVLTree, Record
 
 
-class Values_for_group:
-    """Класс, содержащий авл-дерево, которое является значение ключа в таблице"""
-    def __init__(self, heap: AVLTree):
-        """Инициализация данных"""
-        self.heap = heap
-
-
 class HashTable:
     """Класс хэш-таблицы"""
+
     def __init__(self, size=100):
         """Инициализация данных"""
         self.size = size
@@ -21,16 +15,11 @@ class HashTable:
         """Хэш-функция"""
         return key % self.size
 
-    def insert(self, key: int, value: Record = None):
-        """Вставка записи в группу"""
-        if value is None:
-            value = AVLTree()
+    def add_group(self, key: int):
+        """Добавление группы в хэш-таблицу"""
         index = self._hash(key)
+        value = AVLTree()
 
-        for item in self.table[index]:
-            if item[0] == key:
-                item[1].insert_record(value)
-                return
         self.table[index].append([key, value])
 
     def find(self, key: int):
