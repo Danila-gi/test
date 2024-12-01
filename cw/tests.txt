@@ -1,0 +1,41 @@
+v_3342 = AVLTreeVisualizer(sys.find_group(3342))
+v_3342.visualize("3342")
+
+v_1842 = AVLTreeVisualizer(sys.find_group(1842))
+v_1842.visualize("1842")
+
+v_3781 = AVLTreeVisualizer(sys.find_group(3781))
+v_3781.visualize("3781")
+
+
+sys = ProctoringSystem()
+sys.add_group(3342)
+sys.add_group(1842)
+sys.add_group(3781)
+names = ['Janet Jones', 'Constance Rodriguez', 'Margaret Hayes', 'Kyle Harris', 'Mark Mack', 'Rhonda Johnson',
+         'Barbara Haynes', 'Mary Patton', 'Lauren Mason', 'Timothy Miller', 'Marc Bennett', 'Ellen Ryan',
+         'John Gonzales', 'Henry Collins', 'Carol Patrick', 'Jeffrey Kelly', 'Jennifer Wilson', 'Mark Gregory',
+         'Stephanie Fowler', 'Lloyd Gregory', 'Martin Shaw', 'Margaret Perry', 'Sharon Jones', 'Kenneth Garcia',
+         'Jean Moore', 'Louise Johnson', 'Richard Rose', 'Michael Roberson', 'Mary White', 'Brian Houston']
+
+susp = [53, 16, 75, 47, 37, 24, 53, 75, 79, 99, 31, 74, 25, 92, 32, 53, 1, 69, 94, 70, 80, 31, 27, 11, 75, 39, 20,
+        28, 58, 45]
+for i in range(11):
+    sys.add_record(names[i], susp[i], 3342)
+for i in range(11, 23):
+    sys.add_record(names[i], susp[i], 1842)
+for i in range(23, 30):
+    sys.add_record(names[i], susp[i], 3781)
+
+sys.print_groups()
+
+node = sys.find_record(1842, 'Ellen Ryan')
+sys.del_record(node[0], 1842)
+print(sys.find_most_suspicion(4, 1842))
+
+node = sys.find_record(3342, None, 99)
+sys.del_record(node[0], 3342)
+sys.print_records_of_group(3342)
+print("=================")
+for i in sys.print_top10_records():
+    print(i)
