@@ -1,11 +1,11 @@
 #include "../headers/Enemy.h"
 
-Enemy::Enemy(){
+Enemy::Enemy():playground(Playground(10, 10)){
 }
 
 Enemy::~Enemy(){
     delete ships_manager;
-    delete playground;
+    //delete playground;
 }
 
 void Enemy::set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships){
@@ -13,7 +13,7 @@ void Enemy::set_arguments(int height, int width, std::vector<Length_of_the_ship>
     this->coords_of_ships = coords_of_ships;
     this->orientations_of_ships = orientations_of_ships;
 
-    playground = new Playground(height, width);
+    playground = Playground(height, width);
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 }
 
@@ -22,7 +22,7 @@ void Enemy::perform_shoot(Playground& enemy_playground, Coords coord){
 }
 
 Playground& Enemy::get_playground(){
-    return *playground;
+    return playground;
 }
 
 void Enemy::clear_ships(){
@@ -31,12 +31,12 @@ void Enemy::clear_ships(){
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
     coords_of_ships.clear();
 
-    int old_height = playground->get_height_of_playground();
-    int old_width = playground->get_width_of_playground();
+    int old_height = playground.get_height_of_playground();
+    int old_width = playground.get_width_of_playground();
 
-    if (playground)
-        delete playground;
-    playground = new Playground(old_height, old_width);
+    //if (playground)
+      //  delete playground;
+    playground = Playground(old_height, old_width);
 }
 
 void Enemy::put_ships(){
@@ -46,8 +46,8 @@ void Enemy::put_ships(){
     int index = 0;
     while (index < ships_manager->get_count_of_ships())
     {
-        std::uniform_int_distribution<int> distribution_width(0, playground->get_width_of_playground() - 1);
-        std::uniform_int_distribution<int> distribution_height(0, playground->get_height_of_playground() - 1);
+        std::uniform_int_distribution<int> distribution_width(0, playground.get_width_of_playground() - 1);
+        std::uniform_int_distribution<int> distribution_height(0, playground.get_height_of_playground() - 1);
         std::uniform_int_distribution<int> distribution_orientation(0, 1);
         const int rand_coord_x = distribution_width(generator);
         const int rand_coord_y = distribution_height(generator);
@@ -56,7 +56,7 @@ void Enemy::put_ships(){
         ships_manager->get_ship(index).set_orientation(static_cast<Orientation>(rand_orientation));
 
         try{
-            playground->add_ship(ships_manager->get_ship(index), {rand_coord_x, rand_coord_y});
+            playground.add_ship(ships_manager->get_ship(index), {rand_coord_x, rand_coord_y});
         } catch(ShipPlacmentException &err){
             //std::cout << "Error: " << err.what() << std::endl;
             continue;
@@ -87,7 +87,7 @@ void Enemy::serialize(FileWrapper& file) const {
         }
         file.write('\n');
     }
-    playground->serialize(file);
+    playground.serialize(file);
 
     for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
         file.write(coords_of_ships[i].x);
@@ -127,14 +127,14 @@ void Enemy::deserialize(FileWrapper& file) {
     file.read(height);
     file.read(width);
 
-    playground = new Playground(height, width);
-    playground->deserialize(file);
+    playground = Playground(height, width);
+    playground.deserialize(file);
 
     for (int i = 0; i < ships_count; i++){
         int x, y;
         file.read(x);
         file.read(y);
-        playground->add_ship(ships_manager->get_ship(i), {x, y});
+        playground.add_ship(ships_manager->get_ship(i), {x, y});
         coords_of_ships.push_back({x, y});
     }
 }

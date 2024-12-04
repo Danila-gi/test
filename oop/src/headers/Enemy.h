@@ -10,7 +10,7 @@
 
 class Enemy{
 private:
-    Playground* playground;
+    Playground playground;
     Manager_of_ships* ships_manager;
 
     std::vector<Length_of_the_ship> length_of_ships;

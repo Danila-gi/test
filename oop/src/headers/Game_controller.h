@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "Input_from_terminal.h"
+#include "Output_to_terminal.h"
 #include "Game.h"
 
 template <typename InputType, typename OutputType>

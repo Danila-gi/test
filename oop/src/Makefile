@@ -3,10 +3,12 @@ CFLAGS=-c
 
 all: Ship.o Manager_of_ships.o Playground.o Interface_of_abilities.o Interface_of_builders.o Double_atack.o Scanner.o Shelling.o \
 Double_atack_builder.o Scanner_builder.o Shelling_builder.o Manager_of_abilities.o NoAbilitiesException.o ShipPlacmentException.o AtackException.o \
-Add_ability.o Get_coords.o Ability_maker.o Paint.o Player.o Enemy.o Game.o Game_state.o FileWrapper.o main.o
+Add_ability.o Get_coords.o Ability_maker.o Paint.o Player.o Enemy.o Game.o Game_state.o FileWrapper.o Input_from_terminal.o \
+Output_to_terminal.o Game_controller.o main.o
 	$(CC) main.o Ship.o Manager_of_ships.o Playground.o Interface_of_abilities.o Interface_of_builders.o Double_atack.o Scanner.o Shelling.o \
 	 Double_atack_builder.o Scanner_builder.o Shelling_builder.o Manager_of_abilities.o NoAbilitiesException.o ShipPlacmentException.o AtackException.o \
-	 Add_ability.o Get_coords.o Ability_maker.o Paint.o Player.o Enemy.o Game.o Game_state.o FileWrapper.o -o oop
+	 Add_ability.o Get_coords.o Ability_maker.o Paint.o Player.o Enemy.o Game.o Game_state.o FileWrapper.o Input_from_terminal.o \
+	Output_to_terminal.o Game_controller.o -o oop
 
 Ship.o: includes/Ship.cpp
 	$(CC) $(CFLAGS)  includes/Ship.cpp
@@ -79,6 +81,15 @@ Game_state.o: includes/Game_state.cpp
 
 FileWrapper.o: includes/FileWrapper.cpp
 	$(CC) $(CFLAGS)  includes/FileWrapper.cpp
+
+Input_from_terminal.o: includes/Input_from_terminal.cpp
+	$(CC) $(CFLAGS)  includes/Input_from_terminal.cpp
+
+Output_to_terminal.o: includes/Output_to_terminal.cpp
+	$(CC) $(CFLAGS)  includes/Output_to_terminal.cpp
+
+Game_controller.o: includes/Game_controller.cpp
+	$(CC) $(CFLAGS)  includes/Game_controller.cpp
 
 main.o: main.cpp
 	$(CC) $(CFLAGS)  main.cpp

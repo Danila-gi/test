@@ -1,6 +1,6 @@
 #include "../headers/Player.h"
 
-Player::Player(){
+Player::Player():playground(Playground(10, 10)){
     get_cor = new Get_coords(coords_for_scanner);
     maker = new Ability_maker(get_cor);
     ability_manager = new Manager_of_abilities(*maker);
@@ -13,7 +13,7 @@ Player::~Player(){
     delete maker;
     delete ability_manager;
     delete add_abil;
-    delete playground;
+    //delete playground;
 }
 
 void Player::set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, 
@@ -22,7 +22,7 @@ std::vector<Orientation> orientations_of_ships){
     this->coords_of_ships = coords_of_ships;
     this->orientations_of_ships = orientations_of_ships;
 
-    playground = new Playground(height, width);
+    playground = Playground(height, width);
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 
     this->put_ships();
@@ -38,15 +38,16 @@ void Player::perform_shoot(Playground& enemy_playground, Coords coord){
     }
 }
 
-void Player::use_ability(Playground& enemy_playground){
+std::shared_ptr<Interface_of_builders> Player::get_player_ability(){
     try
     {
         auto get = ability_manager->get_ability();
-        if (get->is_need_arguments()){
+        /*if (get->is_need_arguments()){
             std::cout<<"Print coords"<<std::endl;
             int x, y;
             std::cin >> x >> y;
             coords_for_scanner = {x, y};
+            return true;
             auto ex = get->make_ability();
             std::cout<<ex->perform_ability(enemy_playground)<<std::endl;
         }
@@ -54,15 +55,29 @@ void Player::use_ability(Playground& enemy_playground){
             enemy_playground.set_command(add_abil);
             auto ex = get->make_ability();
             ex->perform_ability(enemy_playground);
-        }
+        }*/
+        return get;
     } catch (NoAbilitiesException &err) 
     {
         std::cout << "Error: " << err.what() << std::endl;
     }
+    return nullptr;
+}
+
+bool Player::use_ability(Playground& enemy_playground, std::shared_ptr<Interface_of_builders> builder, Coords coords){
+    if (builder->is_need_arguments()){
+        coords_for_scanner = coords;
+        auto ex = builder->make_ability();
+        return ex->perform_ability(enemy_playground);
+    }
+    enemy_playground.set_command(add_abil);
+    auto ex = builder->make_ability();
+    return ex->perform_ability(enemy_playground);
+
 }
 
 Playground& Player::get_playground(){
-    return *playground;
+    return playground;
 }
 
 void Player::put_ships(){
@@ -71,7 +86,7 @@ void Player::put_ships(){
     {
         ships_manager->get_ship(index).set_orientation(orientations_of_ships[index]);
         try{
-            playground->add_ship(ships_manager->get_ship(index), coords_of_ships[index]);
+            playground.add_ship(ships_manager->get_ship(index), coords_of_ships[index]);
         } catch(ShipPlacmentException &err){
             std::cout << "Error: " << err.what() << std::endl;
             continue;
@@ -99,7 +114,7 @@ void Player::serialize(FileWrapper& file) const {
         }
         file.write('\n');
     }
-    playground->serialize(file);
+    playground.serialize(file);
 
     for (int i = 0; i < ships_manager->get_count_of_ships(); i++){
         file.write(coords_of_ships[i].x);
@@ -119,8 +134,6 @@ void Player::serialize(FileWrapper& file) const {
 
 bool Player::deserialize(FileWrapper& file) {
     int ships_count;
-    if (ships_count < 0)
-        return false;
         
     file.read(ships_count);
     for (int i = 0; i < ships_count; i++){
@@ -128,6 +141,7 @@ bool Player::deserialize(FileWrapper& file) {
         file.read(l);
         length_of_ships.push_back(static_cast<Length_of_the_ship>(l));
     }
+    //std::cout<<ships_count<<std::endl;
     ships_manager = new Manager_of_ships(ships_count, length_of_ships);
 
     for (int i = 0; i < ships_count; i++){
@@ -150,14 +164,14 @@ bool Player::deserialize(FileWrapper& file) {
     file.read(height);
     file.read(width);
 
-    playground = new Playground(height, width);
-    playground->deserialize(file);
+    playground = Playground(height, width);
+    playground.deserialize(file);
 
     for (int i = 0; i < ships_count; i++){
         int x, y;
         file.read(x);
         file.read(y);
-        playground->add_ship(ships_manager->get_ship(i), {x, y});
+        playground.add_ship(ships_manager->get_ship(i), {x, y});
         coords_of_ships.push_back({x, y});
     }
 
@@ -169,4 +183,5 @@ bool Player::deserialize(FileWrapper& file) {
         file.read(name);
         ability_manager->push_ability(static_cast<Name_of_builder>(name));
     }
+    return true;
 }

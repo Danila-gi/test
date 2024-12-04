@@ -26,13 +26,16 @@ public:
 
     ~Game();
 
-    void input_ships();
+    void input_ships(std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, std::vector<Orientation> orientations_of_ships);
 
-    void play();
+    bool is_player_won();
 
     void start_new_game();
 
-    void player_turn(bool is_need_ability);
+    std::shared_ptr<Interface_of_builders> player_ability();
+
+    bool player_turn_ability(std::shared_ptr<Interface_of_builders> builder, Coords coords_for_abil={0, 0});
+    void player_turn_shoot(Coords coords);
 
     void enemy_turn();
 
@@ -41,6 +44,8 @@ public:
     void save_game(const std::string& filename);
 
     void load_game(const std::string& filename);
+
+    Playground& get_playground(bool is_player);
 };
 
 #endif

@@ -15,7 +15,7 @@ private:
     Ability_maker* maker;
     Add_ability* add_abil;
 
-    Playground* playground;
+    Playground playground;
     Manager_of_abilities* ability_manager;
     Manager_of_ships* ships_manager;
     Coords coords_for_scanner;
@@ -33,7 +33,9 @@ public:
 
     void perform_shoot(Playground& enemy_playground, Coords coord);
 
-    void use_ability(Playground& enemy_playground);
+    std::shared_ptr<Interface_of_builders> get_player_ability();
+
+    bool use_ability(Playground& enemy_playground, std::shared_ptr<Interface_of_builders> builder, Coords coords = {0, 0});
 
     Playground& get_playground();
 

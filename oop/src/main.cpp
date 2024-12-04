@@ -15,10 +15,14 @@
 #include "headers/Paint.h"
 #include "headers/Game.h"
 #include "headers/FileWrapper.h"
+#include "headers/Game_controller.h"
+#include "headers/Input_from_terminal.h"
+#include "headers/Output_to_terminal.h"
 
 int main(){
-    Game game;
-    game.start_new_game();
+    Game* game = new Game();
+    auto game_control = Game_controller<Input_from_terminal, Output_to_terminal>(game);
+    game_control.play();
 
     return 0;
 }

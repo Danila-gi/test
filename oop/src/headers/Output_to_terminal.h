@@ -21,7 +21,7 @@ public:
 
     void print_input_ships_infor();
 
-    void print_ability_process(Interface_of_builders& builder);
+    void print_ability_process(std::shared_ptr<Interface_of_builders> builder);
 
     void print_atack_process(Coords coord, bool is_good_hit, int damage=1);
 

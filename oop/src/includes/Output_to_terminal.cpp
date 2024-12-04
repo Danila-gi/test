@@ -14,9 +14,10 @@ Output_to_terminal::Output_to_terminal(){
 }
 
 void Output_to_terminal::print_playground(Paint painter, bool is_for_player, Playground& playground){
-    if (is_for_player)
+    if (is_for_player){
         painter.print_your_ground(playground);
         return;
+    }
     painter.print_enemy_ground(playground);
 }
 
@@ -33,11 +34,11 @@ void Output_to_terminal::print_input_ships_infor(){
     std::cout << "Print some arguments for ship:" << std::endl;
 }
 
-void Output_to_terminal::print_ability_process(Interface_of_builders& builder){
-    std::cout << builder_to_string[builder.get_name()] << " process..." << std::endl;
+void Output_to_terminal::print_ability_process(std::shared_ptr<Interface_of_builders> builder){
+    std::cout << builder_to_string[builder->get_name()] << " process..." << std::endl;
 }
 
-void Output_to_terminal::print_atack_process(Coords coord, bool is_good_hit, int damage=1){
+void Output_to_terminal::print_atack_process(Coords coord, bool is_good_hit, int damage){
     if (is_good_hit){
         if (damage == 1){
             std::cout<< "good hit " << coord.x << ":" << coord.y << std::endl;
