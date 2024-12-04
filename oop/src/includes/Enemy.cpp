@@ -26,12 +26,16 @@ Playground& Enemy::get_playground(){
 }
 
 void Enemy::clear_ships(){
+    if (ships_manager)
+        delete ships_manager;
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
     coords_of_ships.clear();
 
     int old_height = playground->get_height_of_playground();
     int old_width = playground->get_width_of_playground();
 
+    if (playground)
+        delete playground;
     playground = new Playground(old_height, old_width);
 }
 

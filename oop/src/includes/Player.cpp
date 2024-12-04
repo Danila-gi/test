@@ -117,8 +117,11 @@ void Player::serialize(FileWrapper& file) const {
     file.write('\n');
 }
 
-void Player::deserialize(FileWrapper& file) {
+bool Player::deserialize(FileWrapper& file) {
     int ships_count;
+    if (ships_count < 0)
+        return false;
+        
     file.read(ships_count);
     for (int i = 0; i < ships_count; i++){
         int l;

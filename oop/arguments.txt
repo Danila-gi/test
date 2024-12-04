@@ -1,0 +1,7 @@
+1 Atack
+2 Ability
+3 Save
+4 Load
+5 Exit
+6 Input_ships
+

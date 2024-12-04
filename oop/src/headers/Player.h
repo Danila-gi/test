@@ -40,7 +40,7 @@ public:
     void put_ships();
 
     void serialize(FileWrapper& file) const;
-    void deserialize(FileWrapper& file);
+    bool deserialize(FileWrapper& file);
 };
 
 #endif

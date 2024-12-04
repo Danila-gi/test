@@ -130,7 +130,7 @@ bool Playground::shoot(Coords coord) {
                     }
                     original_shoot(coord, pair.first, index);
                     index = -1;
-                    if (pair.first->is_destroyed() && command){
+                    if (pair.first->is_destroyed()){
                         std::cout<<"Nice, you have destroyed a ship!\n";
                         if (command)
                             command->add_ability();

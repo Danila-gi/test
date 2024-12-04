@@ -15,7 +15,9 @@ public:
     void write(const T& data);
 
     template <typename T>
-    void read(T& data);
+    bool read(T& data);
+
+    bool isEOF() const;
 };
 
 #endif

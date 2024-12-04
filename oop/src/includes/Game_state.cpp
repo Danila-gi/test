@@ -10,6 +10,9 @@ void Game_state::save(const std::string& filename) const{
     FileWrapper file(filename, std::ios::out | std::ios::trunc);
 
     file << *this;
+
+    FileWrapper file_hash("../hash.txt", std::ios::out | std::ios::trunc);
+    
 }
 
 void Game_state::load(const std::string& filename) {
@@ -40,3 +43,12 @@ FileWrapper& operator>>(FileWrapper& file, Game_state& state) {
 std::shared_ptr<Player> Game_state::getPlayer() { return player; }
 std::shared_ptr<Enemy> Game_state::getEnemy() { return enemy; }
 int& Game_state::get_current_round() {return current_round;}
+
+void Game_state::save_hash(FileWrapper& file_read, FileWrapper& file_hash){
+    int hash = 0;
+    int x;
+    while (file_read.read(x)){
+        hash += x;
+    }
+    file_hash.write(hash);
+}

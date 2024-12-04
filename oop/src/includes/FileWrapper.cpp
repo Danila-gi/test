@@ -27,9 +27,14 @@ void FileWrapper::write(const char& data) {
 }
 
 template<>
-void FileWrapper::read(int& data) {
+bool FileWrapper::read(int& data) {
     if (!file.is_open() || !file.good()) {
         throw std::runtime_error("File not opened in input mode");
     }
     file >> data;
+    return !file.eof();
+}
+
+bool FileWrapper::isEOF() const {
+    return file.eof();
 }

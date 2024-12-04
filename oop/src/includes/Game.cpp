@@ -17,6 +17,14 @@ void Game::input_ships(){
     std::vector<Coords> coords_of_ships = {{2, 2}, {3, 4}, {0, 0}, {6, 0}, {1, 6}, {7, 4}, {0, 4}, {4, 0}, {9, 0}, {7, 7}};
     std::vector<Orientation> orientations_of_ships = {Horizontal, Vertical, Vertical, Horizontal, Vertical, Horizontal, Vertical, Vertical, Horizontal, Horizontal};
 
+    /*for (int i = 0; i < ships_count; i++){
+        std::cout << "Print data for ship" << std::endl;
+        int orient, lenght, coord_x, coord_y;
+        std::cin >> orient >> lenght >> coord_x >> coord_y;
+        length_of_ships.push_back(static_cast<Length_of_the_ship>(lenght));
+        orientations_of_ships.push_back(static_cast<Orientation>(orient));
+        coords_of_ships.push_back({coord_x, coord_y});
+    }*/
     game_state->getPlayer()->set_arguments(10, 10, length_of_ships, coords_of_ships, orientations_of_ships);
     game_state->getEnemy()->set_arguments(10, 10, l_for_enemy);
     game_state->getEnemy()->put_ships();
@@ -31,13 +39,17 @@ void Game::play(){
         if (is_player_turn){
             painter.print_your_ground(game_state->getPlayer()->get_playground());
             std::cout<< "-----------------------------------"<<std::endl;
-            painter.print_enemy_ground(game_state->getEnemy()->get_playground());
+            painter.print_your_ground(game_state->getEnemy()->get_playground());
             std::cout<<"Are you need ability? - 1"<<std::endl;
             std::cout<<"Save game? - 2"<<std::endl;
             std::cout<<"Continue game - 0"<<std::endl;
             std::cout<<"End game - 3"<<std::endl;
             int flag;
             std::cin >> flag;
+            if (flag < 0 || flag > 3){
+                std::cout << "Incorrect input!" << std::endl;
+                continue;
+            }
             if (flag == 3){
                 is_game_end = true;
                 return;
@@ -48,7 +60,8 @@ void Game::play(){
             }
             this->player_turn((flag == 1));
 
-            std::cout<<game_state->getEnemy()->get_playground().get_ships_count()<<std::endl;
+            std::cout<< "Count of enemy ships: " << game_state->getEnemy()->get_playground().get_ships_count()<<std::endl;
+            std::cout<< "Count of your ships: " << game_state->getPlayer()->get_playground().get_ships_count()<<std::endl;
             if (game_state->getEnemy()->get_playground().get_ships_count() == 0){
                 std::cout << "You won!" << std::endl;
                 this->start_next_round();
@@ -118,6 +131,10 @@ void Game::start_new_game(){
     }
     else if (choose_start == 1){
         this->load_game("../game.txt");
+    }
+    else{
+        std::cout << "Incorrect input!" << std::endl;
+        start_new_game();
     }
     if (!is_game_end)
         this->play();

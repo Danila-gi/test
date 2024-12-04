@@ -25,6 +25,8 @@ public:
     std::shared_ptr<Player> getPlayer();
     std::shared_ptr<Enemy> getEnemy();
     int& get_current_round();
+
+    void save_hash(FileWrapper& file_read, FileWrapper& file_hash);
 };
 
 #endif
