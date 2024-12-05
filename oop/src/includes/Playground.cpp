@@ -5,7 +5,7 @@ Playground::Playground(int p_width, int p_heigth)
 original_shoot([this](Coords coord, Ship* ship, int index){return this->shoot_with_n_damage(coord, ship, index, 1);})
 {
     if (p_heigth <= 0 || p_width <= 0){
-        std::cout<<"Incorrect sizes"<<std::endl;
+        //std::cout<<"Incorrect sizes"<<std::endl;
         return;
     }
     arr_of_ground = new Statement_of_the_coord*[height];
@@ -105,10 +105,10 @@ bool Playground::shoot_with_n_damage(Coords coord, Ship* ship, int index, int da
     for (int i = 0; i < damage; i++)
         ship->shoot_to_segment(index);
     if (damage == 1){
-        std::cout<< "good hit " << coord.x << ":" << coord.y << std::endl;
+        //std::cout<< "good hit " << coord.x << ":" << coord.y << std::endl;
         return true;
     }
-    std::cout<< "good " << damage << "-force hit " << coord.x << ":" << coord.y << std::endl;
+    //std::cout<< "good " << damage << "-force hit " << coord.x << ":" << coord.y << std::endl;
     set_multiple_attack(1);
     return true;
 }
@@ -124,14 +124,14 @@ bool Playground::shoot(Coords coord) {
             for (Coords c: coords_of_ship[pair.first]){
                 if (c.x == coord.x && c.y == coord.y){
                     if (pair.first->is_destroyed()){
-                        std::cout<<"Ship has already destroyed"<<std::endl;
+                        //std::cout<<"Ship has already destroyed"<<std::endl;
                         set_multiple_attack(1);
                         return false;
                     }
                     original_shoot(coord, pair.first, index);
                     index = -1;
                     if (pair.first->is_destroyed()){
-                        std::cout<<"Nice, you have destroyed a ship!\n";
+                        //std::cout<<"Nice, you have destroyed a ship!\n";
                         if (command)
                             command->add_ability();
                         count_of_ships--;
@@ -143,7 +143,7 @@ bool Playground::shoot(Coords coord) {
         }
     }
     arr_of_ground[coord.y][coord.x] = EMPTY;
-    std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
+    //std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
     return false;
     //return (this->*original_shoot)(coord);
 }

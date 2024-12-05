@@ -13,7 +13,7 @@ Manager_of_abilities::Manager_of_abilities(Ability_maker& maker):maker(maker)
 }
 
 void Manager_of_abilities::push_ability(Name_of_builder builder){
-    std::cout<<"You get new ability!\n";
+    //std::cout<<"You get new ability!\n";
     vector_of_abilities.push_back(maker.get_builder(builder));
 }
 

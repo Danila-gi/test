@@ -17,7 +17,7 @@ private:
 
 public:
     Game_state();
-    void save(const std::string& filename) const;
+    void save(const std::string& filename);
     void load(const std::string& filename);
     friend FileWrapper& operator<<(FileWrapper& file, const Game_state& state);
     friend FileWrapper& operator>>(FileWrapper& file, Game_state& state);
@@ -26,7 +26,8 @@ public:
     std::shared_ptr<Enemy> getEnemy();
     int& get_current_round();
 
-    void save_hash(FileWrapper& file_read, FileWrapper& file_hash);
+    void save_hash(const std::string& filename, FileWrapper& file_hash);
+    int count_hash(const std::string& filename);
 };
 
 #endif

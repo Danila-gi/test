@@ -21,7 +21,7 @@ public:
     ~Enemy();
 
     void set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships);
-    void perform_shoot(Playground& enemy_playground, Coords coord);
+    bool perform_shoot(Playground& enemy_playground, Coords coord);
 
     void put_ships();
 

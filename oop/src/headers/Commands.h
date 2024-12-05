@@ -11,7 +11,8 @@ enum COMMAND{
     SAVE,
     LOAD,
     EXIT,
-    INPUT_SHIPS
+    INPUT_SHIPS,
+    NONE
 };
 
 #endif

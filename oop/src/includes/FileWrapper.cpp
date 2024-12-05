@@ -38,3 +38,10 @@ bool FileWrapper::read(int& data) {
 bool FileWrapper::isEOF() const {
     return file.eof();
 }
+
+void FileWrapper::rewind(){
+    if (file.is_open()) {
+        file.seekp(0, std::ios::beg);
+        file.seekg(0, std::ios::beg);
+    }
+}

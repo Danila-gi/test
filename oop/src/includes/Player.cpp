@@ -29,13 +29,14 @@ std::vector<Orientation> orientations_of_ships){
 
 }
 
-void Player::perform_shoot(Playground& enemy_playground, Coords coord){
+bool Player::perform_shoot(Playground& enemy_playground, Coords coord){
     enemy_playground.set_command(add_abil);
     try{
-        enemy_playground.shoot(coord);
+        return enemy_playground.shoot(coord);
     } catch(AtackException &err){
         std::cout << "Error: " << err.what() << std::endl;
     }
+    return false;
 }
 
 std::shared_ptr<Interface_of_builders> Player::get_player_ability(){

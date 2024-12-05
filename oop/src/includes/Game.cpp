@@ -2,8 +2,8 @@
 
 Game::Game(){
     this->game_state = new Game_state();
-    this->painter = Paint();
     is_game_end = false;
+    is_new_ship_destroyed = false;
 }
 
 Game::~Game(){
@@ -31,11 +31,18 @@ bool Game::player_turn_ability(std::shared_ptr<Interface_of_builders> builder, C
     return game_state->getPlayer()->use_ability(game_state->getEnemy()->get_playground(), builder);
 }
 
-void Game::player_turn_shoot(Coords coords){
-    game_state->getPlayer()->perform_shoot(game_state->getEnemy()->get_playground(), coords);
+bool Game::player_turn_shoot(Coords coords){
+    is_new_ship_destroyed = false;
+    int ship_count = game_state->getEnemy()->get_playground().get_ships_count();
+    bool atack = game_state->getPlayer()->perform_shoot(game_state->getEnemy()->get_playground(), coords);
+    if (ship_count > game_state->getEnemy()->get_playground().get_ships_count())
+        is_new_ship_destroyed = true;
+    return atack;
 }
 
-void Game::enemy_turn(){
+bool Game::is_ship_destroyed(){return is_new_ship_destroyed;}
+
+Coords Game::enemy_turn(){
     std::random_device rd;
     std::mt19937 generator(rd());
 
@@ -48,7 +55,7 @@ void Game::enemy_turn(){
 
         if (game_state->getPlayer()->get_playground().get_statment_of_coord({rand_coord_x, rand_coord_y}) != EMPTY){
             game_state->getEnemy()->perform_shoot(game_state->getPlayer()->get_playground(), {rand_coord_x, rand_coord_y});
-            break;
+            return {rand_coord_x, rand_coord_y};
         }
     }
 }
@@ -79,4 +86,8 @@ Playground& Game::get_playground(bool is_player){
     if (is_player)
         return game_state->getPlayer()->get_playground();
     return game_state->getEnemy()->get_playground();
+}
+
+int Game::get_round_number() const{
+    return game_state->get_current_round();
 }

@@ -31,7 +31,7 @@ public:
     std::vector<Coords> coords_of_ships, std::vector<Orientation> orientations_of_ships);
 
 
-    void perform_shoot(Playground& enemy_playground, Coords coord);
+    bool perform_shoot(Playground& enemy_playground, Coords coord);
 
     std::shared_ptr<Interface_of_builders> get_player_ability();
 

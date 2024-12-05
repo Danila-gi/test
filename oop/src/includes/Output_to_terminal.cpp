@@ -13,41 +13,44 @@ Output_to_terminal::Output_to_terminal(){
     builder_to_string[SCANNER] = "Scanner";
 }
 
-void Output_to_terminal::print_playground(Paint painter, bool is_for_player, Playground& playground){
-    if (is_for_player){
-        painter.print_your_ground(playground);
-        return;
-    }
-    painter.print_enemy_ground(playground);
-}
-
-void Output_to_terminal::print_commands(std::map<char, COMMAND> commands_map){
-    std::cout << "Start new game" << std::endl;
-    std::cout << "You have some commands in this game." << std::endl;
-    std::string name_command;
-    for (const auto& pair: commands_map){
-        std::cout << pair.first << " - " << commands_to_string[pair.second] << std::endl;
-    }
+void Output_to_terminal::print_command(char symbol, COMMAND command){
+    std::cout << symbol << " - " << commands_to_string[command] << std::endl;
 }
 
 void Output_to_terminal::print_input_ships_infor(){
     std::cout << "Print some arguments for ship:" << std::endl;
 }
 
-void Output_to_terminal::print_ability_process(std::shared_ptr<Interface_of_builders> builder){
-    std::cout << builder_to_string[builder->get_name()] << " process..." << std::endl;
+void Output_to_terminal::print_coords_infor(){
+    std::cout << "Print coords:" << std::endl;
 }
 
-void Output_to_terminal::print_atack_process(Coords coord, bool is_good_hit, int damage){
+void Output_to_terminal::print_command_infor(){
+    std::cout << "Print command:" << std::endl;
+}
+
+void Output_to_terminal::print_line(){
+    std::cout<<"===================================="<<std::endl;
+}
+
+void Output_to_terminal::print_ability_process(Name_of_builder builder){
+    std::cout << builder_to_string[builder] << " process..." << std::endl;
+}
+
+void Output_to_terminal::print_atack_process(Coords coord, bool is_good_hit){
     if (is_good_hit){
-        if (damage == 1){
-            std::cout<< "good hit " << coord.x << ":" << coord.y << std::endl;
-            return;
-        }
-        std::cout<< "good " << damage << "-force hit " << coord.x << ":" << coord.y << std::endl;
+        std::cout<< "Good hit " << coord.x << ":" << coord.y << std::endl;
         return;
     }
-    std::cout << "miss " << coord.x << ":" << coord.y <<std::endl;
+    std::cout << "Miss " << coord.x << ":" << coord.y <<std::endl;
+}
+
+void Output_to_terminal::print_enemy_turn(Coords coord){
+    std::cout << "Shoot to " << coord.x << ":" << coord.y <<std::endl;
+}
+
+void Output_to_terminal::print_round(int number){
+    std::cout << "Round is " << number <<std::endl;
 }
 
 void Output_to_terminal::print_get_new_ability(){

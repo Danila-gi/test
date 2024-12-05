@@ -17,8 +17,8 @@ void Enemy::set_arguments(int height, int width, std::vector<Length_of_the_ship>
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 }
 
-void Enemy::perform_shoot(Playground& enemy_playground, Coords coord){
-    enemy_playground.shoot(coord);
+bool Enemy::perform_shoot(Playground& enemy_playground, Coords coord){
+    return enemy_playground.shoot(coord);
 }
 
 Playground& Enemy::get_playground(){

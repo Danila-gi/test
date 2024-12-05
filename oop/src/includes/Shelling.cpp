@@ -3,7 +3,6 @@
 Shelling::Shelling() : generator(std::random_device{}()) {}
 
 bool Shelling::perform_ability(Playground& playground){
-    std::cout<<"Shelling process..\n";
     if (playground.get_ships_count() == 0)
         return false;
     while (true){

@@ -18,6 +18,8 @@ public:
     bool read(T& data);
 
     bool isEOF() const;
+
+    void rewind();
 };
 
 #endif

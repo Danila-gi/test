@@ -26,6 +26,9 @@ void Input_from_terminal::load_commands(const std::string& filename){
 COMMAND Input_from_terminal::read_command(){
     char x;
     std::cin >> x;
+    if (commands_map.find(x) == commands_map.end()){
+        return NONE;
+    }
     return commands_map[x];
 }
 

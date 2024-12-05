@@ -15,17 +15,21 @@ private:
 public:
     Output_to_terminal();
 
-    void print_playground(Paint painter, bool is_for_player, Playground& playground);
-
-    void print_commands(std::map<char, COMMAND> commands_map);
+    void print_command(char symbol, COMMAND command);
 
     void print_input_ships_infor();
-
-    void print_ability_process(std::shared_ptr<Interface_of_builders> builder);
-
-    void print_atack_process(Coords coord, bool is_good_hit, int damage=1);
-
+    void print_coords_infor();
+    void print_command_infor();
     void print_get_new_ability();
+    void print_line();
+
+    void print_ability_process(Name_of_builder builder);
+
+    void print_atack_process(Coords coord, bool is_good_hit);
+
+    void print_enemy_turn(Coords coord);
+
+    void print_round(int number);
 };
 
 #endif

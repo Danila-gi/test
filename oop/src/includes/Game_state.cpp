@@ -6,17 +6,27 @@ Game_state::Game_state(){
     current_round = 1;
 }
 
-void Game_state::save(const std::string& filename) const{
+void Game_state::save(const std::string& filename){
     FileWrapper file(filename, std::ios::out | std::ios::trunc);
 
     file << *this;
 
     FileWrapper file_hash("../hash.txt", std::ios::out | std::ios::trunc);
-    
+    file.rewind();
+    save_hash(filename, file_hash);
 }
 
 void Game_state::load(const std::string& filename) {
     FileWrapper file(filename, std::ios::in);
+    FileWrapper file_hash("../hash.txt", std::ios::in);
+
+    int hash_count = this->count_hash(filename);
+    int has_original;
+    file_hash.read(has_original);
+    if (has_original != hash_count){
+        throw std::runtime_error("Incorrect file!");
+    }
+    file.rewind();
 
     file >> *this;
 }
@@ -44,11 +54,16 @@ std::shared_ptr<Player> Game_state::getPlayer() { return player; }
 std::shared_ptr<Enemy> Game_state::getEnemy() { return enemy; }
 int& Game_state::get_current_round() {return current_round;}
 
-void Game_state::save_hash(FileWrapper& file_read, FileWrapper& file_hash){
+void Game_state::save_hash(const std::string& filename, FileWrapper& file_hash){
+    file_hash.write(this->count_hash(filename));
+}
+
+int Game_state::count_hash(const std::string& filename){
+    FileWrapper file_read(filename, std::ios::in);
     int hash = 0;
-    int x;
+    int x = 0;
     while (file_read.read(x)){
         hash += x;
     }
-    file_hash.write(hash);
+    return hash;
 }

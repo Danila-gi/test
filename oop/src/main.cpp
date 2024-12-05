@@ -21,8 +21,10 @@
 
 int main(){
     Game* game = new Game();
-    auto game_control = Game_controller<Input_from_terminal, Output_to_terminal>(game);
+    auto game_control = Game_controller<Input_from_terminal, Output_to_terminal, Paint>(game);
     game_control.play();
+
+    delete game;
 
     return 0;
 }
