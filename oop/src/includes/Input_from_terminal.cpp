@@ -10,17 +10,45 @@ Input_from_terminal::Input_from_terminal(){
 }
 
 void Input_from_terminal::load_commands(const std::string& filename){
-    std::ifstream file(filename);
-
-    char key;
-    std::string value;
-
-    while (file >> key >> value)
+    try
     {
-        commands_map[key] = string_commands[value];
+        FileWrapper file(filename, std::ios::in);
+
+        std::set<char> assigned_keys;
+        std::set<std::string> assigned_commands;
+
+        char key;
+        std::string value;
+
+        while (file.read(key) && file.read(value))
+        {
+            if (assigned_keys.find(key) != assigned_keys.end()) {
+                throw std::runtime_error("Duplicate key assignment: " + std::string(1, key));
+            }
+
+            if (assigned_commands.find(value) != assigned_commands.end()) {
+                throw std::runtime_error("Duplicate command assignment: " + value);
+            }
+
+            commands_map[key] = string_commands[value];
+            assigned_keys.insert(key);
+            assigned_commands.insert(value);
+        }
+        //file.close();
     }
-    file.close();
+    catch(const std::runtime_error& e)
+    {
+        std::cerr << e.what() << '\n';
+        this->default_arguments();
+    }
     
+}
+
+void Input_from_terminal::default_arguments(){
+    std::vector<char> keys = {'1', '2', '3', '4', '5', '6'};
+    std::vector<std::string> values = {"Atack", "Ability", "Save", "Load", "Exit", "Input_ships"};
+    for (int i = 0; i < keys.size(); i++)
+        commands_map[keys[i]] = string_commands[values[i]];
 }
 
 COMMAND Input_from_terminal::read_command(){
@@ -34,7 +62,20 @@ COMMAND Input_from_terminal::read_command(){
 
 Coords Input_from_terminal::read_coords(){
     int x, y;
-    std::cin >> x >> y;
+    bool valid_input = false;
+
+    while (!valid_input) {
+        std::cin >> x >> y;
+
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cerr << "Invalid input. Please enter numbers only." << std::endl;
+        } else {
+            valid_input = true;
+        }
+    }
+
     return Coords{x, y};
 }
 

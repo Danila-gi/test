@@ -17,8 +17,8 @@ private:
 
 public:
     Game_state();
-    void save(const std::string& filename);
-    void load(const std::string& filename);
+    /*void save(const std::string& filename);
+    void load(const std::string& filename);*/
     friend FileWrapper& operator<<(FileWrapper& file, const Game_state& state);
     friend FileWrapper& operator>>(FileWrapper& file, Game_state& state);
 

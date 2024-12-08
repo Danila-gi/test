@@ -35,6 +35,24 @@ bool FileWrapper::read(int& data) {
     return !file.eof();
 }
 
+template<>
+bool FileWrapper::read(std::string& data) {
+    if (!file.is_open() || !file.good()) {
+        throw std::runtime_error("File not opened in input mode");
+    }
+    file >> data;
+    return !file.eof();
+}
+
+template<>
+bool FileWrapper::read(char& data) {
+    if (!file.is_open() || !file.good()) {
+        throw std::runtime_error("File not opened in input mode");
+    }
+    file >> data;
+    return !file.eof();
+}
+
 bool FileWrapper::isEOF() const {
     return file.eof();
 }

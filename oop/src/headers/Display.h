@@ -25,6 +25,7 @@ public:
     void print_player_shoot_result(bool flag, Coords coord);
     void print_enemy_turn(Coords coord);
     void print_round(int number_of_round);
+    void print_scanner_result(bool result);
 };
 
 #endif

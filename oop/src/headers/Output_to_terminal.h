@@ -30,6 +30,8 @@ public:
     void print_enemy_turn(Coords coord);
 
     void print_round(int number);
+
+    void print_scanner(bool result);
 };
 
 #endif

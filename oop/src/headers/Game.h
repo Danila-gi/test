@@ -12,10 +12,11 @@
 #include "Get_coords.h"
 #include "Add_ability.h"
 #include "Game_state.h"
+#include "SaveLoad.h"
 
 class Game{
 private:
-    Game_state* game_state;
+    Game_state game_state;
 
     bool is_player_turn;
     bool is_game_end;
@@ -49,7 +50,7 @@ public:
 
     Playground& get_playground(bool is_player);
 
-    int get_round_number() const;
+    int get_round_number();
 };
 
 #endif

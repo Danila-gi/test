@@ -23,6 +23,11 @@ void Display<PaintType, OutputType>::print_builder(Name_of_builder builder){
 }
 
 template <typename PaintType, typename OutputType>
+void Display<PaintType, OutputType>::print_scanner_result(bool result){
+    output->print_scanner(result);
+}
+
+template <typename PaintType, typename OutputType>
 void Display<PaintType, OutputType>::print_player_shoot_result(bool flag, Coords coord){
     output->print_atack_process(coord, flag);
 }

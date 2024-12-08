@@ -77,7 +77,7 @@ void Game_controller<InputType, OutputType, PaintType>::play(){
             if (builder->is_need_arguments()){
                 display.execute_message("input_coords");
                 Coords coords_for_abil = input->read_coords();
-                std::cout<<game->player_turn_ability(builder, coords_for_abil)<<std::endl;
+                display.print_scanner_result(game->player_turn_ability(builder, coords_for_abil));
             }
             else{
                 game->player_turn_ability(builder);

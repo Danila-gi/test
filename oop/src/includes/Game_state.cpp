@@ -6,7 +6,7 @@ Game_state::Game_state(){
     current_round = 1;
 }
 
-void Game_state::save(const std::string& filename){
+/*void Game_state::save(const std::string& filename){
     FileWrapper file(filename, std::ios::out | std::ios::trunc);
 
     file << *this;
@@ -29,7 +29,7 @@ void Game_state::load(const std::string& filename) {
     file.rewind();
 
     file >> *this;
-}
+}*/
 
 FileWrapper& operator<<(FileWrapper& file, const Game_state& state) {
     file.write(state.current_round);

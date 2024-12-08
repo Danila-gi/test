@@ -53,6 +53,14 @@ void Output_to_terminal::print_round(int number){
     std::cout << "Round is " << number <<std::endl;
 }
 
+void Output_to_terminal::print_scanner(bool result){
+    if (result){
+        std::cout << "Ship is exist here" << std::endl;
+        return;
+    }
+    std::cout << "Ship isn't exist here" << std::endl; 
+}
+
 void Output_to_terminal::print_get_new_ability(){
     std::cout << "Nice, you have destroyed ship" << std::endl;
     std::cout << "You get new ability!" << std::endl;
