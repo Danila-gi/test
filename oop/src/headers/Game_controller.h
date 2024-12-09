@@ -13,7 +13,7 @@ private:
     Game* game;
 
     InputType* input;
-    OutputType* output;
+    //OutputType* output;
     Display<PaintType, OutputType> display;
 
 public:

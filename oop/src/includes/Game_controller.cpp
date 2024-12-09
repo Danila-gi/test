@@ -3,13 +3,13 @@
 template <typename InputType, typename OutputType, typename PaintType>
 Game_controller<InputType, OutputType, PaintType>::Game_controller(Game* game):game(game), display(){
     input = new InputType();
-    output = new OutputType();
+    //output = new OutputType();
 }
 
 template <typename InputType, typename OutputType, typename PaintType>
 Game_controller<InputType, OutputType, PaintType>::~Game_controller(){
     delete input;
-    delete output;
+    //delete output;
 }
 
 template <typename InputType, typename OutputType, typename PaintType>

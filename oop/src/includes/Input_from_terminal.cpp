@@ -30,6 +30,10 @@ void Input_from_terminal::load_commands(const std::string& filename){
                 throw std::runtime_error("Duplicate command assignment: " + value);
             }
 
+            if (string_commands.find(value) == string_commands.end()){
+                throw std::runtime_error("Unknown command!");
+            }
+
             commands_map[key] = string_commands[value];
             assigned_keys.insert(key);
             assigned_commands.insert(value);
