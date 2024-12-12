@@ -7,17 +7,20 @@ Game::Game(){
 }
 
 Game::~Game(){
-    //delete game_state;
 }
 
-void Game::input_ships(std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, std::vector<Orientation> orientations_of_ships){
-    game_state.getPlayer()->set_arguments(10, 10, length_of_ships, coords_of_ships, orientations_of_ships);
-    game_state.getEnemy()->set_arguments(10, 10, {TWO, ONE});
+void Game::input_ships(int height, int width, std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, std::vector<Orientation> orientations_of_ships){
+    game_state.getPlayer()->set_arguments(height, width, length_of_ships, coords_of_ships, orientations_of_ships);
+    game_state.getEnemy()->set_arguments(height, width, {TWO, ONE});
     game_state.getEnemy()->put_ships();
 }
 
 bool Game::is_player_won(){
     return game_state.getEnemy()->get_playground().get_ships_count() == 0;
+}
+
+bool Game::is_player_loss(){
+    return game_state.getPlayer()->get_playground().get_ships_count() == 0;
 }
 
 std::shared_ptr<Interface_of_builders> Game::player_ability(){
@@ -77,15 +80,12 @@ void Game::start_new_game(){
 void Game::save_game(const std::string& filename) {
     SaveLoad saver(filename);
     saver.save_game(game_state);
-    //game_state->save(filename);
 }
 
 void Game::load_game(const std::string& filename) {
     game_state = Game_state();
     SaveLoad loader(filename);
     loader.load_game(game_state);
-
-    //game_state->load(filename);
 }
 
 Playground& Game::get_playground(bool is_player){

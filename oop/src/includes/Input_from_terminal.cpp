@@ -38,6 +38,9 @@ void Input_from_terminal::load_commands(const std::string& filename){
             assigned_keys.insert(key);
             assigned_commands.insert(value);
         }
+        if (commands_map.size() < string_commands.size()){
+            throw std::runtime_error("Few commands!");
+        }
         //file.close();
     }
     catch(const std::runtime_error& e)
@@ -51,8 +54,9 @@ void Input_from_terminal::load_commands(const std::string& filename){
 void Input_from_terminal::default_arguments(){
     std::vector<char> keys = {'1', '2', '3', '4', '5', '6'};
     std::vector<std::string> values = {"Atack", "Ability", "Save", "Load", "Exit", "Input_ships"};
-    for (int i = 0; i < keys.size(); i++)
+    for (int i = 0; i < keys.size(); i++){
         commands_map[keys[i]] = string_commands[values[i]];
+    }
 }
 
 COMMAND Input_from_terminal::read_command(){
@@ -64,29 +68,57 @@ COMMAND Input_from_terminal::read_command(){
     return commands_map[x];
 }
 
+bool Input_from_terminal::check_input_numbers(int x, int y){
+    if (std::cin.fail() || x < 0 || y < 0) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "Invalid input. Please enter numbers only." << std::endl;
+        return false;
+    }
+    return true;
+}
+
 Coords Input_from_terminal::read_coords(){
     int x, y;
     bool valid_input = false;
 
     while (!valid_input) {
         std::cin >> x >> y;
-
-        if (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cerr << "Invalid input. Please enter numbers only." << std::endl;
-        } else {
-            valid_input = true;
-        }
+        valid_input = check_input_numbers(x, y);
     }
 
     return Coords{x, y};
+}
+
+void Input_from_terminal::read_sizes(int& width, int& height){
+    int x, y;
+    bool valid_input = false;
+
+    while (!valid_input) {
+        std::cin >> x >> y;
+        valid_input = check_input_numbers(x, y);
+    }
+    width = x;
+    height = y;
 }
 
 void Input_from_terminal::read_ships(std::vector<Length_of_the_ship>& length_of_ships, std::vector<Coords>& coords_of_ships, std::vector<Orientation>& orientations_of_ships){
     length_of_ships = {FOUR, THREE, THREE, TWO, TWO, TWO, ONE, ONE, ONE, ONE};
     coords_of_ships = {{2, 2}, {3, 4}, {0, 0}, {6, 0}, {1, 6}, {7, 4}, {0, 4}, {4, 0}, {9, 0}, {7, 7}};
     orientations_of_ships = {Horizontal, Vertical, Vertical, Horizontal, Vertical, Horizontal, Vertical, Vertical, Horizontal, Horizontal};
+    /*int count = 0;
+    std::cin >> count;
+    for (int i = 0; i < count; i++){
+        int length;
+        Coords coord;
+        int orient;
+        std::cin >> length;
+        coord = this->read_coords();
+        std::cin >> orient;
+        length_of_ships.push_back(static_cast<Length_of_the_ship>(length));
+        coords_of_ships.push_back(coord);
+        orientations_of_ships.push_back(static_cast<Orientation>(orient));
+    }*/
 }
 
 std::map<char, COMMAND> Input_from_terminal::get_map_of_commands() const{

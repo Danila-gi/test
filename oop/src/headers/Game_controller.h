@@ -10,17 +10,17 @@
 template <typename InputType, typename OutputType, typename PaintType>
 class Game_controller{
 private:
-    Game* game;
+    Game& game;
 
     InputType* input;
     //OutputType* output;
     Display<PaintType, OutputType> display;
 
 public:
-    Game_controller(Game* game);
+    Game_controller(Game& game);
     ~Game_controller();
     void play();
-    void start_init();
+    bool start_init();
 };
 
 #endif

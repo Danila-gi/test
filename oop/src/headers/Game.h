@@ -27,9 +27,10 @@ public:
 
     ~Game();
 
-    void input_ships(std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, std::vector<Orientation> orientations_of_ships);
+    void input_ships(int height, int width, std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, std::vector<Orientation> orientations_of_ships);
 
     bool is_player_won();
+    bool is_player_loss();
 
     void start_new_game();
 

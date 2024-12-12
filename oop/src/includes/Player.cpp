@@ -13,7 +13,6 @@ Player::~Player(){
     delete maker;
     delete ability_manager;
     delete add_abil;
-    //delete playground;
 }
 
 void Player::set_arguments(int height, int width, std::vector<Length_of_the_ship> length_of_ships, std::vector<Coords> coords_of_ships, 
@@ -22,7 +21,7 @@ std::vector<Orientation> orientations_of_ships){
     this->coords_of_ships = coords_of_ships;
     this->orientations_of_ships = orientations_of_ships;
 
-    playground = Playground(height, width);
+    playground = Playground(width, height);
     ships_manager = new Manager_of_ships(length_of_ships.size(), length_of_ships);
 
     this->put_ships();
@@ -43,24 +42,10 @@ std::shared_ptr<Interface_of_builders> Player::get_player_ability(){
     try
     {
         auto get = ability_manager->get_ability();
-        /*if (get->is_need_arguments()){
-            std::cout<<"Print coords"<<std::endl;
-            int x, y;
-            std::cin >> x >> y;
-            coords_for_scanner = {x, y};
-            return true;
-            auto ex = get->make_ability();
-            std::cout<<ex->perform_ability(enemy_playground)<<std::endl;
-        }
-        else{
-            enemy_playground.set_command(add_abil);
-            auto ex = get->make_ability();
-            ex->perform_ability(enemy_playground);
-        }*/
         return get;
     } catch (NoAbilitiesException &err) 
     {
-        std::cout << "Error: " << err.what() << std::endl;
+        std::cerr << "Error: " << err.what() << std::endl;
     }
     return nullptr;
 }
@@ -89,7 +74,11 @@ void Player::put_ships(){
         try{
             playground.add_ship(ships_manager->get_ship(index), coords_of_ships[index]);
         } catch(ShipPlacmentException &err){
-            std::cout << "Error: " << err.what() << std::endl;
+            std::cerr << "Error: " << err.what() << std::endl;
+            ships_manager->remove_ship(index);
+            orientations_of_ships.erase(orientations_of_ships.begin() + index);
+            coords_of_ships.erase(coords_of_ships.begin() + index);
+            length_of_ships.erase(length_of_ships.begin() + index);
             continue;
         }
         index++;
@@ -165,7 +154,7 @@ bool Player::deserialize(FileWrapper& file) {
     file.read(height);
     file.read(width);
 
-    playground = Playground(height, width);
+    playground = Playground(width, height);
     playground.deserialize(file);
 
     for (int i = 0; i < ships_count; i++){

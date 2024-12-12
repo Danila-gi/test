@@ -105,10 +105,8 @@ bool Playground::shoot_with_n_damage(Coords coord, Ship* ship, int index, int da
     for (int i = 0; i < damage; i++)
         ship->shoot_to_segment(index);
     if (damage == 1){
-        //std::cout<< "good hit " << coord.x << ":" << coord.y << std::endl;
         return true;
     }
-    //std::cout<< "good " << damage << "-force hit " << coord.x << ":" << coord.y << std::endl;
     set_multiple_attack(1);
     return true;
 }
@@ -256,8 +254,8 @@ void Playground::serialize(FileWrapper& file) const {
     file.write(width);
     file.write('\n');
 
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
             file.write(static_cast<int>(arr_of_ground[i][j]));
             file.write(' ');
         }
@@ -269,9 +267,9 @@ void Playground::deserialize(FileWrapper& file) {
     count_of_ships = 0;
 
     arr_of_ground = new Statement_of_the_coord*[height];
-    for (int i = 0; i < width; ++i) {
+    for (int i = 0; i < height; ++i) {
         arr_of_ground[i] = new Statement_of_the_coord[width];
-        for (int j = 0; j < height; ++j) {
+        for (int j = 0; j < width; ++j) {
             int value;
             file.read(value);
             if (value == 1)

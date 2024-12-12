@@ -18,7 +18,8 @@ void Output_to_terminal::print_command(char symbol, COMMAND command){
 }
 
 void Output_to_terminal::print_input_ships_infor(){
-    std::cout << "Print some arguments for ship:" << std::endl;
+    std::cout << "Print sizes of ground and count of ships." << std::endl;
+    std::cout << "Print after that some arguments for ship (count, lenght, coords, orientation(1-vert, 0-horiz))." << std::endl;
 }
 
 void Output_to_terminal::print_coords_infor(){

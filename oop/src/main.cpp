@@ -20,11 +20,11 @@
 #include "headers/Output_to_terminal.h"
 
 int main(){
-    Game* game = new Game();
+    Game game = Game();
     auto game_control = Game_controller<Input_from_terminal, Output_to_terminal, Paint>(game);
     game_control.play();
 
-    delete game;
+    //delete game;
 
     return 0;
 }
