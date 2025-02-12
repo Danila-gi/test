@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -99,16 +100,16 @@ std::vector<std::tuple<int, int, int>> solve(int n) {
         if (!bestSolution.empty() && current.squaresUsed.size() >= bestSolution.size()) {
             // Если в данном состоянии уже есть перебор по количеству квадратов по сравнению с последним лучшим решением,
             // происходит выход из этой ветки и переход к следующей
-            std::cout<< "Stop check this state: " << current.squaresUsed.size() << std::endl;
-            printMatrix(current.grid);
+            /*std::cout<< "Stop check this state: " << current.squaresUsed.size() << std::endl;
+            printMatrix(current.grid);*/
             continue;
         }
 
         if (current.emptyCell.first == -1 && current.emptyCell.second == -1) {
             if (bestSolution.empty() || current.squaresUsed.size() < bestSolution.size()) {
                 // Обновление нового лучшего решения, если столешница заполнена и было затрачено меньше квадратов
-                std::cout<< "Add new best solution: " << current.squaresUsed.size() << std::endl;
-                printMatrix(current.grid);
+                /*std::cout<< "Add new best solution: " << current.squaresUsed.size() << std::endl;
+                printMatrix(current.grid);*/
                 bestSolution = current.squaresUsed;
             }
             continue;
@@ -140,13 +141,14 @@ std::vector<std::tuple<int, int, int>> solve(int n) {
 }
 
 int main() {
-    int n;
-    std::cin >> n; // Чтение входных данных
-    auto solution = solve(n);
+    for (int n = 1; n <= 20; n++){
+        auto start = std::chrono::high_resolution_clock::now();
+        auto solution = solve(n);
+        auto end = std::chrono::high_resolution_clock::now();
 
-    std::cout << solution.size() << std::endl;
-    for (const auto& square : solution) { // Обход вектора и вывод всех чисел каждого кортежа (x, y, w)
-        std::cout << std::get<0>(square) << " " << std::get<1>(square) << " " << std::get<2>(square) << std::endl;
+        std::chrono::duration<long double> elapsed = end - start;
+
+        std::cout << "For N = " << n << " time taken: " << elapsed.count() << " seconds" << std::endl;
     }
 
     return 0;
