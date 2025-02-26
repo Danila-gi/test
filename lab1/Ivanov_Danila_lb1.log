@@ -369,7 +369,7 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~$ date && find . -type f -user
 2) Вложенные команды
 
 # Фиксируем состояние директории до изменения
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l
 Пн 24 фев 2025 22:22:35 MSK
 итого 6208
 -rwxrwxr-x 1 danila danila     593 фев 24 21:31 different_ways_to_find_links.sh
@@ -383,22 +383,22 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/l
 -rwxrwxr-x 1 danila danila    1190 фев 23 14:23 test.sh
 
 # Создаем файлы
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && touch file1.txt && touch file2.txt && touch file3.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && touch file1.txt && touch file2.txt && touch file3.txt
 Пн 24 фев 2025 22:22:59 MSK
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ find . -name "*.txt" -exec tar -czvf archive.tar.gz {} +
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find . -name "*.txt" -exec tar -czvf archive.tar.gz {} +
 ./file1.txt
 ./file2.txt
 ./file3.txt
 
 # Через вложенныую команду находим файлы .txt и архивируем их
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && find . -name "*.txt" -exec tar -czvf archive.tar.gz {} +
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && find . -name "*.txt" -exec tar -czvf archive.tar.gz {} +
 Пн 24 фев 2025 22:23:50 MSK
 ./file1.txt
 ./file2.txt
 ./file3.txt
 
 # Проверяем состояние директории после изменения
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l
 Пн 24 фев 2025 22:23:55 MSK
 итого 6212
 -rw-rw-r-- 1 danila danila     141 фев 24 22:23 archive.tar.gz
@@ -416,11 +416,11 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/l
 -rwxrwxr-x 1 danila danila    1190 фев 23 14:23 test.sh
 
 # Через вложенную команду изменяем права доступа на файлы, которые начинаются на file
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && find . -name "file*" -exec chmod 644 {} \;
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && find . -name "file*" -exec chmod 644 {} \;
 Пн 24 фев 2025 22:26:07 MSK
 
 # Проверяем состояние директории после изменения
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l
 Пн 24 фев 2025 22:26:09 MSK
 итого 6216
 -rw-rw-r-- 1 danila danila     141 фев 24 22:23 archive.tar.gz
@@ -703,41 +703,41 @@ passwd: пароль успешно обновлён
 info: Adding new user `user1' to supplemental / extra groups `users' ...
 info: Добавляется пользователь «user1» в группу «users» ...
 
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && sudo addgroup test_group
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo addgroup test_group
 Вт 25 фев 2025 20:14:17 MSK
 info: Выбирается GID из диапазона от 1000 по 59999 ...
 info: Добавляется группа «test_group» (GID 1002) ...
 
 # Добавление нового пользователя в группу
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && sudo usermod -a -G test_group user1
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo usermod -a -G test_group user1
 Вт 25 фев 2025 20:14:38 MSK
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && groups user1
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && groups user1
 Вт 25 фев 2025 20:14:50 MSK
 user1 : user1 users test_group
 
 # Создание нового файла с измененим владельца и группы
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ sudo touch test_file.txt
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ sudo touch test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
 Вт 25 фев 2025 20:15:34 MSK
 -rw-r--r-- 1 root root 0 фев 25 20:15 test_file.txt
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ sudo chown user1:test_group test_file.txt
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ sudo chown user1:test_group test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
 Вт 25 фев 2025 20:16:01 MSK
 -rw-r--r-- 1 user1 test_group 0 фев 25 20:15 test_file.txt
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ sudo chmod 640 test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ sudo chmod 640 test_file.txt
 
 # Фиксируем изменения
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
 Вт 25 фев 2025 20:16:58 MSK
 -rw-r----- 1 user1 test_group 0 фев 25 20:15 test_file.txt
 
 # Пытаемся получить файл пользователем danila. Отказано в доступе
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && cat test_file.txt 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat test_file.txt 
 Вт 25 фев 2025 20:17:40 MSK
 cat: test_file.txt: Отказано в доступе
 
 # Меняем пользователя
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && sudo -u user1 bash
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo -u user1 bash
 Вт 25 фев 2025 20:18:01 MSK
 
 # Получили права на изменение и чтение
@@ -1199,9 +1199,9 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/
 
 # Для исполняемых файлов ELF это магическое число - первые 4 байта
 # 7f 45 4c 46
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && g++ read_secret.cpp 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && g++ read_secret.cpp 
 Ср 26 фев 2025 02:37:40 MSK
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && hexdump -C a.out | head -n 5
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && hexdump -C a.out | head -n 5
 Ср 26 фев 2025 02:37:47 MSK
 00000000  7f 45 4c 46 02 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
 00000010  03 00 3e 00 01 00 00 00  40 23 00 00 00 00 00 00  |..>.....@#......|
