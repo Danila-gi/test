@@ -1,0 +1,1289 @@
+Лабораторная работа №1.
+Иванов Данила Максимович, 3342
+
+Дата исполнения отчета: 24.02.2025
+
+Идентификация исполнителя:
+
+Script started on 2025-02-24 19:16:04+03:00
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && who
+Пн 24 фев 2025 19:16:36 MSK
+danila   seat0        2025-02-24 15:46 (login screen)
+danila   tty2         2025-02-24 15:46 (tty2)
+
+Профиль системы
+
+Описание аппаратуры/компьютера
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && lscpu
+Пн 24 фев 2025 19:18:37 MSK
+Архитектура:              x86_64
+  CPU op-mode(s):         32-bit, 64-bit
+  Address sizes:          39 bits physical, 48 bits virtual
+  Порядок байт:           Little Endian
+CPU(s):                   16
+  On-line CPU(s) list:    0-15
+ID прроизводителя:        GenuineIntel
+  Имя модели:             Intel(R) Core(TM) i7-10870H CPU @ 2.20GHz
+    Семейство ЦПУ:        6
+    Модель:               165
+    Потоков на ядро:      2
+    Ядер на сокет:        8
+    Сокетов:              1
+    Степпинг:             2
+    CPU(s) scaling MHz:   16%
+    CPU max MHz:          5000,0000
+    CPU min MHz:          800,0000
+    BogoMIPS:             4399,99
+    Флаги:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_
+                          tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pd
+                          cm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enh
+                          anced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xge
+                          tbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+Virtualization features:  
+  Виртуализация:          VT-x
+Caches (sum of all):      
+  L1d:                    256 KiB (8 instances)
+  L1i:                    256 KiB (8 instances)
+  L2:                     2 MiB (8 instances)
+  L3:                     16 MiB (1 instance)
+NUMA:                     
+  NUMA node(s):           1
+  NUMA node0 CPU(s):      0-15
+Vulnerabilities:          
+  Gather data sampling:   Mitigation; Microcode
+  Itlb multihit:          KVM: Mitigation: VMX disabled
+  L1tf:                   Not affected
+  Mds:                    Not affected
+  Meltdown:               Not affected
+  Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+  Reg file data sampling: Not affected
+  Retbleed:               Mitigation; Enhanced IBRS
+  Spec rstack overflow:   Not affected
+  Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+  Srbds:                  Mitigation; Microcode
+  Tsx async abort:        Not affected
+
+Идентификация/описание ОС
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ uname
+Linux
+
+
+Задание 1.
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && touch output && touch output1
+Пн 24 фев 2025 19:19:17 MSK
+
+# Состояния файлов до выполнения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cat output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cat output1
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^-' | awk '{print $0; exit}'
+-rw-r-----   1 root root        620 авг 31 13:14 debug
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^-' | awk '{print $0; exit}' >> output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find 2>/dev/null / -name debug | awk '{print $0; exit}' >> output
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^b' | awk '{print $0; exit}'
+brw-rw----   1 root   disk      7,     0 фев 24 15:46 loop0
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^b' | awk '{print $0; exit}' >> output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find 2>/dev/null / -name loop0 | awk '{print $0; exit}' >> output
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^c' | awk '{print $0; exit}'
+crw-------   1 root   root     10,   122 фев 24 15:46 acpi_thermal_rel
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^c' | awk '{print $0; exit}' >> output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find 2>/dev/null / -name acpi_thermal_rel | awk '{print $0; exit}' >> output
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^d' | awk '{print $0; exit}'
+drwxr-xr-x   2 root root       4096 апр  8  2024 bin.usr-is-merged
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^d' | awk '{print $0; exit}' >> output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find 2>/dev/null / -name bin.usr-is-merged | awk '{print $0; exit}' >> output
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^l' | awk '{print $0; exit}'
+lrwxrwxrwx   1 root root          7 сен  8  2023 bin -> usr/bin
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^l' | awk '{print $0; exit}' >> output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find 2>/dev/null / -name bin | awk '{print $0; exit}' >> output
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^p' | awk '{print $0; exit}'
+prw-------  1 root              root      0 фев 24 15:46 initctl
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^p' | awk '{print $0; exit}' >> output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find 2>/dev/null / -name initctl | awk '{print $0; exit}' >> output
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^s' | awk '{print $0; exit}'
+srw-rw-rw-  1 root              root      0 фев 24 15:46 acpid.socket
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -lR 2>/dev/null / | grep -E '^s' | awk '{print $0; exit}' >> output
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ find 2>/dev/null / -name acpid.socket | awk '{print $0; exit}' >> output
+
+# Состояние output после выполнения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat output
+Пн 24 фев 2025 19:21:25 MSK
+-rw-r-----   1 root root        620 авг 31 13:14 debug
+/sys/kernel/debug
+brw-rw----   1 root   disk      7,     0 фев 24 15:46 loop0
+/dev/loop0
+crw-------   1 root   root     10,   122 фев 24 15:46 acpi_thermal_rel
+/dev/acpi_thermal_rel
+drwxr-xr-x   2 root root       4096 апр  8  2024 bin.usr-is-merged
+/bin.usr-is-merged
+lrwxrwxrwx   1 root root          7 сен  8  2023 bin -> usr/bin
+/opt/zoom/Qt/bin
+prw-------  1 root              root      0 фев 24 15:46 initctl
+/run/initctl
+srw-rw-rw-  1 root              root      0 фев 24 15:46 acpid.socket
+/run/acpid.socket
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ./scan_fs.sh output1
+Пн 24 фев 2025 19:22:03 MSK
+Поиск файлов...
+debug
+loop0
+acpi_thermal_rel
+bin.usr-is-merged
+bin
+initctl
+acpid.socket
+Результаты записаны в output1
+
+# Состояние output1 после выполнения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cat output1
+/sys/kernel/debug
+/dev/loop0
+/dev/acpi_thermal_rel
+/bin.usr-is-merged
+/opt/zoom/Qt/bin
+/run/initctl
+/run/acpid.socket
+
+
+Задание 2.
+
+# Создание жестких ссылок на файл source в разных директориях
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && touch source
+Пн 24 фев 2025 20:06:17 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1& date && ln source link1
+Пн 24 фев 2025 20:06:36 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cd ..
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС$ date && ln lab1/source link2
+Пн 24 фев 2025 20:06:53 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС$ cd lab1
+
+# Проверка совпадения inode
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -i
+Пн 24 фев 2025 20:07:02 MSK
+7374559 experiment_size.sh     7373415 link1       7372121 test.log
+7373598 find_hardlinks.sh      7374738 scan_fs.sh  7374602 test.sh
+7374587 find_links.sh          7373415 source
+7374580 Ivanov_Danila_lb1.log  7374697 test
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cat find_hardlinks.sh 
+#!/bin/bash
+
+# Проверяем, что передан аргумент с именем файла
+if [ -z "$1" ]; then
+    echo "Использование: $0 <файл>"
+    exit 1
+fi
+
+# Получаем inode целевого файла
+target_file="$1"
+target_inode=$(stat -c %i "$target_file")
+
+# Проверяем, что файл существует
+if [ -z "$target_inode" ]; then
+    echo "Файл '$target_file' не найден."
+    exit 1
+fi
+
+echo "Поиск жёстких ссылок на файл '$target_file' (inode: $target_inode)..."
+
+# Рекурсивно обходим файловую систему с помощью ls -iR
+ls -iR / 2>/dev/null | awk -v target_inode="$target_inode" -v target_file="$target_file" '
+BEGIN {
+    dir = ""
+}
+{
+
+    # Если строка начинается с "./", это путь к каталогу
+    if ($0 ~ /^\//) {
+        dir = substr($0, 1, length($0) - 1)  # Убираем двоеточие в конце
+    }
+    # Если строка содержит inode и имя файла
+    else if ($1 ~ /^[0-9]+$/ && $2 != "") {
+        # Если inode совпадает с целевым и это не исходный файл
+        if ($1 == target_inode) {
+            print dir "/" $2  # Выводим полный путь к файлу
+        }
+    }
+}
+'
+
+
+# Запуск скрипта
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ./find_hardlinks.sh source
+Пн 24 фев 2025 20:07:33 MSK
+Поиск жёстких ссылок на файл 'source' (inode: 7373415)...
+/home/danila/Рабочий стол/ОС/link2
+/home/danila/Рабочий стол/ОС/lab1/link1
+/home/danila/Рабочий стол/ОС/lab1/source
+
+Задание 3.
+
+# Создаем наш исходный файл, на который будем ссылаться
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && touch source_file
+Пн 24 фев 2025 20:37:50 MSK
+
+# Способ №1 создать символьную ссылку через ln -s
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ln -s source_file link1
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -l link1
+lrwxrwxrwx 1 danila danila 11 фев 24 20:38 link1 -> source_file
+
+# Способ №2 создать символьную ссылку через cp -s
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cp -s source_file link2
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -l link2
+lrwxrwxrwx 1 danila danila 11 фев 24 20:38 link2 -> source_file
+# Способа через link не существует, он создает только жесткие ссылки
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cat find_links.sh 
+#!/bin/bash
+
+# Проверяем, что передан аргумент с именем файла
+if [ -z "$1" ]; then
+    echo "Использование: $0 <файл>"
+    exit 1
+fi
+
+target_file="$1"
+count=0  # Счетчик символьных ссылок
+
+# Поиск символьных ссылок на целевой файл
+ls -lR / 2>/dev/null | grep "$target_file" | grep ^l | awk '
+{
+    print $0
+    count++
+}
+END {
+    print "Найдено символьных ссылок: " count
+}
+'
+
+# Запуск скрипта
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ./find_links.sh source_file
+Пн 24 фев 2025 20:40:46 MSK
+lrwxrwxrwx 1 danila danila     11 фев 24 20:38 link1 -> source_file
+lrwxrwxrwx 1 danila danila     11 фев 24 20:38 link2 -> source_file
+Найдено символьных ссылок: 2
+
+
+Задание 4.
+# Один из спосбов см. Задание 3. Также предложен способ через find и readlink.
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cat different_ways_to_find_links.sh 
+#!/bin/bash
+
+# Проверяем, что передан аргумент с именем файла
+if [ -z "$1" ]; then
+    echo "Использование: $0 <файл>"
+    exit 1
+fi
+
+target_file=$(realpath "$1")  # Нормализация пути
+
+find / -type l 2>/dev/null | while read -r link; do
+    # Получаем цель символьной ссылки
+    link_target=$(readlink -f "$link")
+    # Сравниваем цель ссылки с целевым файлом
+    if [ "$link_target" == "$target_file" ]; then
+        echo "$link -> $link_target"
+    fi
+done
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ./different_ways_to_find_links.sh source_file
+Пн 24 фев 2025 21:31:32 MSK
+/home/danila/Рабочий стол/ОС/lab1/link2 -> /home/danila/Рабочий стол/ОС/lab1/source_file
+/home/danila/Рабочий стол/ОС/lab1/link1 -> /home/danila/Рабочий стол/ОС/lab1/source_file
+
+Задание 5.
+
+1) Примеры использования find
+
+# Поиск всех файлов с расширением .docx в текущем каталоге и его подкаталогах
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~$ date && find . -name "*.docx"
+Пн 24 фев 2025 22:20:05 MSK
+./Рабочий стол/test/oop/Ivanov_Danila_lb4.docx
+./Рабочий стол/test/oop/Ivanov_Danila_lb1.docx
+./Рабочий стол/test/oop/Ivanov_Danila_lb2.docx
+./Рабочий стол/test/oop/Ivanov_Danila_lb3.docx
+./Рабочий стол/test/ВычМат/lab1/Ivanov_Danila_lb1.docx
+./Рабочий стол/test/ПиАА/lab1/Ivanov_Danila_lb1.docx
+./Рабочий стол/oop/Ivanov_Danila_lb4.docx
+./Рабочий стол/oop/Ivanov_Danila_lb1.docx
+./Рабочий стол/oop/Ivanov_Danila_lb2.docx
+./Рабочий стол/oop/Ivanov_Danila_lb3.docx
+./Рабочий стол/oop3/Ivanov_Danila_lb1.docx
+./Рабочий стол/oop3/Ivanov_Danila_lb2.docx
+./Рабочий стол/ВычМат/lab1/Ivanov_Danila_lb1.docx
+./Рабочий стол/ПиАА/lab1/Ivanov_Danila_lb1.docx
+./.local/share/Trash/files/oop/Ivanov_Danila_lb1.docx
+./.local/share/Trash/files/oop/Ivanov_Danila_lb2.docx
+./.local/share/Trash/files/Ivanov_Danila_lb1.docx
+./.local/share/Trash/files/Ivanov_Danila_lb1.2.docx
+
+# Поиск всех файлов типа p (FIFO)
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~$ date && find . -type p
+Пн 24 фев 2025 22:20:31 MSK
+./.zoom/data/com.zoom.ipc.assistantapp__req
+./.zoom/data/com.zoom.ipc.additional_assistantapp__res
+./.zoom/data/com.zoom.ipc.additional_assistantapp__req
+./.zoom/data/com.zoom.ipc.assistantapp__res
+
+# Поиск всех файлов типа l, измененных за последний 1 день
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~$ date && find . -type l -mtime -1
+Пн 24 фев 2025 22:20:36 MSK
+./snap/firmware-updater/167/.config/ibus/bus
+./snap/firefox/common/.mozilla/firefox/g645i3wb.default/lock
+./snap/firefox/5783/.config/ibus/bus
+./snap/snapd-desktop-integration/253/.config/ibus/bus
+
+# Поиск всех обычных файлов с размером больше 200 Мб
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~$ date && find . -type f -size +200M
+Пн 24 фев 2025 22:20:42 MSK
+./.docker/desktop/vms/0/data/Docker.raw
+
+# Вывод расширенной информации о файлах (имя, размер, время изменения)
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~$ date && find . -type p -printf "%p %s %t\n"
+Пн 24 фев 2025 22:20:46 MSK
+./.zoom/data/com.zoom.ipc.assistantapp__req 0 Tue Jul  2 13:29:39.8654791880 2024
+./.zoom/data/com.zoom.ipc.additional_assistantapp__res 0 Tue Dec 19 16:04:43.4514440620 2023
+./.zoom/data/com.zoom.ipc.additional_assistantapp__req 0 Tue Jul  2 13:29:39.8654791880 2024
+./.zoom/data/com.zoom.ipc.assistantapp__res 0 Tue Dec 19 16:04:43.4514440620 2023
+
+# Поиск файлов, принадлежащих определенному пользователю
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~$ date && find . -type f -user danila | head -n 5
+Пн 24 фев 2025 22:20:53 MSK
+./.bash_history-04599.tmp
+./.cache/vscode-cpptools/6d9d5a9cca587efa63950a5a602fe15d/.browse.VC.db
+./.cache/vscode-cpptools/77acf77abe6bb554095b3522d8f4fb53/.browse.VC.db
+./.cache/vscode-cpptools/26d6ed93a21c0a54b6a33b13564fb0a7/.browse.VC.db
+./.cache/vscode-cpptools/20550bba721447944b08fdf6b5178b47/.browse.VC.db
+
+2) Вложенные команды
+
+# Фиксируем состояние директории до изменения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l
+Пн 24 фев 2025 22:22:35 MSK
+итого 6208
+-rwxrwxr-x 1 danila danila     593 фев 24 21:31 different_ways_to_find_links.sh
+-rwxrwxr-x 1 danila danila     945 фев 23 16:04 experiment_size.sh
+-rwxrwxr-x 1 danila danila    1350 фев 24 19:54 find_hardlinks.sh
+-rwxrwxr-x 1 danila danila     513 фев 24 21:35 find_links.sh
+-rw-rw-r-- 1 danila danila   18858 фев 24 22:21 Ivanov_Danila_lb1.log
+-rwxrwxr-x 1 danila danila    1218 фев 24 17:56 scan_fs.sh
+-rw-rw-r-- 1 danila danila 6316032 фев 24 21:39 test
+-rw-rw-r-- 1 danila danila    5917 фев 24 20:15 test.log
+-rwxrwxr-x 1 danila danila    1190 фев 23 14:23 test.sh
+
+# Создаем файлы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && touch file1.txt && touch file2.txt && touch file3.txt
+Пн 24 фев 2025 22:22:59 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ find . -name "*.txt" -exec tar -czvf archive.tar.gz {} +
+./file1.txt
+./file2.txt
+./file3.txt
+
+# Через вложенныую команду находим файлы .txt и архивируем их
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && find . -name "*.txt" -exec tar -czvf archive.tar.gz {} +
+Пн 24 фев 2025 22:23:50 MSK
+./file1.txt
+./file2.txt
+./file3.txt
+
+# Проверяем состояние директории после изменения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l
+Пн 24 фев 2025 22:23:55 MSK
+итого 6212
+-rw-rw-r-- 1 danila danila     141 фев 24 22:23 archive.tar.gz
+-rwxrwxr-x 1 danila danila     593 фев 24 21:31 different_ways_to_find_links.sh
+-rwxrwxr-x 1 danila danila     945 фев 23 16:04 experiment_size.sh
+-rw-rw-r-- 1 danila danila       0 фев 24 22:22 file1.txt
+-rw-rw-r-- 1 danila danila       0 фев 24 22:22 file2.txt
+-rw-rw-r-- 1 danila danila       0 фев 24 22:22 file3.txt
+-rwxrwxr-x 1 danila danila    1350 фев 24 19:54 find_hardlinks.sh
+-rwxrwxr-x 1 danila danila     513 фев 24 21:35 find_links.sh
+-rw-rw-r-- 1 danila danila   18858 фев 24 22:21 Ivanov_Danila_lb1.log
+-rwxrwxr-x 1 danila danila    1218 фев 24 17:56 scan_fs.sh
+-rw-rw-r-- 1 danila danila 6316032 фев 24 21:39 test
+-rw-rw-r-- 1 danila danila    5917 фев 24 20:15 test.log
+-rwxrwxr-x 1 danila danila    1190 фев 23 14:23 test.sh
+
+# Через вложенную команду изменяем права доступа на файлы, которые начинаются на file
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && find . -name "file*" -exec chmod 644 {} \;
+Пн 24 фев 2025 22:26:07 MSK
+
+# Проверяем состояние директории после изменения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l
+Пн 24 фев 2025 22:26:09 MSK
+итого 6216
+-rw-rw-r-- 1 danila danila     141 фев 24 22:23 archive.tar.gz
+-rwxrwxr-x 1 danila danila     593 фев 24 21:31 different_ways_to_find_links.sh
+-rwxrwxr-x 1 danila danila     945 фев 23 16:04 experiment_size.sh
+-rw-r--r-- 1 danila danila       0 фев 24 22:22 file1.txt
+-rw-r--r-- 1 danila danila       0 фев 24 22:22 file2.txt
+-rw-r--r-- 1 danila danila       0 фев 24 22:22 file3.txt
+-rwxrwxr-x 1 danila danila    1350 фев 24 19:54 find_hardlinks.sh
+-rwxrwxr-x 1 danila danila     513 фев 24 21:35 find_links.sh
+-rw-rw-r-- 1 danila danila   21219 фев 24 22:24 Ivanov_Danila_lb1.log
+-rwxrwxr-x 1 danila danila    1218 фев 24 17:56 scan_fs.sh
+-rw-rw-r-- 1 danila danila 6316032 фев 24 21:39 test
+-rw-rw-r-- 1 danila danila    5917 фев 24 20:15 test.log
+-rwxrwxr-x 1 danila danila    1190 фев 23 14:23 test.sh
+
+
+Задание 6.
+
+# Вывод состояния до выполнения операций
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls
+Вт 25 фев 2025 14:14:48 MSK
+different_ways_to_find_links.sh  find_links.sh          test
+experiment_size.sh               Ivanov_Danila_lb1.log  test.log
+find_hardlinks.sh                scan_fs.sh             test.sh
+
+# Анализ файла через команды od и hexdump
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && od -t x1 -N 64 scan_fs.sh
+Вт 25 фев 2025 14:14:53 MSK
+0000000 23 21 2f 62 69 6e 2f 62 61 73 68 0a 0a 23 20 d0
+0000020 9f d1 80 d0 be d0 b2 d0 b5 d1 80 d0 ba d0 b0 20
+0000040 d0 b0 d1 80 d0 b3 d1 83 d0 bc d0 b5 d0 bd d1 82
+0000060 d0 be d0 b2 0a 69 66 20 5b 20 2d 7a 20 22 24 31
+0000100
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && hexdump -C -n 64 scan_fs.sh
+Вт 25 фев 2025 14:14:57 MSK
+00000000  23 21 2f 62 69 6e 2f 62  61 73 68 0a 0a 23 20 d0  |#!/bin/bash..# .|
+00000010  9f d1 80 d0 be d0 b2 d0  b5 d1 80 d0 ba d0 b0 20  |............... |
+00000020  d0 b0 d1 80 d0 b3 d1 83  d0 bc d0 b5 d0 bd d1 82  |................|
+00000030  d0 be d0 b2 0a 69 66 20  5b 20 2d 7a 20 22 24 31  |.....if [ -z "$1|
+00000040
+
+# Создание директории для анализа
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && mkdir test_dir
+Вт 25 фев 2025 14:15:02 MSK
+
+# Делаем вывод, что нету доступа для анализа директории через вышеуказанные команды
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && od -t x1 -N 1024 test_dir
+Вт 25 фев 2025 14:15:07 MSK
+od: test_dir: Это каталог
+0000000
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && hexdump -C -n 1024 test_dir
+Вт 25 фев 2025 14:15:12 MSK
+hexdump: test_dir: Это каталог
+
+# Создаем тестовый файл .txt, и поочередно добавляем новую информацию и фиксируем эти изменения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && touch test_file.txt
+Вт 25 фев 2025 14:15:21 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && echo "Some text" >> test_file.txt
+Вт 25 фев 2025 14:15:27 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && hexdump -C -n 64 test_file.txt
+Вт 25 фев 2025 14:15:33 MSK
+00000000  53 6f 6d 65 20 74 65 78  74 0a                    |Some text.|
+0000000a
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && echo "One more Line!" >> test_file.txt
+Вт 25 фев 2025 14:15:53 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && hexdump -C -n 64 test_file.txt
+Вт 25 фев 2025 14:16:00 MSK
+00000000  53 6f 6d 65 20 74 65 78  74 0a 4f 6e 65 20 6d 6f  |Some text.One mo|
+00000010  72 65 20 4c 69 6e 65 21  0a                       |re Line!.|
+00000019
+
+
+Задание 7.
+
+# Зафиксируем состояние системы до выполнения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls
+Вт 25 фев 2025 14:41:19 MSK
+different_ways_to_find_links.sh  find_links.sh          test
+experiment_size.sh               Ivanov_Danila_lb1.log  test.log
+find_hardlinks.sh                scan_fs.sh             test.sh
+
+# Вывод содержимого скрипта
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat experiment_size.sh 
+Вт 25 фев 2025 14:41:40 MSK
+#!/bin/bash
+
+mkdir -p test_dir
+echo "Создан каталог test_dir."
+
+echo "Размер пустого каталога:"
+du -sh test_dir
+
+# Создаем 100 файлов
+touch test_dir/file{1..100}
+echo "Создано 100 файлов."
+
+echo "Размер каталога после создания файлов:"
+du -sh test_dir
+
+mkdir -p test_dir/subdir{1..10}
+echo "Создано 10 подкаталогов."
+
+echo "Размер каталога после создания подкаталогов:"
+du -sh test_dir
+
+rm test_dir/file{1..50}
+echo "Удалено 50 файлов."
+
+echo "Размер каталога после удаления файлов:"
+du -sh test_dir
+
+rmdir test_dir/subdir{1..5}
+echo "Удалено 5 подкаталогов."
+
+echo "Размер каталога после удаления подкаталогов:"
+du -sh test_dir
+
+rm -rf test_dir
+echo "Каталог test_dir удален."
+
+# Выполним скрипт и будем комментировать результат вывода
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ./experiment_size.sh 
+Вт 25 фев 2025 14:41:51 MSK
+Создан каталог test_dir.
+Размер пустого каталога:
+4,0K	test_dir # стандартный размер пустого каталога на файловой системе
+Создано 100 файлов.
+Размер каталога после создания файлов:
+4,0K	test_dir # тот же размер, свяазано с тем, что файловая система изначально выделяет достаточно места для хранения записей
+Создано 10 подкаталогов.
+Размер каталога после создания подкаталогов:
+44K	test_dir # подкаталоги добавляют дополнительные записи в метаданные каталога
+Удалено 50 файлов.
+Размер каталога после удаления файлов:
+44K	test_dir # файловая система не сразу освобождает место, занятое удаленными записями
+Удалено 5 подкаталогов.
+Размер каталога после удаления подкаталогов:
+24K	test_dir # удаление подкаталогов освободило часть метаданных, и файловая система смогла уменьшить размер каталога
+Каталог test_dir удален.
+
+
+Задание 8.
+
+# Файл /etc/passwd содержит информация о пользователях системы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat /etc/passwd | head -n 5
+Вт 25 фев 2025 15:03:51 MSK
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+
+# Файл /etc/shadow содержит зашифрованные пароли пользователей
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo cat /etc/shadow | head -n 5
+[sudo] пароль для danila: 
+Вт 25 фев 2025 15:03:56 MSK
+root:!:19608:0:99999:7:::
+daemon:*:19576:0:99999:7:::
+bin:*:19576:0:99999:7:::
+sys:*:19576:0:99999:7:::
+sync:*:19576:0:99999:7:::
+
+# Видим, владелец может эти файлы читать и изменять, группы только читать
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l /etc/passwd
+Вт 25 фев 2025 15:04:01 MSK
+-rw-r--r-- 1 root root 3314 авг 31 13:14 /etc/passwd
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l /etc/shadow
+Вт 25 фев 2025 15:04:06 MSK
+-rw-r----- 1 root shadow 1640 авг 31 13:14 /etc/shadow
+
+# Утилита /usr/bin/passwd позволяет пользователям изменять свои пароли
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l /usr/bin/passwd
+Вт 25 фев 2025 15:04:12 MSK
+-rwsr-xr-x 1 root root 64152 апр  9  2024 /usr/bin/passwd
+
+# s в поле владельца означает, что утилита выполняется с правами владельца (root), даже если запущена обычным пользователем
+
+
+Задание 9.
+
+9.1
+
+# Создание тестовых файлов и фиксация их изначальных прав
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && mkdir test_dir
+Вт 25 фев 2025 18:32:05 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && touch test_dir/file1 && touch test_dir/file2
+Вт 25 фев 2025 18:32:12 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_dir/
+Вт 25 фев 2025 18:32:16 MSK
+итого 0
+-rw-rw-r-- 1 danila danila 0 фев 25 18:32 file1
+-rw-rw-r-- 1 danila danila 0 фев 25 18:32 file2
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l | grep test_dir
+Вт 25 фев 2025 18:32:22 MSK
+drwxrwxr-x 2 danila danila    4096 фев 25 18:32 test_dir
+
+# Изменение прав
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && chmod 644 test_dir/file1
+Вт 25 фев 2025 18:32:30 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && chmod 755 test_dir
+Вт 25 фев 2025 18:32:35 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_dir/
+Вт 25 фев 2025 18:32:40 MSK
+итого 0
+-rw-r--r-- 1 danila danila 0 фев 25 18:32 file1
+-rw-rw-r-- 1 danila danila 0 фев 25 18:32 file2
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l | grep test_dir
+Вт 25 фев 2025 18:32:44 MSK
+drwxr-xr-x 2 danila danila    4096 фев 25 18:32 test_dir
+
+# Изменение владельца и группы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chown root test_dir/file2
+Вт 25 фев 2025 18:32:50 MSK
+[sudo] пароль для danila: 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chown :root test_dir/file2
+Вт 25 фев 2025 18:33:02 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_dir/
+Вт 25 фев 2025 18:33:07 MSK
+итого 0
+-rw-r--r-- 1 danila danila 0 фев 25 18:32 file1
+-rw-rw-r-- 1 root   root   0 фев 25 18:32 file2
+
+9.2
+
+# Показ, что файл еще не создали
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_script.sh
+Вт 25 фев 2025 19:05:16 MSK
+ls: невозможно получить доступ к 'test_script.sh': Нет такого файла или каталога
+
+# Создание тестового скрипта
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && echo '#!/bin/bash' > test_script.sh
+Вт 25 фев 2025 19:05:26 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && echo 'echo "Hello"' >> test_script.sh 
+Вт 25 фев 2025 19:05:39 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && chmod +x test_script.sh 
+Вт 25 фев 2025 19:05:55 MSK
+
+# Видим, что появился скрипт с обычными правами исполнения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_script.sh
+Вт 25 фев 2025 19:06:02 MSK
+-rwxrwxr-x 1 danila danila 25 фев 25 19:05 test_script.sh
+
+# Устанавливаем SUID для скрипта
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && chmod u+s test_script.sh 
+Вт 25 фев 2025 19:06:31 MSK
+
+# Фиксируем изменения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l test_script.sh
+Вт 25 фев 2025 19:06:35 MSK
+-rwsrwxr-x 1 danila danila 25 фев 25 19:05 test_script.sh
+
+# Запускаем скрипт
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ./test_script.sh
+Вт 25 фев 2025 19:06:57 MSK
+Hello
+
+9.3
+ 
+# Создание нового пользователя и группы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo adduser user1
+Вт 25 фев 2025 20:13:41 MSK
+[sudo] пароль для danila: 
+info: Добавляется пользователь «user1» ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Добавляется новая группа «user1» (1001) ...
+info: Adding new user `user1' (1001) with group `user1 (1001)' ...
+warn: The home directory `/home/user1' already exists.  Not touching this directory.
+Новый пароль: 
+Повторите ввод нового пароля: 
+passwd: пароль успешно обновлён
+Изменение информации о пользователе user1
+Введите новое значение или нажмите ENTER для выбора значения по умолчанию
+	Полное имя []: user1
+	Номер комнаты []: 
+	Рабочий телефон []: 
+	Домашний телефон []: 
+	Другое []: 
+Данная информация корректна? [Y/n] y
+info: Adding new user `user1' to supplemental / extra groups `users' ...
+info: Добавляется пользователь «user1» в группу «users» ...
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && sudo addgroup test_group
+Вт 25 фев 2025 20:14:17 MSK
+info: Выбирается GID из диапазона от 1000 по 59999 ...
+info: Добавляется группа «test_group» (GID 1002) ...
+
+# Добавление нового пользователя в группу
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && sudo usermod -a -G test_group user1
+Вт 25 фев 2025 20:14:38 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && groups user1
+Вт 25 фев 2025 20:14:50 MSK
+user1 : user1 users test_group
+
+# Создание нового файла с измененим владельца и группы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ sudo touch test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
+Вт 25 фев 2025 20:15:34 MSK
+-rw-r--r-- 1 root root 0 фев 25 20:15 test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ sudo chown user1:test_group test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
+Вт 25 фев 2025 20:16:01 MSK
+-rw-r--r-- 1 user1 test_group 0 фев 25 20:15 test_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ sudo chmod 640 test_file.txt
+
+# Фиксируем изменения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && ls -l test_file.txt
+Вт 25 фев 2025 20:16:58 MSK
+-rw-r----- 1 user1 test_group 0 фев 25 20:15 test_file.txt
+
+# Пытаемся получить файл пользователем danila. Отказано в доступе
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && cat test_file.txt 
+Вт 25 фев 2025 20:17:40 MSK
+cat: test_file.txt: Отказано в доступе
+
+# Меняем пользователя
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && sudo -u user1 bash
+Вт 25 фев 2025 20:18:01 MSK
+
+# Получили права на изменение и чтение
+user1@danila-VivoBook-ASUSLaptop-X571LH-A571LH:/home/danila/Рабочий стол/ОС/lab1$ date && echo "Hello" >> test_file.txt 
+Вт 25 фев 2025 20:18:53 MSK
+user1@danila-VivoBook-ASUSLaptop-X571LH-A571LH:/home/danila/Рабочий стол/ОС/lab1$ date && cat test_file.txt 
+Вт 25 фев 2025 20:18:55 MSK
+Hello
+
+
+9.4 
+
+# Создание тестовых директории и файла в ней с владельцем root
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo mkdir test_dir
+Вт 25 фев 2025 20:52:01 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo touch test_dir/file_test
+Вт 25 фев 2025 20:52:13 MSK
+
+# Установка прав доступа для каталога и обычного файла. Обычные пользователи могут читать содержимое
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chmod 755 test_dir
+Вт 25 фев 2025 20:53:16 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chmod 644 test_dir/file_test
+Вт 25 фев 2025 20:53:51 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -l | grep test_dir
+drwxr-xr-x 2 root   root      4096 фев 25 20:52 test_dir
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -l test_dir
+итого 0
+-rw-r--r-- 1 root root 0 фев 25 20:52 file_test
+
+# Проверка, что обычный пользователь имеет доступ
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat test_dir
+Вт 25 фев 2025 20:54:34 MSK
+cat: test_dir: Это каталог
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat test_dir/file_test
+Вт 25 фев 2025 20:54:53 MSK
+
+# Изменение прав, чтобы пользователи не могли читать файлы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chmod 740 test_dir
+Вт 25 фев 2025 20:55:34 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -l | grep test_dir
+drwxr----- 2 root   root      4096 фев 25 20:52 test_dir
+
+# Проверка, что будет отказано в доступе
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat test_dir
+Вт 25 фев 2025 20:55:47 MSK
+cat: test_dir: Отказано в доступе
+
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chmod 640 test_dir/file_test
+Вт 25 фев 2025 20:56:01 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat test_dir/file_test
+Вт 25 фев 2025 20:56:06 MSK
+cat: test_dir/file_test: Отказано в доступе
+
+
+Задание 10.
+
+# Создание нового пользователя user1 и группы test_group, которой он будет принадлежать
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo adduser user1
+Вт 25 фев 2025 23:02:43 MSK
+info: Добавляется пользователь «user1» ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Добавляется новая группа «user1» (1001) ...
+info: Adding new user `user1' (1001) with group `user1 (1001)' ...
+info: Создаётся домашний каталог «/home/user1» ...
+info: Копирование файлов из «/etc/skel» ...
+Новый пароль: 
+Повторите ввод нового пароля: 
+passwd: пароль успешно обновлён
+Изменение информации о пользователе user1
+Введите новое значение или нажмите ENTER для выбора значения по умолчанию
+	Полное имя []: user1
+	Номер комнаты []: 
+	Рабочий телефон []: 
+	Домашний телефон []: 
+	Другое []: 
+Данная информация корректна? [Y/n] y
+info: Adding new user `user1' to supplemental / extra groups `users' ...
+info: Добавляется пользователь «user1» в группу «users» ...
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo addgroup test_group
+Вт 25 фев 2025 23:03:07 MSK
+info: Выбирается GID из диапазона от 1000 по 59999 ...
+info: Добавляется группа «test_group» (GID 1002) ...
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo usermod -a -G test_group user1
+Вт 25 фев 2025 23:03:26 MSK
+
+# Создание закрытого файла, который будет недоступен обычным пользователям для чтения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo touch /home/user1/secret_file.txt
+Вт 25 фев 2025 23:03:59 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chown user1:test_group /home/user1/secret_file.txt
+Вт 25 фев 2025 23:04:14 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chmod 600 /home/user1/secret_file.txt
+Вт 25 фев 2025 23:04:24 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo ls -l /home/user1/secret_file.txt
+Вт 25 фев 2025 23:04:31 MSK
+-rw------- 1 user1 test_group 0 фев 25 23:03 /home/user1/secret_file.txt
+
+# Создание нашей программы-шлюз
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ cat read_secret.cpp 
+#include <iostream>
+#include <fstream>
+#include <string>
+
+int main() {
+    const std::string file_path = "/home/user1/secret_file.txt";
+
+    std::ifstream file(file_path);
+
+    if (!file.is_open()) {
+        std::cerr << "Error with open file" << file_path << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::cout << line << std::endl;
+    }
+
+    file.close();
+
+    return 0;
+}
+
+# Компиляция кода для получения исполняемого файла
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ g++ read_secret.cpp 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chmod u+s a.out
+Вт 25 фев 2025 23:06:35 MSK
+
+# Изменение прав доступа к файлу с установкой SUID
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chown user1:test_group a.out
+Вт 25 фев 2025 23:06:44 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -l a.out 
+-rwxrwxr-x 1 user1 test_group 24416 фев 25 23:05 a.out
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo chmod u+s a.out
+Вт 25 фев 2025 23:07:01 MSK
+# Фиксация изменения
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ ls -l a.out 
+-rwsrwxr-x 1 user1 test_group 24416 фев 25 23:05 a.out
+
+# Заполнение закрытого файла
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && echo 'secret text' | sudo tee -a /home/user1/secret_file.txt
+Вт 25 фев 2025 23:09:00 MSK
+secret text
+# Убеждаемся, что владелец может его читать
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo cat /home/user1/secret_file.txt
+Вт 25 фев 2025 23:09:18 MSK
+secret text
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo -u user1 ./a.out
+Вт 25 фев 2025 23:09:35 MSK
+secret text
+
+# Создание нового пользователя, который будет относиться к той же группе
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo adduser user2
+Вт 25 фев 2025 23:09:47 MSK
+info: Добавляется пользователь «user2» ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Добавляется новая группа «user2» (1003) ...
+info: Adding new user `user2' (1003) with group `user2 (1003)' ...
+info: Создаётся домашний каталог «/home/user2» ...
+info: Копирование файлов из «/etc/skel» ...
+Новый пароль: 
+Повторите ввод нового пароля: 
+passwd: пароль успешно обновлён
+Изменение информации о пользователе user2
+Введите новое значение или нажмите ENTER для выбора значения по умолчанию
+	Полное имя []: user2
+	Номер комнаты []: 
+	Рабочий телефон []: 
+	Домашний телефон []: 
+	Другое []: 
+Данная информация корректна? [Y/n] y
+info: Adding new user `user2' to supplemental / extra groups `users' ...
+info: Добавляется пользователь «user2» в группу «users» ...
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo usermod -a -G test_group user2
+Вт 25 фев 2025 23:10:16 MSK
+
+# Запускаем для user2 исполняемый файл и видим, что удалось вывести текст
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo -u user2 ./a.out
+Вт 25 фев 2025 23:10:22 MSK
+secret text
+
+# По аналогии создаем пользователя, который не будет относиться к той же группе
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo adduser user3
+Вт 25 фев 2025 23:10:42 MSK
+info: Добавляется пользователь «user3» ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Добавляется новая группа «user3» (1004) ...
+info: Adding new user `user3' (1004) with group `user3 (1004)' ...
+info: Создаётся домашний каталог «/home/user3» ...
+info: Копирование файлов из «/etc/skel» ...
+Новый пароль: 
+Повторите ввод нового пароля: 
+passwd: пароль успешно обновлён
+Изменение информации о пользователе user3
+Введите новое значение или нажмите ENTER для выбора значения по умолчанию
+	Полное имя []: user3
+	Номер комнаты []: 
+	Рабочий телефон []: 
+	Домашний телефон []: 
+	Другое []: 
+Данная информация корректна? [Y/n] y
+info: Adding new user `user3' to supplemental / extra groups `users' ...
+info: Добавляется пользователь «user3» в группу «users» ...
+# Видим, что даже если пользователь не находится в той же группе, он все равно благодаря запуску программы может прочитать файл
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo -u user3 ./a.out
+Вт 25 фев 2025 23:11:04 MSK
+secret text
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && sudo ls -l /home/user1/secret_file.txt
+Вт 25 фев 2025 23:11:33 MSK
+-rw------- 1 user1 test_group 12 фев 25 23:09 /home/user1/secret_file.txt
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ ls -l a.out
+-rwsrwxr-x 1 user1 test_group 24416 фев 25 23:05 a.out
+# Повторно убеждаемся, что закрытый файл был недоступен, а исполняемый имел SUID
+
+
+Задание 11.
+
+11.1
+
+# Используем df для отображения информации о свободном и использованном пространстве на всех смонтированных файловых системах
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && df -h
+Ср 26 фев 2025 00:31:38 MSK
+Файл.система   Размер Использовано  Дост Использовано% Cмонтировано в
+tmpfs            1,6G         5,5M  1,6G            1% /run
+/dev/nvme0n1p5   147G          42G   98G           30% /
+tmpfs            7,8G          20M  7,8G            1% /dev/shm
+tmpfs            5,0M         8,0K  5,0M            1% /run/lock
+efivarfs         192K          43K  145K           23% /sys/firmware/efi/efivars
+tmpfs            7,8G            0  7,8G            0% /run/qemu
+/dev/nvme0n1p1    96M          35M   62M           37% /boot/efi
+tmpfs            1,6G         160K  1,6G            1% /run/user/1000
+
+# Откроем файл /etc/fstab, который содержит информацию о файловых системах, монтируемых автоматически при загрузке системы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat /etc/fstab
+Ср 26 фев 2025 00:32:14 MSK
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/nvme0n1p5 during installation
+UUID=3d7d4f85-f1ee-45eb-ba22-42c37fe683ce /               ext4    errors=remount-ro 0       1
+# /boot/efi was on /dev/nvme0n1p1 during installation
+UUID=D876-2A1B  /boot/efi       vfat    umask=0077      0       1
+/swapfile                                 none            swap    sw              0       0
+
+# Выполним lsblk для отображения информации о блочных устройствах, таких как диски, разделы и файловые системы, увидим иерархическую структуру устройств
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && lsblk
+Ср 26 фев 2025 00:35:37 MSK
+NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0         7:0    0     4K  1 loop /snap/bare/5
+loop1         7:1    0 317,7M  1 loop /snap/code/181
+loop2         7:2    0 319,2M  1 loop /snap/code/184
+loop3         7:3    0  55,4M  1 loop /snap/core18/2855
+loop4         7:4    0  55,4M  1 loop /snap/core18/2846
+loop5         7:5    0  63,7M  1 loop /snap/core20/2434
+loop6         7:6    0  63,7M  1 loop /snap/core20/2496
+loop7         7:7    0  73,9M  1 loop /snap/core22/1722
+loop8         7:8    0  73,9M  1 loop /snap/core22/1748
+loop9         7:9    0 139,6M  1 loop /snap/docker/2963
+loop10        7:10   0 139,6M  1 loop /snap/docker/2976
+loop11        7:11   0   5,7M  1 loop /snap/dosbox-jz/108
+loop12        7:12   0   258M  1 loop /snap/firefox/5751
+loop13        7:13   0  11,1M  1 loop /snap/firmware-updater/147
+loop14        7:14   0 257,9M  1 loop /snap/firefox/5783
+loop15        7:15   0  11,1M  1 loop /snap/firmware-updater/167
+loop16        7:16   0 164,8M  1 loop /snap/gnome-3-28-1804/198
+loop17        7:17   0 505,1M  1 loop /snap/gnome-42-2204/176
+loop18        7:18   0   516M  1 loop /snap/gnome-42-2204/202
+loop19        7:19   0  91,7M  1 loop /snap/gtk-common-themes/1535
+loop20        7:20   0 689,6M  1 loop /snap/pycharm-community/436
+loop21        7:21   0 752,9M  1 loop /snap/pycharm-community/439
+loop22        7:22   0  10,8M  1 loop /snap/snap-store/1244
+loop23        7:23   0  10,8M  1 loop /snap/snap-store/1248
+loop24        7:24   0  44,3M  1 loop /snap/snapd/23258
+loop25        7:25   0  44,4M  1 loop /snap/snapd/23545
+loop26        7:26   0   564K  1 loop /snap/snapd-desktop-integration/247
+loop27        7:27   0   568K  1 loop /snap/snapd-desktop-integration/253
+loop28        7:28   0 210,4M  1 loop /snap/thunderbird/644
+loop29        7:29   0 210,4M  1 loop /snap/thunderbird/663
+nvme0n1     259:0    0 476,9G  0 disk 
+├─nvme0n1p1 259:1    0   100M  0 part /boot/efi
+├─nvme0n1p2 259:2    0    16M  0 part 
+├─nvme0n1p3 259:3    0 326,1G  0 part 
+├─nvme0n1p4 259:4    0   725M  0 part 
+└─nvme0n1p5 259:5    0   150G  0 part /var/snap/firefox/common/host-hunspell
+                                      /
+
+
+11.2
+
+# Через команду mount находим список всех смонтированных файловых систем
+# Сначала мы записали список до вставки съемного носителя 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && mount > before_inserting.txt
+Ср 26 фев 2025 00:50:42 MSK
+
+# Теперь сохраним информацию после вставки носителя и проведем сравнения файлов
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && mount > after_inserting.txt
+Ср 26 фев 2025 00:51:05 MSK
+
+# В результате сравнения видим, что носитель был смонтирован в /media/danila/UBUNTU 22_0
+# Определяем тип ФС как vfat, который используется для загрузочного раздела
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && diff before_inserting.txt after_inserting.txt 
+Ср 26 фев 2025 00:51:20 MSK
+62a63
+> /dev/sda1 on /media/danila/UBUNTU 22_0 type vfat (rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,showexec,utf8,flush,errors=remount-ro,uhelper=udisks2)
+
+# Через findmnt получили иерархию всех смонтированных файловых систем
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && findmnt
+Ср 26 фев 2025 00:53:03 MSK
+TARGET                                            SOURCE                              FSTYPE          OPTIONS
+/                                                 /dev/nvme0n1p5                      ext4            rw,relatime,errors=remount-ro
+├─/sys                                            sysfs                               sysfs           rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/kernel/security                          securityfs                          securityfs      rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/fs/cgroup                                cgroup2                             cgroup2         rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot
+│ ├─/sys/fs/pstore                                pstore                              pstore          rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/firmware/efi/efivars                     efivarfs                            efivarfs        rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/fs/bpf                                   bpf                                 bpf             rw,nosuid,nodev,noexec,relatime,mode=700
+│ ├─/sys/kernel/debug                             debugfs                             debugfs         rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/kernel/tracing                           tracefs                             tracefs         rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/fs/fuse/connections                      fusectl                             fusectl         rw,nosuid,nodev,noexec,relatime
+│ └─/sys/kernel/config                            configfs                            configfs        rw,nosuid,nodev,noexec,relatime
+├─/proc                                           proc                                proc            rw,nosuid,nodev,noexec,relatime
+│ └─/proc/sys/fs/binfmt_misc                      systemd-1                           autofs          rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=3793
+│   └─/proc/sys/fs/binfmt_misc                    binfmt_misc                         binfmt_misc     rw,nosuid,nodev,noexec,relatime
+├─/dev                                            udev                                devtmpfs        rw,nosuid,relatime,size=8066264k,nr_inodes=2016566,mode=755,inode64
+│ ├─/dev/pts                                      devpts                              devpts          rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000
+│ ├─/dev/shm                                      tmpfs                               tmpfs           rw,nosuid,nodev,inode64
+│ ├─/dev/mqueue                                   mqueue                              mqueue          rw,nosuid,nodev,noexec,relatime
+│ └─/dev/hugepages                                hugetlbfs                           hugetlbfs       rw,nosuid,nodev,relatime,pagesize=2M
+├─/run                                            tmpfs                               tmpfs           rw,nosuid,nodev,noexec,relatime,size=1620376k,mode=755,inode64
+│ ├─/run/lock                                     tmpfs                               tmpfs           rw,nosuid,nodev,noexec,relatime,size=5120k,inode64
+│ ├─/run/qemu                                     tmpfs                               tmpfs           rw,nosuid,nodev,relatime,mode=755,inode64
+│ ├─/run/snapd/ns                                 tmpfs[/snapd/ns]                    tmpfs           rw,nosuid,nodev,noexec,relatime,size=1620376k,mode=755,inode64
+│ │ ├─/run/snapd/ns/docker.mnt                    nsfs[mnt:[4026532786]]              nsfs            rw
+│ │ ├─/run/snapd/ns/snapd-desktop-integration.mnt nsfs[mnt:[4026532849]]              nsfs            rw
+│ │ ├─/run/snapd/ns/firefox.mnt                   nsfs[mnt:[4026532625]]              nsfs            rw
+│ │ └─/run/snapd/ns/firmware-updater.mnt          nsfs[mnt:[4026532630]]              nsfs            rw
+│ └─/run/user/1000                                tmpfs                               tmpfs           rw,nosuid,nodev,relatime,size=1620372k,nr_inodes=405093,mode=700,uid=1000,gid=1000
+│   ├─/run/user/1000/doc                          portal                              fuse.portal     rw,nosuid,nodev,relatime,user_id=1000,group_id=1000
+│   └─/run/user/1000/gvfs                         gvfsd-fuse                          fuse.gvfsd-fuse rw,nosuid,nodev,relatime,user_id=1000,group_id=1000
+├─/snap/bare/5                                    /dev/loop0                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/code/181                                  /dev/loop1                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/code/184                                  /dev/loop2                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/core18/2855                               /dev/loop3                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/core18/2846                               /dev/loop4                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/core20/2434                               /dev/loop5                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/core20/2496                               /dev/loop6                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/core22/1722                               /dev/loop7                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/core22/1748                               /dev/loop8                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/docker/2963                               /dev/loop9                          squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/docker/2976                               /dev/loop10                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/dosbox-jz/108                             /dev/loop11                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/firefox/5751                              /dev/loop12                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/firefox/5783                              /dev/loop14                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/firmware-updater/147                      /dev/loop13                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/firmware-updater/167                      /dev/loop15                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/gnome-3-28-1804/198                       /dev/loop16                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/gnome-42-2204/202                         /dev/loop18                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/gtk-common-themes/1535                    /dev/loop19                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/gnome-42-2204/176                         /dev/loop17                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/pycharm-community/436                     /dev/loop20                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/pycharm-community/439                     /dev/loop21                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/snap-store/1244                           /dev/loop22                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/snap-store/1248                           /dev/loop23                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/snapd/23258                               /dev/loop24                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/snapd/23545                               /dev/loop25                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/snapd-desktop-integration/247             /dev/loop26                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/snapd-desktop-integration/253             /dev/loop27                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/snap/thunderbird/644                           /dev/loop28                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/var/snap/firefox/common/host-hunspell          /dev/nvme0n1p5[/usr/share/hunspell] ext4            ro,noexec,noatime,errors=remount-ro
+├─/snap/thunderbird/663                           /dev/loop29                         squashfs        ro,nodev,relatime,errors=continue,threads=single
+├─/boot/efi                                       /dev/nvme0n1p1                      vfat            rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=iso8859-1,shortname=mixed
+└─/media/danila/UBUNTU 22_0                       /dev/sda1                           vfat            rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,ioch
+# Находим /dev/sda1 - раздел на съемном носителе. И /media/danila/UBUNTU 22_0 - точку монтирования носителя 
+
+
+11.3
+
+# Напишем скрипт для поиска самого глубокого пути и проанализируем ограничения для данной системы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && cat find_deepest_path.sh 
+Ср 26 фев 2025 01:57:59 MSK
+#!/bin/bash
+
+# Функция для поиска самого глубокого пути
+find_deepest_path() {
+    local dir="$1"
+    local max_depth=0
+    local deepest_path=""
+
+    while IFS= read -r path; do
+        depth=$(echo "$path" | tr -cd '/' | wc -c)
+        if [ "$depth" -gt "$max_depth" ]; then
+            max_depth=$depth
+            deepest_path=$path
+        fi
+    done < <(find "$dir" -type d 2>/dev/null)
+
+    echo "Самый глубокий путь: $deepest_path"
+    echo "Глубина: $max_depth"
+    echo "Длина самого глубокого пути: $(echo -n "$deepest_path" | wc -c)"
+}
+
+# Функция для анализа ограничений
+analyze_limits() {
+    echo "Анализ ограничений:"
+
+    local path_max=$(getconf PATH_MAX /)
+    echo "1. Максимальная длина пути (PATH_MAX): $path_max символов"
+
+    local name_max=$(getconf NAME_MAX /)
+    echo "2. Максимальная длина имени файла (NAME_MAX): $name_max символов"
+}
+
+# Начинаем поиск с корневой директории /
+find_deepest_path "/"
+
+analyze_limits
+
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ./find_deepest_path.sh 
+Ср 26 фев 2025 01:58:15 MSK
+Самый глубокий путь: /snap/code/181/usr/share/code/resources/app/out/vs/workbench/contrib/welcomeGettingStarted/common/media/notebookThemes
+Глубина: 16
+Длина самого глубокого пути: 118
+Анализ ограничений:
+1. Максимальная длина пути (PATH_MAX): 4096 символов
+2. Максимальная длина имени файла (NAME_MAX): 255 символов
+
+
+Задание 12.
+
+12.1
+
+# Утилита file используется для определения типа файла на основе его содержимого
+# Она анализирует заголовок файла и сравнивает его с шаблонами, хранящимися в специальной базе данных, называемой "magic database"
+# file открывает файл и читает его первые несколько байт, которые сравниваются с шаблонами. В итоге команда возвращает соответствующий тип
+# Рассмотрим примеры для нескольких типов
+
+# Для PNG это магическое число - первые 8 байт
+# 89 50 4e 47 0d 0a 1a 0a
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && find 2>/dev/null / -name "*.png" | head -n 5
+Ср 26 фев 2025 02:34:29 MSK
+/opt/google/chrome/product_logo_256.png
+/opt/google/chrome/product_logo_64.png
+/opt/google/chrome/product_logo_16.png
+/opt/google/chrome/product_logo_24.png
+/opt/google/chrome/product_logo_128.png
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && hexdump -C /opt/google/chrome/product_logo_256.png | head -n 5
+Ср 26 фев 2025 02:34:36 MSK
+00000000  89 50 4e 47 0d 0a 1a 0a  00 00 00 0d 49 48 44 52  |.PNG........IHDR|
+00000010  00 00 01 00 00 00 01 00  08 06 00 00 00 5c 72 a8  |.............\r.|
+00000020  66 00 00 00 09 70 48 59  73 00 00 0b 13 00 00 0b  |f....pHYs.......|
+00000030  13 01 00 9a 9c 18 00 00  00 01 73 52 47 42 00 ae  |..........sRGB..|
+00000040  ce 1c e9 00 00 00 04 67  41 4d 41 00 00 b1 8f 0b  |.......gAMA.....|
+
+# Для исполняемых файлов ELF это магическое число - первые 4 байта
+# 7f 45 4c 46
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && g++ read_secret.cpp 
+Ср 26 фев 2025 02:37:40 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab1$ date && hexdump -C a.out | head -n 5
+Ср 26 фев 2025 02:37:47 MSK
+00000000  7f 45 4c 46 02 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
+00000010  03 00 3e 00 01 00 00 00  40 23 00 00 00 00 00 00  |..>.....@#......|
+00000020  40 00 00 00 00 00 00 00  60 57 00 00 00 00 00 00  |@.......`W......|
+00000030  00 00 00 00 40 00 38 00  0d 00 40 00 20 00 1f 00  |....@.8...@. ...|
+00000040  06 00 00 00 04 00 00 00  40 00 00 00 00 00 00 00  |........@.......|
+
+
+12.2
+
+# Определяет тип файла на основе его содержимого
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && file a.out
+Ср 26 фев 2025 02:40:01 MSK
+a.out: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b7dd854a6f0f264d2d4a9b2d26448915481de3f3, for GNU/Linux 3.2.0, not stripped
+
+# Определяет MIME-тип файла: стандартный способ указания типа данных в операционных системах
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && file --mime-type a.out
+Ср 26 фев 2025 02:40:40 MSK
+a.out: application/x-pie-executable
+
+# Определяет типы всех файлов в текущей директории
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && file *
+Ср 26 фев 2025 02:40:54 MSK
+a.out:                           ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b7dd854a6f0f264d2d4a9b2d26448915481de3f3, for GNU/Linux 3.2.0, not stripped
+dev:                             Unicode text, UTF-8 text
+different_ways_to_find_links.sh: Bourne-Again shell script, Unicode text, UTF-8 text executable
+experiment_size.sh:              Bourne-Again shell script, Unicode text, UTF-8 text executable
+find_deepest_path.sh:            Bourne-Again shell script, Unicode text, UTF-8 text executable
+find_hardlinks.sh:               Bourne-Again shell script, Unicode text, UTF-8 text executable
+find_links.sh:                   Bourne-Again shell script, Unicode text, UTF-8 text executable
+Ivanov_Danila_lb1.log:           Unicode text, UTF-8 text, with CRLF line terminators
+null:                            ASCII text
+read_secret.cpp:                 C source, ASCII text
+scan_fs.sh:                      Bourne-Again shell script, Unicode text, UTF-8 text executable
+test:                            data
+test.log:                        Unicode text, UTF-8 text, with CRLF, CR, LF line terminators, with escape sequences
+test.sh:                         Bourne-Again shell script, Unicode text, UTF-8 text executable
+
+# Определяет MIME-тип файла с указанием кодировки
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && file -i a.out
+Ср 26 фев 2025 02:41:14 MSK
+a.out: application/x-pie-executable; charset=binary
+
+
+12.3
+
+# Создадим свой собственный тип. Сначала пропишем пользовательскую базу magic
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && touch my_types.magic
+Ср 26 фев 2025 02:58:15 MSK
+
+# Заполним ее новым типом MYNEWTYPE
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && echo '0 string MYNEWTYPE My new type for this experiment' > my_types.magic 
+Ср 26 фев 2025 02:59:01 MSK
+
+# Создаем файл с магическим числом
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && echo "MYNEWTYPE" > test.newtype
+Ср 26 фев 2025 02:59:59 MSK
+
+# Фиксация создания новых файлов
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && ls -l
+Ср 26 фев 2025 03:00:07 MSK
+итого 12388
+-rwxrwxr-x 1 danila danila   24416 фев 26 02:37 a.out
+-rw-rw-r-- 1 danila danila  188680 фев 26 02:25 dev
+-rwxrwxr-x 1 danila danila     593 фев 24 21:31 different_ways_to_find_links.sh
+-rwxrwxr-x 1 danila danila     946 фев 25 14:41 experiment_size.sh
+-rwxrwxr-x 1 danila danila    1168 фев 26 01:57 find_deepest_path.sh
+-rwxrwxr-x 1 danila danila    1350 фев 24 19:54 find_hardlinks.sh
+-rwxrwxr-x 1 danila danila     513 фев 24 21:35 find_links.sh
+-rw-rw-r-- 1 danila danila   77040 фев 26 02:49 Ivanov_Danila_lb1.log
+-rw-rw-r-- 1 danila danila      51 фев 26 02:59 my_types.magic
+-rw-rw-r-- 1 danila danila      14 фев 26 02:53 new_format_file.newtype
+-rw-rw-r-- 1 danila danila 6031874 фев 26 02:25 null
+-rw-rw-r-- 1 danila danila     450 фев 25 23:20 read_secret.cpp
+-rwxrwxr-x 1 danila danila    1218 фев 24 17:56 scan_fs.sh
+-rw-rw-r-- 1 danila danila 6316032 фев 24 21:39 test
+-rw-rw-r-- 1 danila danila    6947 фев 25 18:33 test.log
+-rw-rw-r-- 1 danila danila      10 фев 26 02:59 test.newtype
+-rwxrwxr-x 1 danila danila    1190 фев 23 14:23 test.sh
+
+# Использование нового пользовательского файла для команды file
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab1$ date && file -m my_types.magic test.newtype 
+Ср 26 фев 2025 03:01:00 MSK
+test.newtype: My new type for this experiment
+
