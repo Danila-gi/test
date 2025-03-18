@@ -1,0 +1,572 @@
+Лабораторная работа №2.
+Иванов Данила Максимович, 3342
+
+Дата исполнения отчета: 18.03.2025
+
+Идентификация исполнителя:
+
+Script started on 2025-02-24 19:16:04+03:00
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && who
+Вт 18 мар 2025 12:19:10 MSK
+danila   seat0        2025-03-18 12:17 (login screen)
+danila   tty2         2025-03-18 12:17 (tty2)
+
+Профиль системы
+
+Описание аппаратуры/компьютера
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && lscpu
+Вт 18 мар 2025 12:19:34 MSK
+Архитектура:              x86_64
+  CPU op-mode(s):         32-bit, 64-bit
+  Address sizes:          39 bits physical, 48 bits virtual
+  Порядок байт:           Little Endian
+CPU(s):                   16
+  On-line CPU(s) list:    0-15
+ID прроизводителя:        GenuineIntel
+  Имя модели:             Intel(R) Core(TM) i7-10870H CPU @ 2.20GHz
+    Семейство ЦПУ:        6
+    Модель:               165
+    Потоков на ядро:      2
+    Ядер на сокет:        8
+    Сокетов:              1
+    Степпинг:             2
+    CPU(s) scaling MHz:   16%
+    CPU max MHz:          5000,0000
+    CPU min MHz:          800,0000
+    BogoMIPS:             4399,99
+    Флаги:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_
+                          tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pd
+                          cm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enh
+                          anced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xge
+                          tbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+Virtualization features:  
+  Виртуализация:          VT-x
+Caches (sum of all):      
+  L1d:                    256 KiB (8 instances)
+  L1i:                    256 KiB (8 instances)
+  L2:                     2 MiB (8 instances)
+  L3:                     16 MiB (1 instance)
+NUMA:                     
+  NUMA node(s):           1
+  NUMA node0 CPU(s):      0-15
+Vulnerabilities:          
+  Gather data sampling:   Mitigation; Microcode
+  Itlb multihit:          KVM: Mitigation: VMX disabled
+  L1tf:                   Not affected
+  Mds:                    Not affected
+  Meltdown:               Not affected
+  Mmio stale data:        Mitigation; Clear CPU buffers; SMT vulnerable
+  Reg file data sampling: Not affected
+  Retbleed:               Mitigation; Enhanced IBRS
+  Spec rstack overflow:   Not affected
+  Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+  Srbds:                  Mitigation; Microcode
+  Tsx async abort:        Not affected
+
+Идентификация/описание ОС
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ uname
+Linux
+
+
+Задание 1.
+
+1.1
+
+# Запущены 3 процесса в фоновом режиме, присваивается им номера PID (идентификаторы процессов)
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sleep 10 & (sleep 20; notify-send "Задание завершено") & sleep 30 &
+[1] 6994
+[2] 6995
+[3] 6996
+# Изначально видим, что все процессы запущены
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:40:46 MSK
+[1]   Запущен          sleep 10 &
+[2]-  Запущен          ( sleep 20; notify-send "Задание завершено" ) &
+[3]+  Запущен          sleep 30 &
+# Через 10 секунд завершает работу 1-ый процесс
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:40:52 MSK
+[1]   Завершён        sleep 10
+[2]-  Запущен          ( sleep 20; notify-send "Задание завершено" ) &
+[3]+  Запущен          sleep 30 &
+# Было получено уведомление, о завершении 2-ого задания
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:41:04 MSK
+[2]-  Завершён        ( sleep 20; notify-send "Задание завершено" )
+[3]+  Запущен          sleep 30 &
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:41:07 MSK
+[3]+  Запущен          sleep 30 &
+# Через 30 секунд все процессы завершили работу
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:41:12 MSK
+[3]+  Завершён        sleep 30
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:41:14 MSK
+
+# Делаем аналогичные действия
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sleep 10 & sleep 20 & sleep 30 &
+[1] 7243
+[2] 7244
+[3] 7245
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:51:25 MSK
+[1]   Запущен          sleep 10 &
+[2]-  Запущен          sleep 20 &
+[3]+  Запущен          sleep 30 &
+# Задание 3 было переведено на передний план, и началось ожидание его завершения
+# Во время ожидания задания 3, задания 1 и 2 завершились (так как их время выполнения истекло)
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ fg %3
+sleep 30
+[1]   Завершён        sleep 10
+[2]-  Завершён        sleep 20
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:51:55 MSK
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sleep 10 & sleep 20 & sleep 30 &
+[1] 7345
+[2] 7346
+[3] 7347
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:54:58 MSK
+[1]   Запущен          sleep 10 &
+[2]-  Запущен          sleep 20 &
+[3]+  Запущен          sleep 30 &
+# Принудительно завершаем 2-ое задание
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && kill %2
+Вт 18 мар 2025 12:55:01 MSK
+# Видим, что оно завершилось раньше, чем sleep 10
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:55:06 MSK
+[2]-  Завершено      sleep 20
+[1]-  Запущен          sleep 10 &
+[3]+  Запущен          sleep 30 &
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 12:55:11 MSK
+[1]-  Завершён        sleep 10
+[3]+  Запущен          sleep 30 &
+
+
+1.2
+# Команда nohup позволяет процессу продолжать работу даже после завершения сеанса пользователя
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ nohup sleep 1000 &
+[1] 7793
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ nohup: ввод игнорируется, вывод добавляется в 'nohup.out'
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && jobs
+Вт 18 мар 2025 13:03:25 MSK
+[1]+  Запущен          nohup sleep 1000 &
+# Выход из терминала
+
+# Из вывода команды ps aux | grep sleep видно, что процесс sleep 1000 запущен
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps aux | grep sleep
+Вт 18 мар 2025 13:03:50 MSK
+danila      7793  0.0  0.0   8772  2176 ?        S    13:03   0:00 sleep 1000
+danila      7827  0.0  0.0   9176  2304 pts/0    S+   13:03   0:00 grep --color=auto sleep
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && kill 7793
+Вт 18 мар 2025 13:04:15 MSK
+# После принудительного завершения, процесс завершил свою работу
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps aux | grep sleep
+Вт 18 мар 2025 13:04:16 MSK
+danila      7839  0.0  0.0   9176  2304 pts/0    S+   13:04   0:00 grep --color=auto sleep
+
+1.3
+# Ищем некоторые процессы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps aux | grep test
+Вт 18 мар 2025 13:43:41 MSK
+kernoops    1677  0.0  0.0  12744  2192 ?        Ss   13:27   0:00 /usr/sbin/kerneloops --test
+danila      5783  0.0  0.0   9176  2304 pts/0    S+   13:43   0:00 grep --color=auto test
+# Ищем UID процесса с PID 1677
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps -o uid= -p 1677
+Вт 18 мар 2025 13:44:21 MSK
+  113
+# Узнали, какому пользователю принадлежит UID 113
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && getent passwd 113
+Вт 18 мар 2025 13:49:16 MSK
+kernoops:x:113:65534:Kernel Oops Tracking Daemon,,,:/:/usr/sbin/nologin
+
+# Определим максимальный и минимальный PID
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps -eo pid,comm | sort -n
+Вт 18 мар 2025 13:51:02 MSK
+    PID COMMAND
+      1 systemd
+      2 kthreadd
+      3 pool_workqueue_release
+      4 kworker/R-rcu_g
+      5 kworker/R-rcu_p
+      6 kworker/R-slub_
+      7 kworker/R-netns
+      9 kworker/0:0H-events_highpri
+     10 kworker/0:1-events
+     12 kworker/R-mm_pe
+     13 rcu_tasks_kthread
+     ...
+   6092 Web Content
+   6140 kworker/7:1-mm_percpu_wq
+   6188 ps
+   6189 sort
+
+# делаем вывод, что минимальный PID на момент запуска - 1 (процесс systemd, который является родительским процессом для всех остальных процессов в системе)
+# А максимальный - 6189.
+
+# Максимальный PID, который в принципе может иметь процесс
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat /proc/sys/kernel/pid_max
+Вт 18 мар 2025 13:56:59 MSK
+4194304
+
+1.4
+
+# Запустим системные процессы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps aux | grep '^root' | head -n 10
+Вт 18 мар 2025 14:00:16 MSK
+root           1  0.1  0.0  23796 14076 ?        Ss   13:26   0:03 /sbin/init splash
+root           2  0.0  0.0      0     0 ?        S    13:26   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        S    13:26   0:00 [pool_workqueue_release]
+root           4  0.0  0.0      0     0 ?        I<   13:26   0:00 [kworker/R-rcu_g]
+root           5  0.0  0.0      0     0 ?        I<   13:26   0:00 [kworker/R-rcu_p]
+root           6  0.0  0.0      0     0 ?        I<   13:26   0:00 [kworker/R-slub_]
+root           7  0.0  0.0      0     0 ?        I<   13:26   0:00 [kworker/R-netns]
+root           9  0.0  0.0      0     0 ?        I<   13:26   0:00 [kworker/0:0H-events_highpri]
+root          10  0.0  0.0      0     0 ?        I    13:26   0:00 [kworker/0:1-mm_percpu_wq]
+root          12  0.0  0.0      0     0 ?        I<   13:26   0:00 [kworker/R-mm_pe]
+# Запустим пользовательские процессы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps aux | grep '^danila' | head -n 10
+Вт 18 мар 2025 14:00:23 MSK
+danila      2319  0.0  0.0  21496 12928 ?        Ss   13:27   0:01 /usr/lib/systemd/systemd --user
+danila      2325  0.0  0.0  21400  3600 ?        S    13:27   0:00 (sd-pam)
+danila      2339  0.0  0.0 115896 13804 ?        S<sl 13:27   0:00 /usr/bin/pipewire
+danila      2340  0.0  0.0  97744  5888 ?        Ssl  13:27   0:00 /usr/bin/pipewire -c filter-chain.conf
+danila      2344  0.0  0.1 567420 32128 ?        S<sl 13:27   0:00 /usr/bin/wireplumber
+danila      2345  0.0  0.0 115956 13024 ?        S<sl 13:27   0:00 /usr/bin/pipewire-pulse
+danila      2347  0.0  0.0 317112  9984 ?        SLsl 13:27   0:00 /usr/bin/gnome-keyring-daemon --foreground --components=pkcs11,secrets --control-directory=/run/user/1000/keyring
+danila      2359  0.0  0.0  10804  6272 ?        Ss   13:27   0:01 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+danila      2404  0.0  0.0 536964  7808 ?        Ssl  13:27   0:00 /usr/libexec/xdg-document-portal
+danila      2408  0.0  0.0 309840  6272 ?        Ssl  13:27   0:00 /usr/libexec/xdg-permission-store
+
+# Можем увидеть следющие различия: системные процессы имеют маленькие PID, пользовательские - большие.
+# Системные запускаются от имени суперпользователя root.
+# Также имена системных процессов хранятся в квадратных скобках.
+# /sbin/init splash (PID 1) - родительский процесс всех процессов в системе, инициализация системы
+# [kthreadd] (PID 2) - ядро Linux, которое управляет потоками ядра
+# [pool_workqueue_release] (PID 3) - поток ядра, связанный с управлением рабочими очередями
+# [kworker/R-*] (PID 4, 5, 6, 7, 12) - рабочие потоки ядра, фоновые задачи
+# [kworker/0:1-mm_percpu_wq] (PID 10) - рабочий поток ядра, связанный с управлением памятью (на уровне ядра)
+# [kworker/R-mm_pe] (PID 12) - рабочий поток ядра, связанный с управлением памятью (в режиме реального времени)
+
+
+1.5
+
+# Переход в каталог, который содержит информацию о процессе с идентификатором (PID) 1
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cd /proc/1
+Вт 18 мар 2025 14:23:40 MSK
+# Откроем файл, содержащий подробную информацию о состоянии процесса
+# Процесс с PID 1 — это systemd, который является родительским процессом для всех остальных процессов в системе
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: /proc/1$ date && cat /proc/1/status
+Вт 18 мар 2025 14:23:53 MSK
+Name:	systemd
+Umask:	0000
+State:	S (sleeping)
+Tgid:	1
+Ngid:	0
+Pid:	1
+PPid:	0
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	512
+Groups:	 
+NStgid:	1
+NSpid:	1
+NSpgid:	1
+NSsid:	1
+Kthread:	0
+VmPeak:	   23832 kB
+VmSize:	   23796 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   14076 kB
+VmRSS:	   14076 kB
+RssAnon:	    4864 kB
+RssFile:	    9212 kB
+RssShmem:	       0 kB
+VmData:	    4772 kB
+VmStk:	     132 kB
+VmExe:	      44 kB
+VmLib:	   12188 kB
+VmPTE:	      88 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+untag_mask:	0xffffffffffffffff
+Threads:	1
+SigQ:	2/63017
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	7fefc1fe28014a03
+SigIgn:	0000000000001000
+SigCgt:	00000000000004ec
+CapInh:	0000000000000000
+CapPrm:	000001ffffffffff
+CapEff:	000001ffffffffff
+CapBnd:	000001ffffffffff
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Seccomp_filters:	0
+Speculation_Store_Bypass:	thread vulnerable
+SpeculationIndirectBranch:	conditional enabled
+Cpus_allowed:	ffff
+Cpus_allowed_list:	0-15
+Mems_allowed:	00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	4000
+nonvoluntary_ctxt_switches:	264
+x86_Thread_features:	
+x86_Thread_features_locked:	
+
+# Откроем файл, содержащий командную строку, которой был запущен процесс
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: /proc/1$ date && cat /proc/1/cmdline
+Вт 18 мар 2025 14:24:24 MSK
+/sbin/initsplashdanila
+# Процесс был запущен с аргументом splash, который отвечает за отображение заставки при загрузке
+
+# Откроем файл, содержащий переменные окружения процесса
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: /proc/1$ sudo cat /proc/1/environ
+[sudo] пароль для danila: 
+HOME=/init=/sbin/initNETWORK_SKIP_ENSLAVED=TERM=linuxBOOT_IMAGE=/boot/vmlinuz-6.8.0-49-genericdrop_caps=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/binPWD=/rootmnt=/root
+
+
+Задание 2.
+
+2.1
+
+# Программа с помощью вызова fork создает процесс-потомок, который является копией родительского
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat 2_1.c
+Вт 18 мар 2025 22:15:51 MSK
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main() {
+    pid_t pid = fork();  // Создаем процесс-потомок
+
+    if (pid == 0) {
+        // Код, выполняемый в процессе-потомке
+        printf("Child Process: PID = %d, PPID = %d\n", getpid(), getppid());
+    } else if (pid > 0) {
+        // Код, выполняемый в родительском процессе
+        printf("Parent Process: PID = %d, PPID = %d\n", getpid(), getppid());
+    } else {
+        // Обработка ошибки
+        fprintf(stderr, "Fork failed!\n");
+        return 1;
+    }
+
+    // Общий код для обоих процессов
+    printf("Process with PID = %d is finishing.\n", getpid());
+
+    return 0;
+}
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc 2_1.c
+Вт 18 мар 2025 22:16:01 MSK
+
+# Видим, что сначала выполняется родительский процесс. После он завершает выполнение, и начинает работу потомок.
+# Его PPID совпал с родительским. То, что родительский процесс завершился раньше, чем начал выполнение потомок, зависит от планировщика ОС.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ./a.out
+Вт 18 мар 2025 22:16:09 MSK
+Parent Process: PID = 5536, PPID = 3680
+Process with PID = 5536 is finishing.
+Child Process: PID = 5537, PPID = 5536
+Process with PID = 5537 is finishing.
+
+# Изменим программу и добавим wait(NULL) в процессе родителе для ожидания окончания выполнени потомка.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ date && cat 2_1.c
+Вт 18 мар 2025 22:16:12 MSK
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t pid = fork();  // Создаем процесс-потомок
+
+    if (pid == 0) {
+        // Код, выполняемый в процессе-потомке
+        printf("Child Process: PID = %d, PPID = %d\n", getpid(), getppid());
+    } else if (pid > 0) {
+        // Код, выполняемый в родительском процессе
+        printf("Parent Process: PID = %d, PPID = %d\n", getpid(), getppid());
+	wait(NULL);
+    } else {
+        // Обработка ошибки
+        fprintf(stderr, "Fork failed!\n");
+        return 1;
+    }
+
+    // Общий код для обоих процессов
+    printf("Process with PID = %d is finishing.\n", getpid());
+
+    return 0;
+}
+
+# Как мы видим, родитель не закончит работу до завершения выполнения процесса-потомка.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ gcc 2_1.c
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ ./a.out
+Parent Process: PID = 6484, PPID = 3680
+Child Process: PID = 6485, PPID = 6484
+Process with PID = 6485 is finishing.
+Process with PID = 6484 is finishing.
+
+# Создадим аналогичную программу, но заменим однократные вычислени циклами с длительным исполнением каждой итерации.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat 2_1_cycle.c
+Вт 18 мар 2025 22:16:20 MSK
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main() {
+    pid_t pid = fork();  // Создаем процесс-потомок
+
+    if (pid == 0) {
+        // Код, выполняемый в процессе-потомке
+        printf("Child Process: PID = %d, PPID = %d\n", getpid(), getppid());
+        for (int i = 0; i < 5; i++) {
+            printf("Child Process: PID = %d, Iteration = %d\n", getpid(), i);
+            sleep(1);  // Задержка для наблюдения конкуренции
+        }
+    } else if (pid > 0) {
+        // Код, выполняемый в родительском процессе
+        printf("Parent Process: PID = %d, PPID = %d\n", getpid(), getppid());
+        for (int i = 0; i < 5; i++) {
+            printf("Parent Process: PID = %d, Iteration = %d\n", getpid(), i);
+            sleep(1);  // Задержка для наблюдения конкуренции
+        }
+    } else {
+        // Обработка ошибки
+        fprintf(stderr, "Fork failed!\n");
+        return 1;
+    }
+
+    // Общий код для обоих процессов
+    printf("Process with PID = %d is finishing.\n", getpid());
+
+    return 0;
+}
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc 2_1_cycle.c 
+Вт 18 мар 2025 22:16:31 MSK
+# Оба процесса начинают выполнени с точки после вызова fork() и входят в цикл.
+# ОС переключает контект между процессами, что приводит к чередованию вывода сообщений.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ./a.out
+Вт 18 мар 2025 22:16:35 MSK
+Parent Process: PID = 5617, PPID = 3680
+Parent Process: PID = 5617, Iteration = 0
+Child Process: PID = 5618, PPID = 5617
+Child Process: PID = 5618, Iteration = 0
+Child Process: PID = 5618, Iteration = 1
+Parent Process: PID = 5617, Iteration = 1
+Parent Process: PID = 5617, Iteration = 2
+Child Process: PID = 5618, Iteration = 2
+Parent Process: PID = 5617, Iteration = 3
+Child Process: PID = 5618, Iteration = 3
+Child Process: PID = 5618, Iteration = 4
+Parent Process: PID = 5617, Iteration = 4
+Process with PID = 5617 is finishing.
+Process with PID = 5618 is finishing.
+# Наблюдаем в результате работу псевдопараллелизма - ОС быстро переключается между процессами.
+# ОС также управляет распределением процессорного времени между процессами.
+
+2.2
+
+# Напишем программу, которая будет содержать выполнение родительского процесса и создавать дочерний через fork().
+# В дочернем заменим его образ (все, что нужно для выполнения: стек, код, данные, куча и т. д.) на программу son с помощью execl().
+# Это позволит выполнить другую программу в том же процессе.
+# Родительсктй процесс будет ждать завершения дочернего через wait().
+# Через system будем фиксировать состояние таблицы процессов.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat father_2_2.c 
+Ср 19 мар 2025 00:35:58 MSK
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main() {
+    pid_t pid = fork();  // Создаем дочерний процесс
+
+    if (pid == 0) {
+        // Код, выполняемый в процессе-потомке
+        printf("Child Process: PID = %d, PPID = %d\n", getpid(), getppid());
+
+        // Заменяем образ дочернего процесса на программу son
+        execl("./son", "son", NULL);
+
+        // Если execl() завершился с ошибкой
+        perror("execl failed");
+        exit(1);
+    } else if (pid > 0) {
+        // Код, выполняемый в родительском процессе
+        printf("Parent Process: PID = %d, PPID = %d\n", getpid(), getppid());
+
+        // Фиксируем состояние таблицы процессов
+        system("ps -l > processes.txt");
+
+	// Ждем завершения дочернего процесса
+        wait(NULL);
+
+        printf("Parent Process: Child process finished.\n");
+    } else {
+        // Ошибка при создании дочернего процесса
+        perror("fork failed");
+        exit(1);
+    }
+
+    return 0;
+}
+# Следующий код будет содержать команды для выполнения дочернего процесса.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat son_2_2.c 
+Ср 19 мар 2025 00:36:09 MSK
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+int main() {
+    printf("Son Process: PID = %d, PPID = %d\n", getpid(), getppid());
+
+    sleep(3);
+
+    printf("Son Process: Finished.\n");
+    return 0;
+}
+# Создание исполняемых файлов.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_2_2.c -o father && gcc son_2_2.c -o son
+Ср 19 мар 2025 00:36:32 MSK
+# Видим, что начал выполнение родительский процесс, затем запустилась информация о дочернем процессе из обоих файлов (там были одинаковые PID).
+# Родительский процесс выводит о завершении выполнении дочернего.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ./father
+Ср 19 мар 2025 00:36:45 MSK
+Parent Process: PID = 8469, PPID = 3680
+Child Process: PID = 8470, PPID = 8469
+Son Process: PID = 8470, PPID = 8469
+Son Process: Finished.
+Parent Process: Child process finished.
+
+# По коду запись происходила до wait(), то есть когда выполнялись и дочерний файл, и родительский.
+# Это мы и увидели по таблице. На момент запуска ps -l выполнялись оба процесса. 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat processes.txt 
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000    3680    3673  0  80   0 -  3078 do_wai pts/0    00:00:00 bash
+0 S  1000    8469    3680  0  80   0 -   670 do_wai pts/0    00:00:00 father
+0 S  1000    8470    8469  0  80   0 -   670 hrtime pts/0    00:00:00 son
+0 S  1000    8471    8469  0  80   0 -   700 do_wai pts/0    00:00:00 sh
+4 R  1000    8472    8471 99  80   0 -  3494 -      pts/0    00:00:00 ps
+
+# Запустим в фоновом режиме.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./father > output.txt 2>&1 &
+[1] 8524
+# Пока выполняется, мы в другом окне запустим следующую команду для отображения, что данный процесс виден системой.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps -el | grep father
+Ср 19 мар 2025 00:38:14 MSK
+0 S  1000    8524    3680  0  80   0 -   670 do_wai pts/0    00:00:00 father
