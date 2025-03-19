@@ -570,3 +570,346 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/
 danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps -el | grep father
 Ср 19 мар 2025 00:38:14 MSK
 0 S  1000    8524    3680  0  80   0 -   670 do_wai pts/0    00:00:00 father
+
+
+2.3
+
+# Напишем программу, в которой будем тестировать различные функции семейства exec().
+# Дочернему процессу будем передавать некоторые аргументы и переменные окружения.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat father_2_3.c
+Ср 19 мар 2025 16:38:27 MSK
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main() {
+    pid_t pid;
+
+    // Массив аргументов для execv и execvp
+    char *args[] = {"./son", "arg1", "arg2", NULL};
+
+    // Переменные окружения для execle
+    char *env[] = {"ENV_VAR1=value1", "ENV_VAR2=value2", NULL};
+
+    // Создаем дочерний процесс
+    pid = fork();
+
+    if (pid == 0) {
+        // Дочерний процесс
+        printf("Child Process: PID = %d, PPID = %d\n", getpid(), getppid());
+
+        // Использование execl
+        printf("Using execl:\n");
+        if (execl("./son", "son", "arg1", "arg2", NULL) == -1) {
+            perror("execl failed");
+        }
+
+        // Использование execv
+        printf("Using execv:\n");
+        if (execv("./son", args) == -1) {
+            perror("execv failed");
+        }
+
+        // Использование execle
+        printf("Using execle:\n");
+        if (execle("./son", "son", "arg1", "arg2", NULL, env) == -1) {
+            perror("execle failed");
+        }
+
+        // Использование execvp
+        printf("Using execvp:\n");
+        if (execvp("son", args) == -1) {
+            perror("execvp failed");
+        }
+
+        // Если все exec-функции завершились с ошибкой
+        printf("All exec functions failed.\n");
+        exit(1);
+    } else if (pid > 0) {
+        // Родительский процесс
+        printf("Parent Process: PID = %d, PPID = %d\n", getpid(), getppid());
+
+        // Ждем завершения дочернего процесса
+        wait(NULL);
+
+        printf("Parent Process: Child process finished.\n");
+    } else {
+        // Ошибка при создании дочернего процесса
+        perror("fork failed");
+        exit(1);
+    }
+
+    return 0;
+}
+# Дочерний процесс будет содержать вывод переданных параметров
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat son_2_3.c
+Ср 19 мар 2025 16:38:34 MSK
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[], char *envp[]) {
+    printf("Son Process: PID = %d, PPID = %d\n", getpid(), getppid());
+
+    printf("Arguments:\n");
+    for (int i = 0; i < argc; i++) {
+        printf("argv[%d] = %s\n", i, argv[i]);
+    }
+
+    printf("Environment variables:\n");
+    for (int i = 0; envp[i] != NULL; i++) {
+        printf("envp[%d] = %s\n", i, envp[i]);
+    }
+
+    return 0;
+}
+# Получим исполняемые файлы
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_2_3.c -o father && gcc son_2_3.c -o son
+Ср 19 мар 2025 16:38:46 MSK
+
+# Запустим функцию execl
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./father
+Parent Process: PID = 6399, PPID = 5335
+Child Process: PID = 6400, PPID = 6399
+Using execl:
+Son Process: PID = 6400, PPID = 6399
+Arguments:
+argv[0] = son
+argv[1] = arg1
+argv[2] = arg2
+Environment variables:
+envp[0] = SHELL=/bin/bash
+envp[1] = SESSION_MANAGER=local/danila-VivoBook-ASUSLaptop-X571LH-A571LH:@/tmp/.ICE-unix/2557,unix/danila-VivoBook-ASUSLaptop-X571LH-A571LH:/tmp/.ICE-unix/2557
+envp[2] = QT_ACCESSIBILITY=1
+envp[3] = COLORTERM=truecolor
+envp[4] = XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+envp[5] = XDG_MENU_PREFIX=gnome-
+... # другие переменные окружения, доступные системе
+envp[38] = DISPLAY=:0
+envp[39] = SHLVL=1
+envp[40] = GSM_SKIP_SSH_AGENT_WORKAROUND=true
+envp[41] = QT_IM_MODULE=ibus
+envp[42] = DBUS_STARTER_ADDRESS=unix:path=/run/user/1000/bus,guid=237ce072be415b6d46a4070167dab89a
+envp[43] = XDG_RUNTIME_DIR=/run/user/1000
+envp[44] = DEBUGINFOD_URLS=https://debuginfod.ubuntu.com 
+envp[45] = XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+envp[46] = PATH=.:/home/danila/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/danila/.dotnet/tools
+envp[47] = GDMSESSION=ubuntu
+envp[48] = DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus,guid=237ce072be415b6d46a4070167dab89a
+envp[49] = _=./father
+Parent Process: Child process finished.
+
+# Запустим функцию execv
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_2_3.c -o father && gcc son_2_3.c -o son
+Ср 19 мар 2025 16:39:18 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./father
+Parent Process: PID = 6453, PPID = 5335
+Child Process: PID = 6454, PPID = 6453
+Using execv:
+Son Process: PID = 6454, PPID = 6453
+Arguments:
+argv[0] = ./son
+argv[1] = arg1
+argv[2] = arg2
+Environment variables:
+envp[0] = SHELL=/bin/bash
+envp[1] = SESSION_MANAGER=local/danila-VivoBook-ASUSLaptop-X571LH-A571LH:@/tmp/.ICE-unix/2557,unix/danila-VivoBook-ASUSLaptop-X571LH-A571LH:/tmp/.ICE-unix/2557
+envp[2] = QT_ACCESSIBILITY=1
+envp[3] = COLORTERM=truecolor
+envp[4] = XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+envp[5] = XDG_MENU_PREFIX=gnome-
+... # другие переменные окружения, доступные системе
+envp[38] = DISPLAY=:0
+envp[39] = SHLVL=1
+envp[40] = GSM_SKIP_SSH_AGENT_WORKAROUND=true
+envp[41] = QT_IM_MODULE=ibus
+envp[42] = DBUS_STARTER_ADDRESS=unix:path=/run/user/1000/bus,guid=237ce072be415b6d46a4070167dab89a
+envp[43] = XDG_RUNTIME_DIR=/run/user/1000
+envp[44] = DEBUGINFOD_URLS=https://debuginfod.ubuntu.com 
+envp[45] = XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+envp[46] = PATH=.:/home/danila/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/danila/.dotnet/tools
+envp[47] = GDMSESSION=ubuntu
+envp[48] = DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus,guid=237ce072be415b6d46a4070167dab89a
+envp[49] = _=./father
+Parent Process: Child process finished.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_2_3.c -o father && gcc son_2_3.c -o son
+Ср 19 мар 2025 16:39:38 MSK
+
+# Запустим функцию execle
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./father
+Parent Process: PID = 6480, PPID = 5335
+Child Process: PID = 6481, PPID = 6480
+Using execle:
+Son Process: PID = 6481, PPID = 6480
+Arguments:
+argv[0] = son
+argv[1] = arg1
+argv[2] = arg2
+Environment variables:
+envp[0] = ENV_VAR1=value1
+envp[1] = ENV_VAR2=value2
+Parent Process: Child process finished.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_2_3.c -o father && gcc son_2_3.c -o son
+Ср 19 мар 2025 16:39:53 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./father
+Parent Process: PID = 6546, PPID = 5335
+Child Process: PID = 6547, PPID = 6546
+Using execvp:
+Son Process: PID = 6547, PPID = 6546
+Arguments:
+argv[0] = ./son
+argv[1] = arg1
+argv[2] = arg2
+Environment variables:
+envp[0] = SHELL=/bin/bash
+envp[1] = SESSION_MANAGER=local/danila-VivoBook-ASUSLaptop-X571LH-A571LH:@/tmp/.ICE-unix/2557,unix/danila-VivoBook-ASUSLaptop-X571LH-A571LH:/tmp/.ICE-unix/2557
+envp[2] = QT_ACCESSIBILITY=1
+envp[3] = COLORTERM=truecolor
+envp[4] = XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+envp[5] = XDG_MENU_PREFIX=gnome-
+... # другие переменные окружения, доступные системе
+envp[38] = DISPLAY=:0
+envp[39] = SHLVL=1
+envp[40] = GSM_SKIP_SSH_AGENT_WORKAROUND=true
+envp[41] = QT_IM_MODULE=ibus
+envp[42] = DBUS_STARTER_ADDRESS=unix:path=/run/user/1000/bus,guid=237ce072be415b6d46a4070167dab89a
+envp[43] = XDG_RUNTIME_DIR=/run/user/1000
+envp[44] = DEBUGINFOD_URLS=https://debuginfod.ubuntu.com 
+envp[45] = XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+envp[46] = PATH=.:/home/danila/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/danila/.dotnet/tools
+envp[47] = GDMSESSION=ubuntu
+envp[48] = DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus,guid=237ce072be415b6d46a4070167dab89a
+envp[49] = _=./father
+Parent Process: Child process finished.
+
+
+2.4
+
+# Напишем программу, в которой будем вызывать родительский и дочерний процессы и через ps фиксировать их состояния.
+# При это рассмотрим 3 указанных случая, передавая в фугкцию разные аргументы.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat father_2_4.c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Функция для запуска процесса-сына
+void run_son(int delay_son, int delay_father) {
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        // Дочерний процесс (сын)
+        printf("Son Process: PID = %d, PPID = %d\n", getpid(), getppid());
+        
+        // Фиксируем состояние процессов
+        system("ps -o pid,ppid,stat,comm > processes.txt");
+        
+        sleep(delay_son);  // Имитация работы процесса-сына
+        
+        printf("Son Process: Finished.\n");
+        exit(0);
+    } else if (pid > 0) {
+        // Родительский процесс (отец)
+        printf("Father Process: PID = %d, PPID = %d\n", getpid(), getppid());
+
+        if (delay_father > 0) {
+            sleep(delay_father);  // Имитация работы процесса-отца
+        }
+
+        if (delay_father == 0) {
+            // Отец завершается сразу после запуска сына
+            printf("Father Process: Exiting without waiting for son.\n");
+            exit(0);
+        } else {
+            // Отец ждет завершения сына
+            wait(NULL);
+            printf("Father Process: Son process finished.\n");
+        }
+        
+
+    } else {
+        perror("fork failed");
+        exit(1);
+    }
+}
+
+int main() {
+    printf("Situation a\n");
+    run_son(2, 5);
+
+    /*printf("Situation b\n");
+    run_son(5, 0);*/
+
+    /*printf("Situation c\n");
+    run_son(2, 5);*/
+
+    return 0;
+}
+
+# В ситуации a процесс-отец ждет завершения процесса-сына с помощью wait. Запись происходит во время выполнения обоих процессов.
+# Потом идет заврешение сначала сына, потом отца.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_2_4.c
+Ср 19 мар 2025 17:58:49 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./a.out
+Situation a
+Father Process: PID = 7894, PPID = 5335
+Son Process: PID = 7895, PPID = 7894
+Son Process: Finished.
+Father Process: Son process finished.
+# По таблице видим, что оба процесса имеют состояние S, така как они ожидают завершения своих задач.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat processes.txt 
+    PID    PPID STAT COMMAND
+   5335    5327 Ss   bash
+   7894    5335 S+   a.out
+   7895    7894 S+   a.out
+   7896    7895 S+   sh
+   7897    7896 R+   ps
+
+# В ситуации b процесс-отец завершается раньше, и процесс-сын становится "сиротой". Запись происходит во время выполнения сына, но после завершения отца.
+# По PPID видим, что сын получил нового родителя. Им стал пользовательский экземпляр systemd, который управляет пользовательскими службами и сессиями.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_2_4.c
+Ср 19 мар 2025 17:59:36 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./a.out
+Situation b
+Father Process: PID = 7929, PPID = 5335
+Father Process: Exiting without waiting for son.
+Son Process: PID = 7930, PPID = 7929
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ Son Process: Finished.
+^C
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat processes.txt 
+    PID    PPID STAT COMMAND
+   5335    5327 Ss+  bash
+   7930    2300 S    a.out
+   7931    7930 S    sh
+   7932    7931 R    ps
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps -Flww -p 2300
+Ср 19 мар 2025 18:01:58 MSK
+F S UID          PID    PPID  C PRI  NI ADDR SZ WCHAN    RSS PSR STIME TTY          TIME CMD
+4 S danila      2300       1  0  80   0 -  5383 -      13256   2 15:29 ?        00:00:03 /usr/lib/systemd/systemd --user
+
+# В ситуации c процесс-отец не ждет завершения процесса-сына, мы закомметировали wait. Запись происходит после завершения выполнения сына.
+# Этот процесс стал зомби, так как его запись в таблице процессов осталась, но процесс-отец не вызвал wait.
+# Процесс-зомби - процесс, который завершил выполнение, но его запись в таблице процессов остается до тех пор, пока родитель не прочитает его статус (wait).
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ date && gcc father_2_4.c
+Ср 19 мар 2025 18:19:56 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ ./a.out
+Situation c
+Father Process: PID = 8465, PPID = 5335
+Son Process: PID = 8466, PPID = 8465
+Son Process: Finished.
+Father Process: Son process finished.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat processes.txt 
+    PID    PPID STAT COMMAND
+   5335    5327 Ss   bash
+   8465    5335 S+   a.out
+   8466    8465 Z+   a.out
+   8469    8465 S+   sh
+   8470    8469 R+   ps
+
+
+Задание 3.
+
