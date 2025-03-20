@@ -938,7 +938,7 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/
 
 # В программе ниже будет родительский процесс создавать 3 дочерних и отправлять им сигналы SIGUSR1.
 # SIGUSR1 - пользовательский сигнал, предназначенный для пользовательских приложений.
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat father_3_1.c 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat father_3_1.c 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -980,9 +980,9 @@ int main() {
 }
 
 # Первый дочерний процесс будет реагировать по умолчанию. В результате процесс сразу прекратит работу.
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat son1
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat son1
 son1        son1_3_1.c  
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat son1_3_1.c 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat son1_3_1.c 
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
@@ -997,7 +997,7 @@ int main() {
 
 # Второй дочерний процесс будет игнорировать сигнал (команда signal(SIGUSR1, SIG_IGN)).
 # По итогу он продолжит работу и будет выполняться вечный цикл. 
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat son2_3_1.c 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat son2_3_1.c 
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
@@ -1013,7 +1013,7 @@ int main() {
 
 # В третьем дочернем процессе пропишем обработку сигнала через signal().
 # После его получения выполнится функция signal_handler и после этого будет записана в текстовый файл информация о процессах.
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat son3_3_1.c 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat son3_3_1.c 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -1036,8 +1036,8 @@ int main() {
 }
 
 # Для 3-его процесса сигнал успешно обработался.
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ date && gcc father_3_1.c -o father && gcc son1_3_1.c -o son1 && gcc son2_3_1.c -o son2 && gcc son3_3_1.c -o son3Ср 19 мар 2025 23:51:14 MSK
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ ./father
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_3_1.c -o father && gcc son1_3_1.c -o son1 && gcc son2_3_1.c -o son2 && gcc son3_3_1.c -o son3Ср 19 мар 2025 23:51:14 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./father
 son1: PID = 12730, PPID = 12729
 son3: PID = 12732, PPID = 12729
 son2: PID = 12731, PPID = 12729
@@ -1045,7 +1045,7 @@ son3: Received signal 10
 ^C
 
 # По таблице мы видим, что son1 дейстивтельно заврешил работу, а остальные продолжили выполнение.
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ date && cat processes.txt 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && cat processes.txt 
 Ср 19 мар 2025 23:51:58 MSK
   UID     PID          PENDING          BLOCKED          IGNORED           CAUGHT STAT TTY        TIME COMMAND
  1000    2446 0000000000000000 0000000000000000 0000000000001000 0000000100004000 Ssl+ tty2       0:00 /usr/libexec/gdm-wayland-session env GNOME_SHELL_SESSION_MODE=ubuntu /usr/bin/gnome-session --session=ubuntu
@@ -1066,3 +1066,188 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/l
 
 
 3.2
+
+# Напишем программу, которая создает 2 дочерних процесса, ожидает их завершения и выводит информацию о завершении.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat father_3_2.c 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t son1, son2;
+
+    son1 = fork();
+    if (son1 == 0) {
+        printf("son1: PID = %d, PPID = %d\n", getpid(), getppid());
+        sleep(2);
+        exit(0);
+    }
+
+    son2 = fork();
+    if (son2 == 0) {
+        printf("son2: PID = %d, PPID = %d\n", getpid(), getppid());
+        sleep(5);
+        exit(0);
+    }
+
+    // Ожидаем завершения son1 через wait
+    int status;
+    pid_t pid = wait(&status);
+    if (WIFEXITED(status)) {
+	    printf("son1 %d exited with status %d\n", pid, WEXITSTATUS(status));
+    }
+
+    // Ожидаем завершения son2 через waitpid
+    waitpid(son2, &status, 0);
+    if (WIFEXITED(status)) {
+        printf("son2 %d exited with status %d\n", son2, WEXITSTATUS(status));
+    }
+
+    return 0;
+}
+
+# Родительский процесс ожидает завершения son1 с помощью wait(&status).
+# Родительский процесс ожидает завершения son2 с помощью waitpid(son2, &status, 0).
+# wait ожидает завершения любого дочернего процесса. Завершился раньше son1, так что получает именно его pid.
+# waitpid ожидает завершения конкретного процесса.
+# WIFEXITED(status) — проверяет, завершился ли процесс нормально (с помощью exit()).
+# WEXITSTATUS(status) — извлекает код возврата процесса
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_3_2.c -o father
+Чт 20 мар 2025 15:48:05 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ./father
+Чт 20 мар 2025 15:48:14 MSK
+son1: PID = 7208, PPID = 7207
+son2: PID = 7209, PPID = 7207
+son1 7208 exited with status 0
+son2 7209 exited with status 0
+
+# Связь wait() с SIGCHLD
+# Когда дочерний процесс завершается, ядро отправляет родительскому процессу сигнал SIGCHLD. 
+# Если родительский процесс использует wait(), то он будет уведомлен о завершении дочернего процесса.
+
+
+Задание 4.
+
+4.1
+
+# Напишем программу, которая создает 2 потока разными способами (pthread_create и clone).
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat thread_4.c 
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/syscall.h>
+
+#define STACK_SIZE (1024 * 1024)
+
+pthread_t t1;
+
+int shared_variable = 0;
+
+void* thread1(void* arg) {
+    int tid = syscall(SYS_gettid);
+    int pid = getpid();
+    printf("Thread_1 with thread id = %d and pid = %d is started\n", tid, pid);
+    sleep(3);
+    shared_variable++;
+    printf("Thread_1 with thread id = %d and pid = %d is finished. New shared_variable=%d\n", tid, pid, shared_variable);
+    return NULL;
+}
+
+int thread2(void* arg) {
+    int tid = syscall(SYS_gettid);
+    int pid = getpid();
+    printf("Thread_2 with thread id = %d and pid = %d is started\n", tid, pid);
+    sleep(5);
+    shared_variable++;
+    printf("Thread_2 with thread id = %d and pid = %d is finished. New shared_variable=%d\n", tid, pid, shared_variable);
+    return 0;
+}
+
+int main() {
+    // Создание потока_1 через pthread_create
+    pthread_create(&t1, NULL, thread1, NULL);
+    
+    
+    // Создание потока_2 через clone
+    void* stack = malloc(STACK_SIZE);
+    if (stack == NULL) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD;
+    pid_t tid2 = clone(thread2, stack + STACK_SIZE, flags, NULL);
+    if (tid2 == -1) {
+        perror("clone");
+        free(stack);
+        exit(EXIT_FAILURE);
+    }
+    
+    system("ps -eLf | grep ./thread > threads.txt");
+
+    // Ожидаем завершения потоков
+    pthread_join(t1, NULL);
+    sleep(6);
+
+    printf("Main thread: all thread has finished. Final shared_variable=%d\n", shared_variable);
+
+    free(stack);
+    return 0;
+}
+
+# Все потоки, созданные внутри одного процесса, используют общие ресурсы этого процесса.
+# В отличие от процессов, которые изолированы друг от друга и имеют свои собственные ресурсы, 
+# потоки работают в рамках одного адресного пространства и совместно используют большинство ресурсов процесса.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc thread_4.c -o thread
+Чт 20 мар 2025 20:50:58 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ./thread
+Чт 20 мар 2025 20:51:06 MSK
+Thread_1 with thread id = 6532 and pid = 6531 is started
+Thread_2 with thread id = 6533 and pid = 6531 is started
+Thread_1 with thread id = 6532 and pid = 6531 is finished. New shared_variable=1
+Thread_2 with thread id = 6533 and pid = 6531 is finished. New shared_variable=2
+Main thread: all thread has finished. Final shared_variable=2
+
+4.2
+
+# Видим по выводу, что оба потока относятся к одному процессу, так как имеют одинаковый pid.
+# Видим выполнение 3 потоков: основной, у которого pid = tid и 2 нами созданных.
+# Первый поток завершается через 3 секунды после начала, второй - после 5 секунд.
+# выполнение они начинают одновременно.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat threads.txt 
+danila      6531    5536    6531  0    3 20:51 pts/0    00:00:00 ./thread
+danila      6531    5536    6532  0    3 20:51 pts/0    00:00:00 ./thread
+danila      6531    5536    6533  0    3 20:51 pts/0    00:00:00 ./thread
+danila      6534    6531    6534  0    1 20:51 pts/0    00:00:00 sh -c -- ps -eLf | grep ./thread > threads.txt
+danila      6536    6534    6536  0    1 20:51 pts/0    00:00:00 grep ./thread
+
+4.3
+
+# При вызове clone мы определили в переменную flags некоторые флаги.
+# Они определяют, какие ресурсы будут разделяться между родительским процессом и новым потоком.
+# Разделяются адресное пространство, файловая система, таблица обработчика сигналов и потоковая группа.
+# Покажем ресурсы, которые разделяют оба дочерних потока.
+# Это адресное пространоство (т. к. pid одинаковый), глобальные переменные, файловые дескрипторы и т. д.
+# Для примера в программе оба потока увеличивают переменную на 1, что в итоге отображается в выводе.
+
+4.4
+
+# Увеличим время выполнения каждого потока до 300 и 500 секунд, чтобы можно было в другом терминале завершить его работу.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ./thread
+Чт 20 мар 2025 21:37:14 MSK
+Thread_2 with thread id = 7409 and pid = 7407 is started
+Thread_1 with thread id = 7408 and pid = 7407 is started
+Убито # после kill -9
+
+# Завершаем принудительно потокномер 2 через его tid. Сигнал 9 SIGKILL.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ kill -9 7409
+
+# Программа завершилась с сообщением "Убито", что указывает на то, что поток Thread_2 был принудительно завершен, 
+# и это привело к завершению всего процесса.
+# Поток_2 создан с флагом CLONE_THREAD, что означает, что он работает в той же потоковой группе, что и родительский процесс.
+# Потоки, созданные с этим флагом, не являются независимыми процессами. Они разделяют адресное пространство и другие ресурсы с родительским процессом.
+# Поэтому ядро завершает весь процесс.
