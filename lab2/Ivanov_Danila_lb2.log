@@ -789,7 +789,7 @@ Parent Process: Child process finished.
 
 # Напишем программу, в которой будем вызывать родительский и дочерний процессы и через ps фиксировать их состояния.
 # При это рассмотрим 3 указанных случая, передавая в фугкцию разные аргументы.
-danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH:~/Рабочий стол/ОС/lab2$ cat father_2_4.c
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat father_2_4.c
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -1251,3 +1251,672 @@ danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/
 # Поток_2 создан с флагом CLONE_THREAD, что означает, что он работает в той же потоковой группе, что и родительский процесс.
 # Потоки, созданные с этим флагом, не являются независимыми процессами. Они разделяют адресное пространство и другие ресурсы с родительским процессом.
 # Поэтому ядро завершает весь процесс.
+
+Задание 5.
+
+5.1
+
+# Политика планирование - алгоритм, который определяет, какой поток должен быть выбран для выполнения.
+
+# Напишем программу, в которой 1 родительский процесс будет порождать 2 дочерних.
+# Каждый процесс выводит свой PID в бесконечном цикле с задержкой в 1 секунду. 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && ps -eo pid,pri,ni,comm | grep sched
+Сб 22 мар 2025 13:47:27 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat sched_5_1.c 
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main() {
+    pid_t pid1 = fork();
+    if (pid1 == 0) {
+        // Дочерний процесс 1
+        while (1) {
+            sleep(1);
+            printf("Child 1 PID: %d\n", getpid());
+        }
+    } else {
+        pid_t pid2 = fork();
+        if (pid2 == 0) {
+            // Дочерний процесс 2
+            while (1) {
+                sleep(1);
+                printf("Child 2 PID: %d\n", getpid());
+            }
+        } else {
+            // Родительский процесс
+            while (1) {
+                sleep(1);
+                printf("Parent PID: %d\n", getpid());
+            }
+        }
+    }
+    return 0;
+}
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc sched_5_1.c -o sched
+Сб 22 мар 2025 13:47:53 MSK
+# Видим по выводу, что планировщик равномерно распределяет процессорное время между процессами с одинаковым приоритетом.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./sched
+Parent PID: 5745
+Child 2 PID: 5747
+Child 1 PID: 5746
+Child 2 PID: 5747
+Parent PID: 5745
+Child 1 PID: 5746
+Child 2 PID: 5747
+Parent PID: 5745
+Child 1 PID: 5746
+Child 2 PID: 5747
+Parent PID: 5745
+Child 1 PID: 5746
+Child 2 PID: 5747
+...
+# По умолчанию все процессы имеют одинаковый приоритет (nice = 0, PRI = 19).
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ps -eo pid,pri,ni,comm | grep sched
+   5745  19   0 sched
+   5746  19   0 sched
+   5747  19   0 sched
+
+# Политика планирования по умолчанию: SCHED_OTHER (CFS). Эта политика предназначена для обычных процессов и использует значение nice для определения приоритета.
+
+5.2
+
+# Напишем программу, которая по переданного аргументы будет выводить полученное число.
+# Использование fflush(stdout) гарантирует, что вывод сразу попадает в терминал, а не буферизируется.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat sched_5_2.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/resource.h>
+
+int main(int argc, char *argv[]) {
+    int id = (argc > 1) ? atoi(argv[1]) : 0;
+    for (int i = 0; i < 100000; ++i) {
+        printf("%d", id);
+        fflush(stdout);      // Сбрасывает буфер вывода
+    }
+    printf("\n");
+    return 0;
+}
+
+# Запустим по этой программе 3 процесса, при этом изменяя для некоторых приоритет nice.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ gcc sched_5_2.c -o sched
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ nice -n 10 ./sched 1 & ./sched 2 & ./sched 3
+[7] 9473
+[8] 9474
+33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333332323232323232323232323232323232323
+232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323
+2323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232
+32132132132132132132132132132132132132132132132132132132132132132132132132132132132132313213213213213213213213213213213213213213213213
+213213213213213213213213213213213213213213213213213213213213213213213213213213213213213213213213213213213123123123123123123123123123123
+1231231231231231231231231231231231231231231321321321321321321321321321321321321321321321321321231231231231232132132132132132132132132132
+132132132132132132132132132132132132132132132132132132132132132132132132132132132132132132132
+
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./sched 1 & ./sched 2 & nice -n 10 ./sched 3
+[7] 9533
+[8] 9534
+1111111111111111111111111111111111111111111111111111111111111111111111121212121212121212121212121212121212121212121212121212121212121212121212
+1212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121
+2121212121212121212121212121212121212121212121212121212121212312312312312312312312312312312312312312312312312312312312312312312312312312312312312312
+312312312312312312312312312312312312312312123123123123123123123123132312312312312312312312312312312312312312312312312312312312313213231231231231231231
+231231231231231231231231231231231231231231231231231231231231231231231231231231231231231231231231231231231231
+
+# Мы видим, что процессы, которые имеют больший приоритет (nice=0) будут выполняться в самом начале, а оставшийся 3-ий процесс получит право вывести число позже.
+# Так как планировщик CFS (Completely Fair Scheduler) распределяет CPU в зависимости от значения nice. И 3-ий процесс имеет меньше процессорного времени.
+
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat get_priority_5_2.c 
+#include <sys/resource.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Usage: %s <PID>\n", argv[0]);
+        return 1;
+    }
+
+    pid_t pid = atoi(argv[1]);
+    int priority = getpriority(PRIO_PROCESS, pid);
+    printf("Priority of process %d: %d\n", pid, priority);
+    return 0;
+}
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ gcc get_priority_5_2.c -o get
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./get 9938
+Priority of process 9938: 0
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./get 9947
+Priority of process 9947: 10
+
+# 2-ое окно
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sleep 100 &
+[2] 9938
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ jobs
+[1]+  Остановлен    top
+[2]-  Запущен          sleep 100 &
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ kill 9938
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ jobs
+[1]+  Остановлен    top
+[2]-  Завершено      sleep 100
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ nice -n 10 sleep 100 &
+[2] 9947
+
+
+5.3
+
+# Напишем 3 программы fifo1, fifo2, fifo3, каждая из которых порождает процесс.
+# Каждый процесс устанавливает политику планирования SCHED_FIFO с приоритетом, переданным через аргумент командной строки, нагружает CPU и выводит свой PID и приоритет три раза.
+# Также напишем скрипт, который запускает одновременно эти 3 процесса.
+# Добавим taskset -c 0, чтобы привязать процессы к 1 ядру.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat 5_3.sh 
+#!/bin/bash
+
+EXECUTABLES=("fifo1" "fifo2" "fifo3")
+
+DIFFERENT_PRIORITIES=(30 30 30)
+
+# Функция для ожидания завершения группы процессов
+wait_for_processes() {
+    for pid in "$@"; do
+        wait "$pid"
+    done
+}
+
+pids=()
+for i in "${!EXECUTABLES[@]}"; do
+    exe="${EXECUTABLES[$i]}"
+    prio="${DIFFERENT_PRIORITIES[$i]}"
+    echo "Запуск $exe с приоритетом $prio"
+    sudo taskset -c 0 "./$exe" "$prio" &
+    pids+=($!)
+done
+wait_for_processes "${pids[@]}"
+
+rm fifo1 fifo2 fifo3
+
+# Установим разные приоритеты. И мы видим, что планировщик распределил процессы в соответствии с этим показателем.
+# Процесс с самым высоким приоритетом (40) выполняется первым, затем процесс с приоритетом 20, и, наконец, процесс с приоритетом 10.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc fifo1_5_3.c -o fifo1 && gcc fifo2_5_3.c -o fifo2 && gcc fifo3_5_3.c -o fifo3
+Сб 22 мар 2025 19:12:23 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sudo ./5_3.sh
+[sudo] пароль для danila: 
+Запуск fifo1 с приоритетом 10
+Запуск fifo2 с приоритетом 40
+Запуск fifo3 с приоритетом 20
+Min priority: 1, Max priority: 99
+Procces PID: 14797, Priority: 40
+Procces PID: 14797, Priority: 40
+Procces PID: 14797, Priority: 40
+Procces PID: 14798, Priority: 20
+Procces PID: 14798, Priority: 20
+Procces PID: 14798, Priority: 20
+Procces PID: 14795, Priority: 10
+Procces PID: 14795, Priority: 10
+Procces PID: 14795, Priority: 10
+
+# Процессы с одинаковым приоритетом выполняются в порядке запуска (FIFO), что соответствует политике SCHED_FIFO.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc fifo1_5_3.c -o fifo1 && gcc fifo2_5_3.c -o fifo2 && gcc fifo3_5_3.c -o fifo3
+Сб 22 мар 2025 19:13:24 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sudo ./5_3.sh
+Запуск fifo1 с приоритетом 30
+Запуск fifo2 с приоритетом 30
+Запуск fifo3 с приоритетом 30
+Min priority: 1, Max priority: 99
+Procces PID: 14885, Priority: 30
+Procces PID: 14885, Priority: 30
+Procces PID: 14885, Priority: 30
+Procces PID: 14886, Priority: 30
+Procces PID: 14886, Priority: 30
+Procces PID: 14886, Priority: 30
+Procces PID: 14888, Priority: 30
+Procces PID: 14888, Priority: 30
+Procces PID: 14888, Priority: 30
+
+# Также программа через sched_get_priority_min и sched_get_priority_max выводит границы для значения приоритетов.
+
+
+5.4
+
+
+# Все действия будут по аналогии с 5.3. Только в самих исполняемых программах нужно изменить планирование на SCHED_RR и также вывести квант времени.
+# Планировщик SCHED_RR поочередно выделяет CPU каждому процессу в течение кванта времени.
+# Это значение кванта времени, в течение которого процесс может использовать CPU, прежде чем планировщик переключится на другой процесс с таким же приоритетом.
+
+# Для разных приоритетов выполнение идет по аналогии. Больший приоритет выполняется полностью и блокирует остальные.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ chmod +x 5_4.sh 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc rr1_5_4.c -o rr1 && gcc rr2_5_4.c -o rr2 && gcc rr3_5_4.c -o rr3
+Сб 22 мар 2025 20:03:20 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./5_4.sh
+Запуск rr1 с приоритетом 10
+Запуск rr2 с приоритетом 40
+Запуск rr3 с приоритетом 20
+[sudo] пароль для danila: 
+Min priority: 1, Max priority: 99
+Quantum: 3000000 ns
+Procces PID: 17689, Priority: 40
+Procces PID: 17689, Priority: 40
+Procces PID: 17689, Priority: 40
+Procces PID: 17688, Priority: 20
+Procces PID: 17688, Priority: 20
+Procces PID: 17688, Priority: 20
+Procces PID: 17685, Priority: 10
+Procces PID: 17685, Priority: 10
+Procces PID: 17685, Priority: 10
+
+# Для 2-ой ситуации процессы начинают чередоваться, что соответствует данному планировщику.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc rr1_5_4.c -o rr1 && gcc rr2_5_4.c -o rr2 && gcc rr3_5_4.c -o rr3
+Сб 22 мар 2025 20:04:21 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./5_4.sh
+Запуск rr1 с приоритетом 30
+Запуск rr2 с приоритетом 30
+Запуск rr3 с приоритетом 30
+Min priority: 1, Max priority: 99
+Quantum: 3000000 ns
+Procces PID: 17779, Priority: 30
+Procces PID: 17780, Priority: 30
+Procces PID: 17781, Priority: 30
+Procces PID: 17779, Priority: 30
+Procces PID: 17780, Priority: 30
+Procces PID: 17781, Priority: 30
+Procces PID: 17779, Priority: 30
+Procces PID: 17780, Priority: 30
+Procces PID: 17781, Priority: 30
+
+
+5.5
+
+# Будем использовать программы из предыдущих заданий и запускать вместе.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat 5_5.sh
+#!/bin/bash
+
+gcc rr1_5_5.c -o rr1
+gcc rr2_5_5.c -o rr2
+gcc fifo1_5_5.c -o fifo1
+gcc fifo2_5_5.c -o fifo2
+EXECUTABLES_FIFO=("fifo1" "fifo2")
+EXECUTABLES_RR=("rr1" "rr2")
+
+PRIORITIES_FIFO=(30 30)
+PRIORITIES_RR=(30 30)
+
+# Функция для ожидания завершения группы процессов
+wait_for_processes() {
+    for pid in "$@"; do
+        wait "$pid"
+    done
+}
+
+pids=()
+
+for i in "${!EXECUTABLES_RR[@]}"; do
+    exe="${EXECUTABLES_RR[$i]}"
+    prio="${PRIORITIES_RR[$i]}"
+    echo "Запуск $exe с приоритетом $prio"
+    sudo taskset -c 0 "./$exe" "$prio" &
+    pids+=($!)
+done
+
+for i in "${!EXECUTABLES_FIFO[@]}"; do
+    exe="${EXECUTABLES_FIFO[$i]}"
+    prio="${PRIORITIES_FIFO[$i]}"
+    echo "Запуск $exe с приоритетом $prio"
+    sudo taskset -c 0 "./$exe" "$prio" &
+    pids+=($!)
+done
+
+wait_for_processes "${pids[@]}"
+
+rm rr1 rr2 fifo1 fifo2
+
+# Все процессы имеют одинаковый приоритет (30).
+# Процессы с политикой SCHED_FIFO выполняются первыми, так как они имеют более высокий приоритет по сравнению с SCHED_RR при одинаковом значении приоритета.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./5_5.sh
+Запуск rr1 с приоритетом 30
+Запуск rr2 с приоритетом 30
+Запуск fifo1 с приоритетом 30
+Запуск fifo2 с приоритетом 30
+Procces_fifo PID: 19932, Priority: 30
+Procces_fifo PID: 19932, Priority: 30
+Procces_fifo PID: 19932, Priority: 30
+Procces_fifo PID: 19935, Priority: 30
+Procces_fifo PID: 19935, Priority: 30
+Procces_fifo PID: 19935, Priority: 30
+Procces_rr PID: 19930, Priority: 30
+Procces_rr PID: 19934, Priority: 30
+Procces_rr PID: 19930, Priority: 30
+Procces_rr PID: 19934, Priority: 30
+Procces_rr PID: 19930, Priority: 30
+Procces_rr PID: 19934, Priority: 30
+
+# Изменим в скрипте приоритеты.
+# При разных приоритетах процессы с более высокими приоритетами выполняются первыми, независимо от политики.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./5_5.sh
+Запуск rr1 с приоритетом 40
+Запуск rr2 с приоритетом 10
+Запуск fifo1 с приоритетом 20
+Запуск fifo2 с приоритетом 35
+Procces_rr PID: 20035, Priority: 40
+Procces_rr PID: 20035, Priority: 40
+Procces_rr PID: 20035, Priority: 40
+Procces_fifo PID: 20036, Priority: 35
+Procces_fifo PID: 20036, Priority: 35
+Procces_fifo PID: 20036, Priority: 35
+Procces_fifo PID: 20033, Priority: 20
+Procces_fifo PID: 20033, Priority: 20
+Procces_fifo PID: 20033, Priority: 20
+Procces_rr PID: 20034, Priority: 10
+Procces_rr PID: 20034, Priority: 10
+Procces_rr PID: 20034, Priority: 10
+
+5.6
+
+# Напишем программу, которая в рамках одного процесса создает несколько потоков и устанавливает для них политику планирования с приоритетом. 
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat 5_6.c
+#include <stdio.h>
+#include <pthread.h>
+#include <sched.h>
+#include <unistd.h>
+#include <time.h>
+
+void* thread_function(void* arg) {
+    const char* policy_name = (const char*)arg;
+    printf("Thread with %s policy started\n", policy_name);
+
+    int policy;
+    struct sched_param param;
+    pthread_getschedparam(pthread_self(), &policy, &param);
+    printf("Thread %s: policy = %d, priority = %d\n", policy_name, policy, param.sched_priority);
+
+    time_t start = time(NULL);
+    while (time(NULL) - start < 5) {
+        // Активное ожидание
+    }
+
+    printf("Thread with %s policy finished\n", policy_name);
+    return NULL;
+}
+
+void set_thread_policy(pthread_t thread, int policy, int priority) {
+    struct sched_param param;
+    param.sched_priority = priority;
+    if (pthread_setschedparam(thread, policy, &param) != 0) {
+        perror("pthread_setschedparam");
+    }
+}
+
+int main() {
+    pthread_t thread1, thread2, thread3;
+
+    pthread_create(&thread1, NULL, thread_function, (void*)"SCHED_FIFO (Prio 50)");
+    pthread_create(&thread2, NULL, thread_function, (void*)"SCHED_OTHER (Prio 0)");
+    pthread_create(&thread3, NULL, thread_function, (void*)"SCHED_RR (Prio 50)");
+
+    set_thread_policy(thread1, SCHED_FIFO, 50);
+    set_thread_policy(thread2, SCHED_OTHER, 0);
+    set_thread_policy(thread3, SCHED_RR, 50);
+
+
+    pthread_join(thread1, NULL);
+    pthread_join(thread2, NULL);
+    pthread_join(thread3, NULL);
+
+    printf("All threads finished\n");
+    return 0;
+}
+
+# Для начала рассмотрим ситуацию, в которой создаем 3 потока разных политик с одинаковым приоритетом.
+# SCHED_FIFO (реальный временной режим, поток выполняется до завершения или пока не будет вытеснен более приоритетным потоком).
+# SCHED_RR (реальный временной режим с квантованием времени, поток выполняется в течение выделенного кванта времени, после чего переходит в конец очереди).
+# SCHED_OTHER (обычный режим с разделением времени). Завершился последним, так как имеет самый низкий приоритет.
+# SCHED_RR квант времени и выполнил свою работу в течение этого кванта. Если он успел завершить свою работу в течение своего кванта времени, он завершился раньше, чем поток с SCHED_FIFO.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc 5_6.c
+Сб 22 мар 2025 21:42:45 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sudo ./a.out
+Thread with SCHED_FIFO (Prio 50) policy started
+Thread SCHED_FIFO (Prio 50): policy = 1, priority = 50
+Thread with SCHED_RR (Prio 50) policy started
+Thread SCHED_RR (Prio 50): policy = 2, priority = 50
+Thread with SCHED_OTHER (Prio 0) policy started
+Thread SCHED_OTHER (Prio 0): policy = 0, priority = 0
+Thread with SCHED_RR (Prio 50) policy finished
+Thread with SCHED_FIFO (Prio 50) policy finished
+Thread with SCHED_OTHER (Prio 0) policy finished
+All threads finished
+
+# Потоки с более высоким приоритетом вытесняют потоки с более низким приоритетом.
+# Поток с приоритетом 70 вытеснил поток с приоритетом 50 и выполнился до завершения.
+# После завершения потока с приоритетом 70 поток с приоритетом 50 продолжил выполнение.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc 5_6.c
+Сб 22 мар 2025 21:44:10 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ sudo ./a.out
+Thread with SCHED_FIFO (Prio 50) policy started
+Thread SCHED_FIFO (Prio 50): policy = 1, priority = 50
+Thread with SCHED_FIFO (Prio 70) policy started
+Thread SCHED_FIFO (Prio 70): policy = 1, priority = 70
+Thread with SCHED_FIFO (Prio 70) policy finished
+Thread with SCHED_FIFO (Prio 50) policy finished
+All threads finished
+
+
+Задание 6.
+
+6.1
+
+# Напишем программу, в которой родительский процесс создает дочерний.
+# Основной процесс открывает файл и устанавливает для него права доступа 644. То есть записывать туда может только владелец.
+# После наследования дочерний процесс будет иметь те же права доступа. Происходит копирование всех открытых файловых дескрипторов. 
+# Таким образом, дочерний процесс получает доступ к тем же файлам, что и родительский процесс.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat 6_1.c
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+int main() {
+    int fd = open("testfile.txt", O_RDWR | O_CREAT, 0644);
+    if (fd == -1) {
+        perror("open");
+        return 1;
+    }
+
+    pid_t pid = fork();
+    if (pid == -1) {
+        perror("fork");
+        return 1;
+    }
+
+    if (pid == 0) {
+        // Дочерний процесс
+        write(fd, "Child\n", 6);
+    } else {
+        // Родительский процесс
+        write(fd, "Parent\n", 7);
+    }
+
+    close(fd);
+    return 0;
+}
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc 6_1.c && ./a.out
+Сб 22 мар 2025 22:08:57 MSK
+# Видим, что с дочернего процесса удалось удачно записать информцию в файл.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat testfile.txt 
+Parent
+Child
+
+
+6.2
+
+# Напишем программу, в которой для основного процесса устанавливается определенная политика планирования с приоритетом.
+# После этого идет создание дочернего процесса.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat 6_2.c
+#include <stdio.h>
+#include <unistd.h>
+#include <sched.h>
+#include <stdlib.h>
+
+int main() {
+    // Устанавливаем политику и приоритет в родительском процессе ДО fork()
+    struct sched_param param;
+    param.sched_priority = 50;
+
+    if (sched_setscheduler(0, SCHED_FIFO, &param) == -1) {
+        perror("sched_setscheduler failed");
+        exit(EXIT_FAILURE);
+    }
+
+    pid_t pid = fork();
+    if (pid == -1) {
+        perror("fork failed");
+        return 1;
+    }
+
+    if (pid == 0) {
+        // Дочерний процесс
+        struct sched_param child_param;
+        if (sched_getparam(0, &child_param) == -1) {
+            perror("sched_getparam failed in child");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("Child PID: %d\n", getpid());
+        printf("Child scheduling policy: %d\n", sched_getscheduler(0));
+        printf("Child priority: %d\n", child_param.sched_priority);
+    } else {
+        // Родительский процесс
+        struct sched_param parent_param;
+        if (sched_getparam(0, &parent_param) == -1) {
+            perror("sched_getparam failed in parent");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("Parent PID: %d\n", getpid());
+        printf("Parent scheduling policy: %d\n", sched_getscheduler(0));
+        printf("Parent priority: %d\n", parent_param.sched_priority);
+    }
+
+    return 0;
+}
+# Видим по выводу, что значения для родительского и дочернего процессов полностью совпали. То есть дочерний процесс полностью отнаследовал политику.
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc 6_2.c && ./a.out
+Сб 22 мар 2025 22:34:08 MSK
+sched_setscheduler failed: Operation not permitted
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc 6_2.c && sudo ./a.out
+Сб 22 мар 2025 22:34:17 MSK
+Parent PID: 26904
+Parent scheduling policy: 1
+Parent priority: 50
+Child PID: 26905
+Child scheduling policy: 1
+Child priority: 50
+
+
+6.3
+
+# Напишем программу для реализации родительского и дочернего процессов. Через execl сделаем замену текущего образа процесса на новый исполняемый файл.
+# После вызова fork(), дочерний процесс становится почти точной копией родительского процесса. Это включает в себя наследование диспозиции сигналов.
+# До execl у нас отнаследовался тот же обработчик сигнала.
+# Однако после вызова exec(), диспозиция сигналов сбрасывается в состояние по умолчанию (SIG_DFL).
+# Это означает, что обработчик handler, унаследованный от родительского процесса, больше не действует в дочернем процессе.
+# Чтобы восстановить обработчик, его нужно явно установить в дочернем процессе после exec().
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat father_6_3.c 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+void handler(int sig) {
+    printf("Parent: Received signal %d\n", sig);
+}
+
+int main() {
+    pid_t son;
+
+    signal(SIGUSR1, handler);
+
+    son = fork();
+    if (son == -1) {
+        perror("fork failed");
+        return 1;
+    }
+
+    if (son == 0) {
+        printf("Child: Sending SIGUSR1 to myself before exec()\n");
+        raise(SIGUSR1);
+        
+        execl("./son", "son", NULL);
+        perror("execl failed");
+        exit(EXIT_FAILURE);
+    }
+
+    sleep(2);
+
+    printf("Parent: Sending SIGUSR1 to myself\n");
+    raise(SIGUSR1);
+
+    printf("Parent: Sending SIGUSR1 to son (PID: %d)\n", son);
+    kill(son, SIGUSR1);
+
+    return 0;
+}
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat son_6_3.c 
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+
+void handler(int sig) {
+    printf("Son: Received signal %d\n", sig);
+}
+
+int main() {
+    // Восстанавливаем обработчик сигнала SIGUSR1
+    signal(SIGUSR1, handler);
+    printf("son1: PID = %d, PPID = %d\n", getpid(), getppid());
+    while (1) {
+        sleep(1);
+    }
+    return 0;
+}
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ date && gcc father_6_3.c -o father && gcc son_6_3.c -o son
+Сб 22 мар 2025 23:44:42 MSK
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ ./father
+Child: Sending SIGUSR1 to myself before exec()
+Parent: Received signal 10
+son1: PID = 274850, PPID = 274849
+Parent: Sending SIGUSR1 to myself
+Parent: Received signal 10
+Parent: Sending SIGUSR1 to son (PID: 274850)
+Son: Received signal 10
+
+6.4
+
+# Функция clone() позволяет явно указать, какие ресурсы должны быть разделены, а какие — скопированы (наследованы). Это делается с помощью флагов, передаваемых в clone().
+danila@danila-VivoBook-ASUSLaptop-X571LH-A571LH: ~/Рабочий стол/ОС/lab2$ cat 6_4.c
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <sched.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+int child_func(void *arg) {
+    printf("Child PID: %d\n", getpid());
+    return 0;
+}
+
+int main() {
+    char stack[1024 * 1024];  // Стек для нового процесса
+
+    pid_t pid = clone(child_func, stack + sizeof(stack), CLONE_VM | CLONE_FS | CLONE_FILES, NULL);
+    if (pid == -1) {
+        perror("clone");
+        return 1;
+    }
+
+    printf("Parent PID: %d\n", getpid());
+    waitpid(pid, NULL, 0);
+    return 0;
+}
+
+# В данном примере флаги CLONE_VM | CLONE_FS | CLONE_FILES будут разделяться. То есть происходит использование одних и тех же ресурсов.
+# Если бы они не были указаны, они бы просто наследовались. То есть дочерний процесс получал бы копию ресурса родительского процесса.
