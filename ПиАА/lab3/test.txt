@@ -1,0 +1,15 @@
+abcbbcababz
+7
+a 
+ab
+bab
+bc
+bca
+caa
+c
+
+-----------
+
+xabvccababcax
+abφφcφ
+φ
