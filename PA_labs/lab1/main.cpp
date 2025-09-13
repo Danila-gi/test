@@ -4,11 +4,11 @@
 #include "BlockMultiply.cpp"
 
 int main(){
-    BlockMultiplyMatrix obj(1024, 16);
+    BlockMultiplyMatrix obj(1000, 10);
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    obj.parallelMultiply(8);
+    obj.parallelMultiply(28);
 
     auto stop = std::chrono::high_resolution_clock::now();
 

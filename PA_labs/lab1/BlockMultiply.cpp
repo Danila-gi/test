@@ -26,15 +26,6 @@ private:
         }
     }
 
-    void mPrintMatrix(const std::vector<std::vector<double>>& matrix){
-        for (auto arr: matrix){
-            for (double element: arr){
-                std::cout << std::setprecision(2) << element << '\t';
-            }
-            std::cout << std::endl;
-        }
-    }
-
     std::vector<std::vector<double>> mBaseMultiply(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B){
         int n = A[0].size();
         
@@ -101,42 +92,62 @@ public:
         blocksOnLine = sizeMatrix / blockSize;
     }
 
-    std::vector<std::vector<double>> baseMultiply(){
-        return mBaseMultiply(A, B);
+    void baseMultiply(){
+        C = mBaseMultiply(A, B);
     }
+
+    void printResultMatrix(){
+        for (auto arr: C){
+            for (double element: arr){
+                std::cout << std::setprecision(2) << element << '\t';
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    void clearC(){
+        for (int i = 0; i < sizeMatrix; i++){
+            for (int j = 0; j < sizeMatrix; j++){
+                C[i][j] = 0;
+            }
+        }
+    };
 
     void parallelMultiply(int threadsCount){
         std::vector<std::thread> threadArr;
         
         int blocksPerThread = blocksOnLine * blocksOnLine / threadsCount;
-        //int extraBlocks = blocksOnLine * blocksOnLine % threadsCount;
+        int extraBlocks = blocksOnLine * blocksOnLine % threadsCount;
 
-        //int indexThread = 0;
+        int indexThread = 0;
         for (int i = 0; i < threadsCount * blocksPerThread; i += blocksPerThread){
-            threadArr.emplace_back([this, blocksPerThread, i](){
+            threadArr.emplace_back([this, blocksPerThread, i, threadsCount, indexThread, extraBlocks](){
                 int blockX = i % blocksOnLine;
                 int blockY = i / blocksOnLine;
-                //std::cout << blockY << " - " << blockX << " BLOCKS_PER_THREAD: " << blocksPerThread <<std::endl;
-                for (int j = 0; j < blocksPerThread; j++){
+                int iterationsCount = blocksPerThread;
+
+                if (indexThread == threadsCount - 1){
+                    iterationsCount += extraBlocks;
+                }
+
+                //std::cout << blockY << " - " << blockX << " BLOCKS_PER_THREAD: " << blocksPerThread << " EXTRA BLOCKS: " << extraBlocks << std::endl;
+                for (int j = 0; j < iterationsCount; j++){
                     std::vector<std::vector<double>> C_block (blockSize, std::vector<double>(blockSize, 0));
                     for (int t = 0; t < blocksOnLine; t++){
-                        auto A_block = mGetBlockByIndex(A, blockX, t, blockSize, blockSize);
-                        auto B_block = mGetBlockByIndex(B, t, blockY, blockSize, blockSize);
+                        auto A_block = mGetBlockByIndex(A, blockY, t, blockSize, blockSize);
+                        auto B_block = mGetBlockByIndex(B, t, blockX, blockSize, blockSize);
                         mSumMatrix(C_block, mBaseMultiply(A_block, B_block));
                     }
                     
-                    //std::cout << blockY << " " << blockX << std::endl;
                     mFillC(blockX, blockY, blocksPerThread, C_block);
                     mGetNextBlockIndex(blockX, blockY, blocksOnLine);
                 }
             });
-            //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-            //indexThread++;
+            indexThread++;
         }
         
         for (auto& th: threadArr){
             th.join();
         }
-        //std::cout << currentBlockY << " " << currentBlockX << std::endl;
     }
 };
