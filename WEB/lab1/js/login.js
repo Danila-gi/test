@@ -4,5 +4,6 @@ document.getElementById('loginUser').addEventListener('submit', function(e) {
     e.preventDefault();
     const username = document.getElementById('username').value;
     localStorage.setItem('tetris.username', username);
+    localStorage.setItem('records', JSON.stringify([]));
     window.location.href = 'game.html';
 });

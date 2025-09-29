@@ -1,12 +1,3 @@
-body {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 20px;
-}
-
 .container {
     display: flex;
     flex-direction: row;
@@ -20,4 +11,190 @@ body {
     display: flex;
     gap: 20px;
     align-items: flex-start;
+}
+
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --accent-color: #e74c3c;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    color: var(--light-color);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+h1 {
+    margin: 20px 0;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Стили для интерфейса игры */
+.game_interface {
+    background: rgba(44, 62, 80, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    width: 250px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game_interface p:first-child {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+.game_interface p:nth-child(2) {
+    margin: 15px 0;
+    font-size: 1.2rem;
+}
+
+.game_interface button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+#startGame {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+#startGame:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+}
+
+#endGame {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+#endGame:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+/* Стили для игровой области */
+.game_area {
+    display: flex;
+    align-items: flex-start;
+}
+
+#mainCanv {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Стили для метрик игры */
+.game_metrics {
+    background: rgba(44, 62, 80, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    width: 200px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#nextShape {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.game_metrics p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+}
+
+#score {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+#gameOver {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Стили для таблицы рекордов */
+.records {
+    margin-top: 30px;
+    background: rgba(44, 62, 80, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.records p {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+#list_of_records {
+    text-align: left;
+    padding-left: 30px;
+}
+
+#list_of_records li {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    padding: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }

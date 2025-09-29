@@ -1,10 +1,15 @@
 import {WIDTH_GROUND, HEIGTH_GROUND, BLOCK_SIZE, shapes, rotates, ADD_POINTS, colors, levels} from "./utils.js";
 import { drawGround, drawNextShape } from "./draw.js";
+import { putRecords } from "./infoLoad.js";
 
 export class Game{
 
     constructor(){
         this.mainGround = [];
+        this.clearMetrics();
+    }
+
+    clearMetrics(){
         this.posX = 0;
         this.posY = 0;
         this.rotate = 0;
@@ -15,6 +20,16 @@ export class Game{
         this.gameInterval;
         this.level = 0;
         this.isFinished = true;
+    }
+
+    addRecord(score){
+        const arrayRecords = JSON.parse(localStorage.getItem('records'));
+        arrayRecords.push(score);
+        arrayRecords.sort((a, b) => b - a);
+        if (arrayRecords.length == 6){
+            arrayRecords.pop();
+        }
+        localStorage.setItem('records', JSON.stringify(arrayRecords));
     }
 
     changeState(){
@@ -48,24 +63,19 @@ export class Game{
         this.isFinished = true;
         document.getElementById("gameOver").textContent = "Game Over";
         clearInterval(this.gameInterval);
+        this.addRecord(this.SCORE);
     }
 
     clearGame(){
-        clearInterval(this.gameInterval);
         document.getElementById("gameOver").innerHTML = "";
         this.mainGround = [];
         for (let i = 0; i < HEIGTH_GROUND; i++){
             this.mainGround.push(Array.from({length: WIDTH_GROUND}, () => 0));
         };
-        this.posX = 0;
-        this.posY = 0;
-        this.rotate = 0;
-        this.shape = Math.floor(Math.random() * (shapes.length));
-        this.nextShape = Math.floor(Math.random() * (shapes.length));
-        this.SCORE = 0;
-        this.isPaused = false;
-        this.level = 0;
-        this.isFinished = true;
+        drawGround(this.mainGround);
+        clearInterval(this.gameInterval);
+        this.clearMetrics();
+        putRecords();
     }
 
     checkShape(backPosition, posX, posY){
@@ -119,8 +129,8 @@ export class Game{
     }
 
     gameCycle(){
-        if (this.SCORE >= 600 * (this.level + 1) && this.level < levels.length - 1){
-            console.log("Change level: " + ++this.level);
+        if (this.SCORE >= 800 * (this.level + 1) && this.level < levels.length - 1){
+            ++this.level;
             clearInterval(this.gameInterval);
             this.gameInterval = setInterval(() => {this.gameCycle();}, levels[this.level]);
         }
@@ -151,6 +161,7 @@ export class Game{
             this.rotate = 0;
             if (this.checkShape(()=>{}, this.posX, this.posY)){
                 this.gameOver();
+                return;
             }
 
             let index = HEIGTH_GROUND - 1;
@@ -172,6 +183,7 @@ export class Game{
             }
             if (this.mainGround[0].find(((element) => {return element !== 0})) !== undefined){
                 this.gameOver();
+                return;
             }
         }
         else{

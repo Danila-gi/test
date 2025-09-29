@@ -1,3 +1,183 @@
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --accent-color: #e74c3c;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    color: var(--light-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+}
+
 .main_page {
     text-align: center;
+    background: rgba(44, 62, 80, 0.8);
+    border-radius: 20px;
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    color: var(--light-color);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+label {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 500;
+    width: 100%;
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    text-align: center;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+    background: white;
+}
+
+input[type="text"]::placeholder {
+    color: #95a5a6;
+}
+
+input[type="submit"] {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover {
+    background-color: #27ae60;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+input[type="submit"]:active {
+    transform: translateY(-1px);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.main_page {
+    animation: fadeIn 0.8s ease-out;
+}
+
+h1 {
+    animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+form {
+    animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+/* Дополнительные декоративные элементы */
+.tetris-shapes {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    opacity: 0.7;
+}
+
+.shape {
+    width: 30px;
+    height: 30px;
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.shape:nth-child(2) {
+    background: var(--secondary-color);
+}
+
+.shape:nth-child(3) {
+    background: var(--accent-color);
+}
+
+.shape:nth-child(4) {
+    background: #f39c12;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .main_page {
+        padding: 30px 20px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    input[type="text"] {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 1.7rem;
+    }
+    
+    label {
+        font-size: 1.1rem;
+    }
 }

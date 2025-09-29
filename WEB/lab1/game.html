@@ -1,33 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тетрис - Игра</title>
     <link rel="stylesheet" href="css/style_game.css">
     <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/infoLoad.js"></script>
 </head>
-<body onload="printUserInfo();">
+<body>
 
-    <h1>Welcome, <span id="user"></span>. Let's play the game!</h1>
+    <h1>Добро пожаловать, <span id="user"></span>. Давайте играть!</h1>
     <div class="container">
         <div class="game_interface">
             <p>Правила игры</p>
-            <p>Уровень игры: <span id="level"></span></p>
+            <p>Уровень: <span id="level"></span></p>
             <button type="button" id="startGame">Начать игру</button>
             <button type="button" id="endGame">Закончить игру</button>
         </div>
         
         <div class="game_area">
-            <canvas id="mainCanv" width="300" height="600"></canvas>
+            <canvas id="mainCanv" width="200" height="400"></canvas>
         </div>
 
         <div class="game_metrics">
-            <canvas id="nextShape" width="100" height="100"></canvas>
-            <p>SCORE:</p>
+            <canvas id="nextShape" width="80" height="80"></canvas>
+            <p>СЧЕТ:</p>
             <p id="score"></p>
             <p id="gameOver" style="color: red;"></p>
         </div>
     </div>
-
-<script src="js/infoLoad.js"></script>
+    <div class="records">
+        <p>Ваши рекорды</p>
+        <ol id="list_of_records">
+            <!-- Рекорды будут загружены через JavaScript -->
+        </ol>
+    </div>
 </body>
 </html>
