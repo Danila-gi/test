@@ -23,13 +23,12 @@ export class Game{
     }
 
     addRecord(score){
-        const arrayRecords = JSON.parse(localStorage.getItem('records'));
-        arrayRecords.push(score);
-        arrayRecords.sort((a, b) => b - a);
-        if (arrayRecords.length == 6){
-            arrayRecords.pop();
+        const records = JSON.parse(localStorage.getItem('records'));
+        if (score > records[localStorage.getItem('tetris.username')]){
+            records[localStorage.getItem('tetris.username')] = score;
         }
-        localStorage.setItem('records', JSON.stringify(arrayRecords));
+        
+        localStorage.setItem('records', JSON.stringify(records));
     }
 
     changeState(){
@@ -62,12 +61,14 @@ export class Game{
     gameOver(){
         this.isFinished = true;
         document.getElementById("gameOver").textContent = "Game Over";
+        document.getElementById("nextShape").innerHTML = "";
         clearInterval(this.gameInterval);
         this.addRecord(this.SCORE);
     }
 
     clearGame(){
         document.getElementById("gameOver").innerHTML = "";
+        document.getElementById("nextShape").innerHTML = "";
         this.mainGround = [];
         for (let i = 0; i < HEIGTH_GROUND; i++){
             this.mainGround.push(Array.from({length: WIDTH_GROUND}, () => 0));
@@ -157,7 +158,7 @@ export class Game{
             this.posX = 0;
             this.posY = 0;
             this.shape = this.nextShape;
-            this.nextShape = (this.nextShape + 1) % shapes.length;
+            this.nextShape = Math.floor(Math.random() * (shapes.length));
             this.rotate = 0;
             if (this.checkShape(()=>{}, this.posX, this.posY)){
                 this.gameOver();

@@ -2,7 +2,6 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тетрис - Игра</title>
     <link rel="stylesheet" href="css/style_game.css">
     <script type="module" src="js/app.js"></script>
@@ -14,6 +13,10 @@
     <div class="container">
         <div class="game_interface">
             <p>Правила игры</p>
+            <p>Клавиша &larr; - перемещение фигуры влево</p>
+            <p>Клавиша &rarr; - перемещение фигуры вправо</p>
+            <p>Клавиша &darr; - уронить фигуру</p>
+            <p>Клавиша &uarr; - поворот фигуры на 90&deg;</p>
             <p>Уровень: <span id="level"></span></p>
             <button type="button" id="startGame">Начать игру</button>
             <button type="button" id="endGame">Закончить игру</button>
@@ -24,16 +27,15 @@
         </div>
 
         <div class="game_metrics">
-            <canvas id="nextShape" width="80" height="80"></canvas>
+            <div id="nextShape" class="next-shape-container"></div>
             <p>СЧЕТ:</p>
             <p id="score"></p>
-            <p id="gameOver" style="color: red;"></p>
+            <p id="gameOver"></p>
         </div>
     </div>
     <div class="records">
         <p>Ваши рекорды</p>
         <ol id="list_of_records">
-            <!-- Рекорды будут загружены через JavaScript -->
         </ol>
     </div>
 </body>

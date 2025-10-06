@@ -4,12 +4,12 @@ export function printUserInfo(){
 }
 
 export function putRecords(){
-    const arrayRecords = JSON.parse(localStorage.getItem('records'));
-    arrayRecords.sort((a, b) => b - a);
+    const records = JSON.parse(localStorage.getItem('records'));
     const listElement = document.getElementById("list_of_records");
+    const sortedRecords = Object.fromEntries(Object.entries(records).sort((a, b) => b[1] - a[1]));
     listElement.innerHTML = '';
-    for (let i = 0; i < arrayRecords.length; i++){
-        listElement.innerHTML += `<li>${arrayRecords[i]}</li>`;
+    for (let key in sortedRecords){
+        listElement.innerHTML += `<li>${key}: ${sortedRecords[key]}</li>`;
     }
 }
 
