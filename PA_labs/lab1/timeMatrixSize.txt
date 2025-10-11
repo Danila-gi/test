@@ -1,0 +1,56 @@
+Matrix size: 1152
+Time taken by function: 1.651 seconds
+
+Matrix size: 1280
+Time taken by function: 2.586 seconds
+
+Matrix size: 1408
+Time taken by function: 2.927 seconds
+
+Matrix size: 1536
+Time taken by function: 3.698 seconds
+
+Matrix size: 1664
+Time taken by function: 4.996 seconds
+
+Matrix size: 1792
+Time taken by function: 6.949 seconds
+
+Matrix size: 1920
+Time taken by function: 8.042 seconds
+
+Matrix size: 2048
+Time taken by function: 10.577 seconds
+
+Matrix size: 2176
+Time taken by function: 12.845 seconds
+
+Matrix size: 2304
+Time taken by function: 15.941 seconds
+
+Matrix size: 2432
+Time taken by function: 17.787 seconds
+
+Matrix size: 2560
+Time taken by function: 20.636 seconds
+
+Matrix size: 2688
+Time taken by function: 24.212 seconds
+
+Matrix size: 2816
+Time taken by function: 28.474 seconds
+
+Matrix size: 2944
+Time taken by function: 31.530 seconds
+
+Matrix size: 3072
+Time taken by function: 35.700 seconds
+
+Matrix size: 3200
+Time taken by function: 40.706 seconds
+
+Matrix size: 3328
+Time taken by function: 46.840 seconds
+
+Matrix size: 3456
+Time taken by function: 50.891 seconds

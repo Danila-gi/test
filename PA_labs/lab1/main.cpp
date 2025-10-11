@@ -3,21 +3,40 @@
 #include <chrono>
 #include "BlockMultiply.cpp"
 
+bool checkCorrectMultyply(const std::vector<std::vector<double>>& C_blocks, const std::vector<std::vector<double>>& C_standart){
+    if (C_blocks.size () != C_standart.size()){
+        return false;
+    }
+    for (int i = 0; i < C_blocks.size(); i++){
+        if (C_blocks[i].size() != C_standart[i].size()){
+            return false;
+        }
+        for (int j = 0; j < C_blocks[i].size(); j++){
+            if (abs(C_blocks[i][j] - C_standart[i][j]) >= 0.01){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 int main(){
-    BlockMultiplyMatrix obj(1000, 10);
+    BlockMultiplyMatrix obj(20, 2);
 
-    auto start = std::chrono::high_resolution_clock::now();
+    obj.parallelMultiplyFuture(6);
+    obj.printResultMatrix();
 
-    obj.parallelMultiply(28);
+    auto C_blocks = obj.getResultMatrix();
 
-    auto stop = std::chrono::high_resolution_clock::now();
+    std::cout << "=====================================\n";
+    obj.clearC();
 
-    auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    obj.baseMultiply();
+    obj.printResultMatrix();
 
-    auto seconds = duration_ms.count() / 1000;
-    auto milliseconds = duration_ms.count() % 1000;
+    auto C_std = obj.getResultMatrix();
 
-    std::cout << "Time taken by function: " << seconds << "." << std::setfill('0') << std::setw(3) << milliseconds << " seconds" << std::endl;
+    std::cout << "Result of equal: " << checkCorrectMultyply(C_blocks, C_std) << std::endl;
 
     return 0;
 }

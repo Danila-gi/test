@@ -1,11 +1,10 @@
 #include <thread>
+#include <future>
 #include <iostream>
 #include <iomanip>
 #include <chrono>
 #include <vector>
 #include <cmath>
-#include <mutex>
-#include <atomic>
 
 class BlockMultiplyMatrix{
 private:
@@ -13,7 +12,6 @@ private:
     int sizeMatrix;
     int blockSize;
     int blocksOnLine;
-    std::mutex indexMutex;
 
     void mFillMatrix(){
         srand(time(0));
@@ -96,6 +94,8 @@ public:
         C = mBaseMultiply(A, B);
     }
 
+    const std::vector<std::vector<double>>& getResultMatrix(){return C;}
+
     void printResultMatrix(){
         for (auto arr: C){
             for (double element: arr){
@@ -130,7 +130,6 @@ public:
                     iterationsCount += extraBlocks;
                 }
 
-                //std::cout << blockY << " - " << blockX << " BLOCKS_PER_THREAD: " << blocksPerThread << " EXTRA BLOCKS: " << extraBlocks << std::endl;
                 for (int j = 0; j < iterationsCount; j++){
                     std::vector<std::vector<double>> C_block (blockSize, std::vector<double>(blockSize, 0));
                     for (int t = 0; t < blocksOnLine; t++){
@@ -148,6 +147,44 @@ public:
         
         for (auto& th: threadArr){
             th.join();
+        }
+    }
+
+    void parallelMultiplyFuture(int threadsCount){
+        std::vector<std::future<void>> threadArr;
+        
+        int blocksPerThread = blocksOnLine * blocksOnLine / threadsCount;
+        int extraBlocks = blocksOnLine * blocksOnLine % threadsCount;
+
+        int indexThread = 0;
+        for (int i = 0; i < threadsCount * blocksPerThread; i += blocksPerThread){
+            threadArr.emplace_back(std::async(
+                std::launch::async, [this, blocksPerThread, i, threadsCount, indexThread, extraBlocks](){
+                int blockX = i % blocksOnLine;
+                int blockY = i / blocksOnLine;
+                int iterationsCount = blocksPerThread;
+
+                if (indexThread == threadsCount - 1){
+                    iterationsCount += extraBlocks;
+                }
+
+                for (int j = 0; j < iterationsCount; j++){
+                    std::vector<std::vector<double>> C_block (blockSize, std::vector<double>(blockSize, 0));
+                    for (int t = 0; t < blocksOnLine; t++){
+                        auto A_block = mGetBlockByIndex(A, blockY, t, blockSize, blockSize);
+                        auto B_block = mGetBlockByIndex(B, t, blockX, blockSize, blockSize);
+                        mSumMatrix(C_block, mBaseMultiply(A_block, B_block));
+                    }
+                    
+                    mFillC(blockX, blockY, blocksPerThread, C_block);
+                    mGetNextBlockIndex(blockX, blockY, blocksOnLine);
+                }
+            }));
+            indexThread++;
+        }
+        
+        for (auto& th: threadArr){
+            th.wait();
         }
     }
 };

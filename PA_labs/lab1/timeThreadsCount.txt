@@ -1,0 +1,74 @@
+Matrix size: 1408*1408
+blockSize: 128
+
+Base multiply: Time taken by function: 28.617; 35.083; 34.137 seconds
+
+
+Threads count: 3
+Time taken by function: 6.955; 9.723; 9.811 seconds
+
+Threads count: 4
+Time taken by function: 5.266; 8.498; 8.009 seconds
+
+Threads count: 5
+Time taken by function: 4.362; 7.038; 7.030 seconds
+
+Threads count: 6
+Time taken by function: 3.766; 6.190; 6.316 seconds
+
+Threads count: 7
+Time taken by function: 3.601; 6.014; 6.036 seconds
+
+Threads count: 8
+Time taken by function: 3.010; 5.549; 5.475 seconds
+
+Threads count: 9
+Time taken by function: 4.301; 6.010; 6.774 seconds
+
+Threads count: 10
+Time taken by function: 3.586; 5.950; 5.850 seconds
+
+Threads count: 11
+Time taken by function: 3.380; 5.563; 5.535 seconds
+
+Threads count: 12
+Time taken by function: 3.496; 5.558; 5.600 seconds
+
+Threads count: 13
+Time taken by function: 4.158; 6.075; 6.098 seconds
+
+Threads count: 14
+Time taken by function: 4.595; 6.637; 6.773 seconds
+
+Threads count: 15
+Time taken by function: 3.352; 5.554; 5.469 seconds
+
+Threads count: 16
+Time taken by function: 4.651; 6.609; 6.853 seconds
+
+Threads count: 17
+Time taken by function: 3.558; 5.739; 5.549 seconds
+
+Threads count: 18
+Time taken by function: 5.225; 7.185; 7.264 seconds
+
+Threads count: 19
+Time taken by function: 4.072; 6.200; 6.305 seconds
+
+Threads count: 20
+Time taken by function: 3.423; 5.428; 5.604 seconds
+
+Threads count: 21
+Time taken by function: 5.648; 7.633; 7.905 seconds
+
+Threads count: 22
+Time taken by function: 4.426; 6.769; 6.866 seconds
+
+Threads count: 23
+Time taken by function: 3.930; 6.060; 5.925 seconds
+
+Threads count: 24
+Time taken by function: 3.431; 5.399; 5.453 seconds
+
+Threads count: 25
+Time taken by function: 6.099; 8.073; 8.447 seconds
