@@ -1,0 +1,330 @@
+For Fine:
+Results for 100 writers and 0 readers:
+Time: 20409
+For Coarse:
+Results for 100 writers and 0 readers:
+Time: 11352
+For LockFree:
+Results for 100 writers and 0 readers:
+Time: 11042
+================
+For Fine:
+Results for 100 writers and 0 readers:
+Time: 11378
+For Coarse:
+Results for 100 writers and 0 readers:
+Time: 10759
+For LockFree:
+Results for 100 writers and 0 readers:
+Time: 10648
+================
+For Fine:
+Results for 100 writers and 0 readers:
+Time: 10951
+For Coarse:
+Results for 100 writers and 0 readers:
+Time: 10867
+For LockFree:
+Results for 100 writers and 0 readers:
+Time: 10871
+================
+For Fine:
+Results for 90 writers and 10 readers:
+Time: 10905
+For Coarse:
+Results for 90 writers and 10 readers:
+Time: 11467
+For LockFree:
+Results for 90 writers and 10 readers:
+Time: 11394
+================
+For Fine:
+Results for 90 writers and 10 readers:
+Time: 11691
+For Coarse:
+Results for 90 writers and 10 readers:
+Time: 11215
+For LockFree:
+Results for 90 writers and 10 readers:
+Time: 11972
+================
+For Fine:
+Results for 90 writers and 10 readers:
+Time: 11894
+For Coarse:
+Results for 90 writers and 10 readers:
+Time: 11664
+For LockFree:
+Results for 90 writers and 10 readers:
+Time: 11342
+================
+For Fine:
+Results for 80 writers and 20 readers:
+Time: 10861
+For Coarse:
+Results for 80 writers and 20 readers:
+Time: 10655
+For LockFree:
+Results for 80 writers and 20 readers:
+Time: 11502
+================
+For Fine:
+Results for 80 writers and 20 readers:
+Time: 10954
+For Coarse:
+Results for 80 writers and 20 readers:
+Time: 11006
+For LockFree:
+Results for 80 writers and 20 readers:
+Time: 10651
+================
+For Fine:
+Results for 80 writers and 20 readers:
+Time: 10912
+For Coarse:
+Results for 80 writers and 20 readers:
+Time: 11328
+For LockFree:
+Results for 80 writers and 20 readers:
+Time: 10881
+================
+For Fine:
+Results for 70 writers and 30 readers:
+Time: 11088
+For Coarse:
+Results for 70 writers and 30 readers:
+Time: 10795
+For LockFree:
+Results for 70 writers and 30 readers:
+Time: 11183
+================
+For Fine:
+Results for 70 writers and 30 readers:
+Time: 11470
+For Coarse:
+Results for 70 writers and 30 readers:
+Time: 11910
+For LockFree:
+Results for 70 writers and 30 readers:
+Time: 11535
+================
+For Fine:
+Results for 70 writers and 30 readers:
+Time: 10688
+For Coarse:
+Results for 70 writers and 30 readers:
+Time: 10882
+For LockFree:
+Results for 70 writers and 30 readers:
+Time: 11389
+================
+For Fine:
+Results for 60 writers and 40 readers:
+Time: 10646
+For Coarse:
+Results for 60 writers and 40 readers:
+Time: 11398
+For LockFree:
+Results for 60 writers and 40 readers:
+Time: 11297
+================
+For Fine:
+Results for 60 writers and 40 readers:
+Time: 10881
+For Coarse:
+Results for 60 writers and 40 readers:
+Time: 11392
+For LockFree:
+Results for 60 writers and 40 readers:
+Time: 11135
+================
+For Fine:
+Results for 60 writers and 40 readers:
+Time: 10869
+For Coarse:
+Results for 60 writers and 40 readers:
+Time: 11554
+For LockFree:
+Results for 60 writers and 40 readers:
+Time: 11259
+================
+For Fine:
+Results for 50 writers and 50 readers:
+Time: 11567
+For Coarse:
+Results for 50 writers and 50 readers:
+Time: 10684
+For LockFree:
+Results for 50 writers and 50 readers:
+Time: 10931
+================
+For Fine:
+Results for 50 writers and 50 readers:
+Time: 2512
+For Coarse:
+Results for 50 writers and 50 readers:
+Time: 10964
+For LockFree:
+Results for 50 writers and 50 readers:
+Time: 11683
+================
+For Fine:
+Results for 50 writers and 50 readers:
+Time: 11933
+For Coarse:
+Results for 50 writers and 50 readers:
+Time: 10768
+For LockFree:
+Results for 50 writers and 50 readers:
+Time: 10886
+================
+For Fine:
+Results for 40 writers and 60 readers:
+Time: 11999
+For Coarse:
+Results for 40 writers and 60 readers:
+Time: 11386
+For LockFree:
+Results for 40 writers and 60 readers:
+Time: 11455
+================
+For Fine:
+Results for 40 writers and 60 readers:
+Time: 12783
+For Coarse:
+Results for 40 writers and 60 readers:
+Time: 11697
+For LockFree:
+Results for 40 writers and 60 readers:
+Time: 11809
+================
+For Fine:
+Results for 40 writers and 60 readers:
+Time: 11228
+For Coarse:
+Results for 40 writers and 60 readers:
+Time: 11518
+For LockFree:
+Results for 40 writers and 60 readers:
+Time: 11286
+================
+For Fine:
+Results for 30 writers and 70 readers:
+Time: 10928
+For Coarse:
+Results for 30 writers and 70 readers:
+Time: 11474
+For LockFree:
+Results for 30 writers and 70 readers:
+Time: 11364
+================
+For Fine:
+Results for 30 writers and 70 readers:
+Time: 12136
+For Coarse:
+Results for 30 writers and 70 readers:
+Time: 11032
+For LockFree:
+Results for 30 writers and 70 readers:
+Time: 11098
+================
+For Fine:
+Results for 30 writers and 70 readers:
+Time: 10722
+For Coarse:
+Results for 30 writers and 70 readers:
+Time: 11492
+For LockFree:
+Results for 30 writers and 70 readers:
+Time: 11667
+================
+For Fine:
+Results for 20 writers and 80 readers:
+Time: 11677
+For Coarse:
+Results for 20 writers and 80 readers:
+Time: 10964
+For LockFree:
+Results for 20 writers and 80 readers:
+Time: 11886
+================
+For Fine:
+Results for 20 writers and 80 readers:
+Time: 11167
+For Coarse:
+Results for 20 writers and 80 readers:
+Time: 11122
+For LockFree:
+Results for 20 writers and 80 readers:
+Time: 12552
+================
+For Fine:
+Results for 20 writers and 80 readers:
+Time: 12299
+For Coarse:
+Results for 20 writers and 80 readers:
+Time: 11204
+For LockFree:
+Results for 20 writers and 80 readers:
+Time: 10881
+================
+For Fine:
+Results for 10 writers and 90 readers:
+Time: 11405
+For Coarse:
+Results for 10 writers and 90 readers:
+Time: 10956
+For LockFree:
+Results for 10 writers and 90 readers:
+Time: 10931
+================
+For Fine:
+Results for 10 writers and 90 readers:
+Time: 11782
+For Coarse:
+Results for 10 writers and 90 readers:
+Time: 11578
+For LockFree:
+Results for 10 writers and 90 readers:
+Time: 12093
+================
+For Fine:
+Results for 10 writers and 90 readers:
+Time: 10617
+For Coarse:
+Results for 10 writers and 90 readers:
+Time: 10914
+For LockFree:
+Results for 10 writers and 90 readers:
+Time: 10621
+================
+For Fine:
+Results for 0 writers and 100 readers:
+Time: 11525
+For Coarse:
+Results for 0 writers and 100 readers:
+Time: 11984
+For LockFree:
+Results for 0 writers and 100 readers:
+Time: 11434
+================
+For Fine:
+Results for 0 writers and 100 readers:
+Time: 10986
+For Coarse:
+Results for 0 writers and 100 readers:
+Time: 11199
+For LockFree:
+Results for 0 writers and 100 readers:
+Time: 10950
+================
+For Fine:
+Results for 0 writers and 100 readers:
+Time: 14519
+For Coarse:
+Results for 0 writers and 100 readers:
+Time: 13757
+For LockFree:
+Results for 0 writers and 100 readers:
+Time: 12884
+================
