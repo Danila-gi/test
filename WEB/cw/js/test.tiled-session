@@ -1,0 +1,43 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "map.json",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "map.json": {
+            "scale": 0.8,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2316.875,
+                "y": 803.75
+            }
+        },
+        "space_merc.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "space_merc.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/home/danila/Рабочий стол/WEB/cw/js",
+    "last.imagePath": "/home/danila/Рабочий стол/WEB/cw/js",
+    "map.height": 30,
+    "map.lastUsedExportFilter": "JSON map-файлы (*.tmj *.json)",
+    "map.width": 60,
+    "openFiles": [
+        "map.json"
+    ],
+    "project": "test.tiled-project",
+    "recentFiles": [
+        "map.json",
+        "space_merc.tsj",
+        "space_merc.tsx"
+    ],
+    "tileset.lastUsedFormat": "json"
+}
