@@ -2,7 +2,9 @@ import { mapManager } from "./map.js";
 import { createFire, createEnemyRunner, createGun } from "./objects.js";
 import { eventsManager } from "./events.js";
 import { physicManager } from "./physic.js";
-import { enemiesPositionsLevel1, gunsPositionsLevel1, emptyCell, desappearingCell, enemiesPositionsLevel2, gunsPositionsLevel2 } from "./utils.js";
+import { soundManager } from "./sounds.js";
+import { enemiesPositionsLevel1, gunsPositionsLevel1, emptyCell, desappearingCell,
+    enemiesPositionsLevel2, gunsPositionsLevel2, sounds } from "./utils.js";
 import { ctx } from "./app.js"
 
 export let gameManager = {
@@ -17,6 +19,7 @@ export let gameManager = {
     gameInterval: null,
     gameOverPromise: null,
     gameOverResolve: null,
+    win: false,
 
     initPlayer: function(obj, start_x, start_y) {
         this.player = obj;
@@ -53,6 +56,11 @@ export let gameManager = {
         }
     },
 
+    initSounds: function(){
+        soundManager.init();
+        soundManager.loadArray(sounds);
+    },
+
     initGuns: function(){
         for (let i = 0; i < this.gunsPositions.length; i++){
             let gun = createGun();
@@ -68,9 +76,12 @@ export let gameManager = {
         }   
     },
 
-    gameCycle: function(level){
+    gameCycle: function(level, points){
+        this.points = points;
         document.getElementById("gameStatus").innerHTML = "Игра началась";
+        document.getElementById("gameStatus").style = "color: black";
         document.getElementById("points").innerText = `Очки ${this.points}`;
+        document.getElementById("level").innerText = `Уровень ${level}`;
 
         setTimeout(() => {
             if (level === 1){
@@ -81,8 +92,10 @@ export let gameManager = {
                 this.enemiesPositions = enemiesPositionsLevel2;
                 this.gunsPositions = gunsPositionsLevel2;
             }
+            this.win = false;
             this.initEnemies();
             this.initGuns();
+            this.initSounds();
         }, 100);
 
         this.gameOverPromise = new Promise((resolve) => {
@@ -114,6 +127,13 @@ export let gameManager = {
             if (physicManager.intersection(this.player, this.Fires) !== -1){
                 this.gameOver();
             }
+            if (this.player.pos_y >= mapManager.mapSize.y - 50){
+                this.gameOver();
+            }
+            if (this.player.pos_x >= mapManager.mapSize.x - 50){
+                this.win = true;
+                this.gameOver();
+            }
             for (let i = 0; i < this.Guns.length; i++){
                 this.Guns[i].object.draw(ctx);
             }
@@ -123,6 +143,7 @@ export let gameManager = {
             mapManager.centerAt(this.player.pos_x, this.player.pos_y);
             physicManager.updateWalk(this.player);
             if (eventsManager.action['fire'] && !this.player.waitNextFire){
+                soundManager.play("sounds/fire.mp3", null);
                 const args = {move_x: 0, move_y: 0};
                 if (this.player.currentState === "normal_right" || this.player.currentState === "run_right" || this.player.currentState === "shoot_up_right"){
                     args.move_x = 1;
@@ -189,7 +210,8 @@ export let gameManager = {
             }
             
             if (mapManager.getTilesetIdx(fire.pos_x - 5, fire.pos_y + 5) !== emptyCell ||
-                mapManager.getTilesetIdx(fire.pos_x + mapManager.tSize.x + 5, fire.pos_y + 5) !== emptyCell){
+                mapManager.getTilesetIdx(fire.pos_x + mapManager.tSize.x + 5, fire.pos_y + 5) !== emptyCell ||
+                !mapManager.isVisible(fire.pos_x, fire.pos_y, mapManager.tSize.x, mapManager.tSize.y)){
                 for (let index = 0; index < this.Fires.length; index++){
                     if (this.Fires[index].object === fire){
                         this.Fires.splice(index, 1);
@@ -240,16 +262,23 @@ export let gameManager = {
             this.Fires = [];
             this.Enemies = [];
             this.Guns = [];
-            this.points = 0;
             this.player = null;
             this.isBonus = false;
-            document.getElementById("gameStatus").innerHTML = "Game over";
+            if (this.win){
+                document.getElementById("gameStatus").innerHTML = "Уровень пройден";
+                document.getElementById("gameStatus").style = "color: green";
+            }
+            else{
+                document.getElementById("gameStatus").innerHTML = "Game over";
+                document.getElementById("gameStatus").style = "color: red";
+            }
             this.gameInterval = null;
             mapManager.clearMap();
 
             if (this.gameOverResolve) {
-                this.gameOverResolve({points: this.points });
+                this.gameOverResolve({points: this.points, win: this.win });
             }
+            this.points = 0;
         }, 100);
     },
 

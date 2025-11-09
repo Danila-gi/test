@@ -25,6 +25,11 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+.records {
+    display: flex;
+    flex-direction: column;
+}
+
 #gameCanvas {
     border: 1px solid #333;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);

@@ -6,7 +6,7 @@ document.getElementById('loginUser').addEventListener('submit', function(e) {
     const username = document.getElementById('user').value;
     const usersRecords = JSON.parse(localStorage.getItem('records'));
     if (!(username in usersRecords)){
-        usersRecords[username] = 0;
+        usersRecords[username] = -1;
     }
     localStorage.setItem('records', JSON.stringify(usersRecords));
     localStorage.setItem('currentUser', username);

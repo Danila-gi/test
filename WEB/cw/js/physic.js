@@ -109,8 +109,8 @@ export let physicManager = {
 
     intersection(obj, ArrayObjects){
         for (let i = 0; i < ArrayObjects.length; i++){
-            if (obj.pos_y - 15 <= ArrayObjects[i].object.pos_y && 
-                obj.pos_y + mapManager.tSize.y + 15 >= ArrayObjects[i].object.pos_y &&
+            if (obj.pos_y - mapManager.tSize.y / 2 <= ArrayObjects[i].object.pos_y && 
+                obj.pos_y + mapManager.tSize.y * 1.5 >= ArrayObjects[i].object.pos_y &&
                 obj.pos_x <= ArrayObjects[i].object.pos_x && 
                 obj.pos_x + mapManager.tSize.x / 2>= ArrayObjects[i].object.pos_x){
                     return i; 

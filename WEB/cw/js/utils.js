@@ -21,13 +21,25 @@ export let gunsPositionsLevel1 = [
 ]
 
 export let enemiesPositionsLevel2 = [
+    {x: 3100, y: 700},
+    {x: 3250, y: 700},
+    {x: 3400, y: 700},
+    {x: 4500, y: 900},
+    {x: 4750, y: 900},
+    {x: 5000, y: 900},
+    {x: 5250, y: 900},
+    {x: 5500, y: 900},
 ]
 
 export let gunsPositionsLevel2 = [
     {x: 80, y: 370},
     {x: 500, y: 490},
     {x: 80, y: 690},
+    {x: 3150, y: 800},
 ]
 
 export const emptyCell = 1;
 export const desappearingCell = 785;
+
+export let sounds = ["sounds/fire.mp3"];
+export let maps = ["map.json", "map2.json"];
