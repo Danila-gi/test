@@ -1,3 +1,5 @@
+import { emptyCell } from "./utils.js";
+
 export let mapManager = {
     mapData: null,
     tLayer: null,
@@ -9,16 +11,18 @@ export let mapManager = {
     imgLoadCount: 0,
     imgLoaded: false,
     jsonLoaded: false,
+    directory: "",
     view: {x: 0, y: 0, w: 1000, h: 600},
 
-    loadMap: function(path){
+    loadMap: function(path, dir){
+        this.directory = dir;
         let request = new XMLHttpRequest();
         request.onreadystatechange = function (){
             if (request.readyState === 4 && request.status === 200){
                 mapManager.parseMap(request.responseText);
             }
         };
-        request.open("GET", path, true);
+        request.open("GET", dir + "/" + path, true);
         request.send();
     },
 
@@ -45,7 +49,7 @@ export let mapManager = {
                 mapManager.parseTileset(tsjRequest.responseText, tileset);
             }
         };
-        tsjRequest.open("GET", tileset.source, true);
+        tsjRequest.open("GET", this.directory + "/" + tileset.source, true);
         tsjRequest.send();
     },
 
@@ -68,7 +72,7 @@ export let mapManager = {
             }
         };
         
-        tilesetObj.image.src = tsjData.image;
+        tilesetObj.image.src = this.directory + "/" + tsjData.image;
         this.tilesets.push(tilesetObj);
     },
 
@@ -210,5 +214,27 @@ export let mapManager = {
             };
             checkLoad();
         });
+    },
+
+    setEmptyCell: function(x, y){
+        let wX = x;
+        let wY = y;
+        let idx = Math.floor(wY / this.tSize.y) * this.xCount + Math.floor(wX / this.tSize.x);
+        this.tLayer.data[idx] = emptyCell;
+    },
+
+    clearMap: function(){
+        this.mapData = null;
+        this.tLayer = null,
+        this.xCount = 0;
+        this.yCount = 0;
+        this.tSize = {x: 32, y: 32};
+        this.mapSize = {x: 32, y: 32};
+        this.tilesets = new Array();
+        this.imgLoadCount = 0;
+        this.imgLoaded = false;
+        this.jsonLoaded = false;
+        this.directory = "";
+        this.view = {x: 0, y: 0, w: 1000, h: 600};
     }
 };

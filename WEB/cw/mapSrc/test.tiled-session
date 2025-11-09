@@ -9,11 +9,11 @@
     ],
     "fileStates": {
         "map.json": {
-            "scale": 0.8,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2316.875,
-                "y": 803.75
+                "x": 2687,
+                "y": 556
             }
         },
         "space_merc.tsj": {

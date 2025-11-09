@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
 
 const port = 3000;
 
@@ -11,65 +10,44 @@ const mimeTypes = {
   '.css': 'text/css',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
   '.gif': 'image/gif',
   '.json': 'application/json',
-  '.tsx': 'text/plain'
+  '.tsx': 'text/plain',
+  '.txt': 'text/plain',
+  '.ico': 'image/x-icon',
+  '.svg': 'image/svg+xml'
 };
 
 const server = http.createServer((req, res) => {
-  const parsedUrl = url.parse(req.url);
-  let pathname = parsedUrl.pathname;
+  let url = req.url.split('?')[0];
+  
+  if (url === '/') {
+    url = '/entrance.html';
+  }
+  else if (url === '/game'){
+    url = '/index.html';
+  }
+  
+  let filePath = path.join(__dirname, url);
+  const extname = String(path.extname(filePath)).toLowerCase();
+  
+  const contentType = mimeTypes[extname] || 'application/octet-stream';
+  
+  const isTextFile = contentType.startsWith('text/') || 
+                     contentType.includes('javascript') || 
+                     contentType.includes('json');
+
+  fs.readFile(filePath, (err, data) => {
+    const headers = {};
     
-  // Если запрос к корню, отдаем index.html
-  if (pathname === '/') {
-    pathname = '/index.html';
-  }
-  
-  // Убираем начальный слеш
-  let filePath = pathname.substring(1);
-  
-  // Пробуем найти файл в разных местах
-  const possiblePaths = [
-    filePath,                            // прямо по пути
-    path.join('js', filePath),           // в папке js
-    path.join('js', pathname.substring(1)) // если pathname начинается с /
-  ];
-  
-  let foundPath = null;
-  
-  // Проверяем существование файла
-  for (const tryPath of possiblePaths) {
-    const fullPath = path.join(__dirname, tryPath);
-    if (fs.existsSync(fullPath)) {
-      foundPath = fullPath;
-      break;
-    }
-  }
-  
-  // Если файл не найден
-  if (!foundPath) {
-    res.statusCode = 404;
-    res.end('File not found');
-    return;
-  }
-  
-  // Определяем MIME-тип
-  const ext = path.extname(foundPath);
-  const mimeType = mimeTypes[ext] || 'text/plain';
-  
-  // Читаем и отдаем файл
-  fs.readFile(foundPath, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.end('Server error');
-      return;
+    if (isTextFile) {
+      headers['Content-Type'] = `${contentType}; charset=utf-8`;
+    } else {
+      headers['Content-Type'] = contentType;
     }
     
-    res.setHeader('Content-Type', mimeType);
-    
-    // Добавляем CORS заголовки если нужно
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    
+    res.writeHead(200, headers);
     res.end(data);
   });
 });

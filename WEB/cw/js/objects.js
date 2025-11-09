@@ -21,6 +21,7 @@ export let Soldier = Entity.extend({
     speed: 5,
     isJump: false,
     isFall: false,
+    isUp: false,
     draw: function(ctx){
         spriteManager.drawSprite(ctx, this.currentState, this.pos_x, this.pos_y);
     },
@@ -29,25 +30,45 @@ export let Soldier = Entity.extend({
 
     changeState: function(){
         if (this.move_x === 1){
+            if (this.isUp){
+                this.currentState = "shoot_up_right";
+                return;
+            }
             this.currentState = "run_right";
         }
         else if (this.move_x === -1){
+            if (this.isUp){
+                this.currentState = "shoot_up_left";
+                return;
+            }
             this.currentState = "run_left";
         }
         else{
-            if (this.currentState === "run_left" || this.currentState === "normal_left"){
+            if (this.currentState === "run_left" || this.currentState === "normal_left" || this.currentState === "shoot_up_left"){
+                if (this.isUp){
+                    this.currentState = "shoot_up_left";
+                    return;
+                }
                 this.currentState = "normal_left";
             }
             else{
+                if (this.isUp){
+                    this.currentState = "shoot_up_right";
+                    return;
+                }
                 this.currentState = "normal_right";
             }
         }
     }
 });
 
+export function createSoldier(){
+    return Entity.extend(Soldier);
+}
+
 export let EnemyRunner = Entity.extend({
     move_x: 0, move_y: 0,
-    currentState: "enemy_run",
+    currentState: "enemy_run_left",
     speed: 5,
     isFall: false,
     waitNextFire: false,
@@ -75,7 +96,8 @@ export function createGun(){
 export let Fire = Entity.extend({
     move_x: 0, move_y: 0,
     currentState: "fire",
-    speed: 5,
+    speed: 10,
+    shooter: null,
 
     draw: function(ctx){
         spriteManager.drawSprite(ctx, this.currentState, this.pos_x, this.pos_y);
