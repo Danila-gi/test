@@ -25,197 +25,203 @@ const std::vector<std::string> M_brends = {"demix", "nike", "puma", "adidas", "u
 const std::vector<std::string> M_languages = {"русский", "английский", "португальский", "испанский", "китайский", "французский",
                                                 "казахский", "японский", "корейский"};
 
-void limit1(bdd &result, const bdd (&p)[M][N][N]) {
-    // 7 штук
+void limitN1(bdd &result, const bdd (&p)[M][N][N]) {
+    // 7 штук ограничений n1
   
-    result &= p[0][7][7];
+    result &= p[0][3][0];
 
-    result &= p[0][4][6];
-
-    result &= p[1][0][4];
-
-    result &= p[0][1][1];
-
-    result &= p[2][2][0];
-
-    result &= p[3][2][0];
+    result &= p[1][5][1];
 
     result &= p[3][1][1];
 
-    // Дополнительные ограничения
+    result &= p[0][7][1];
 
-    result &= p[1][4][6];
+    result &= p[2][6][0];
 
-    result &= p[0][0][2];
+    result &= p[3][2][0];
 
-    result &= p[1][2][8];
-
-    result &= p[3][8][8];
-
-    result &= p[1][8][7];
-
-    //result &= p[1][8][5];
-
-    //result &= p[3][7][4];
-
-    //result &= p[1][1][3];
-
-    //result &= p[2][0][4];
-
-    //result &= p[0][5][0];
+    result &= p[0][8][2];
 }
 
-void limit2(bdd &result, const bdd (&p)[M][N][N]) {
-    // 5 штук
+void limitN2(bdd &result, const bdd (&p)[M][N][N]) {
+    // 5 штук ограничений n2
     for (unsigned i = 0; i < N; i++) {
-        result &= bdd_apply(p[1][i][3], p[3][i][1], bddop_biimp);
+        result &= bdd_apply(p[0][i][3], p[1][i][7], bddop_biimp);
 
-        result &= bdd_apply(p[1][i][1], p[2][i][2], bddop_biimp);
+        result &= bdd_apply(p[0][i][6], p[2][i][7], bddop_biimp);
 
-        result &= bdd_apply(p[0][i][5], p[3][i][3], bddop_biimp);
+        result &= bdd_apply(p[1][i][2], p[3][i][2], bddop_biimp);
 
-        result &= bdd_apply(p[2][i][5], p[0][i][5], bddop_biimp);
+        result &= bdd_apply(p[1][i][5], p[2][i][5], bddop_biimp);
 
-        result &= bdd_apply(p[3][i][1], p[2][i][8], bddop_biimp);
+        result &= bdd_apply(p[0][i][7], p[1][i][6], bddop_biimp);
     }
 }
 
-void limit3(bdd &result, const bdd (&p)[M][N][N]) {
-    // 5 штук
+void limitN3(bdd &result, const bdd (&p)[M][N][N]) {
+    // 4 штуки ограничения n4
+    // Соседи: сверху-слева, снизу-слева
+    unsigned index;
     const int squareSize = (int)std::sqrt(N);
     for (unsigned i = 0; i < N; i++) {
-        if (!(i < squareSize || i % squareSize == 0)){
-            
-            result &= bdd_apply(p[0][i - squareSize - 1][0], p[2][i][2], bddop_biimp);
-            
-            result &= bdd_apply(p[3][i - squareSize - 1][3], p[1][i][0], bddop_biimp);
-            
-            result &= bdd_apply(p[3][i - squareSize - 1][6], p[2][i][1], bddop_biimp);
-
-        } else if (IS_GLUING) {
-            int index;
-            if (i % squareSize == 0){
-                if (i < squareSize){
-                    index = N - 1;
-                } else {
-                    index = i - 1;
-                }
-            } else if (i < squareSize){
-                index = N - squareSize - 1 + i;
-            }
-            result &= bdd_apply(p[0][index][0], p[2][i][2], bddop_biimp);
-            result &= bdd_apply(p[3][index][3], p[1][i][0], bddop_biimp);
-            result &= bdd_apply(p[3][index][6], p[2][i][1], bddop_biimp);
-        }
-
-        if (!(i >= N - squareSize || i % squareSize == 0)){
-            result &= bdd_apply(p[1][i + squareSize - 1][2], p[3][i][6], bddop_biimp); // 1 8 : 3 5
-            
-            result &= bdd_apply(p[0][i + squareSize - 1][5], p[2][i][7], bddop_biimp); // 0 4 : 1 7
-        } else if (IS_GLUING) {
-            int index;
-            if (i % squareSize == 0){
-                if (i >= N - squareSize){
-                    index = squareSize - 1;
-                } else {
-                    index = i + squareSize * 2 - 1;
-                }
-            } else if (i >= N - squareSize){
-                index = i + 2 - N;
-            }
-            result &= bdd_apply(p[1][index][2], p[3][i][6], bddop_biimp);
-            result &= bdd_apply(p[0][index][5], p[2][i][7], bddop_biimp);
-        }
-
-
-    }
-}
-
-void limit4(bdd &result, const bdd (&p)[M][N][N])
-{
-    const int squareSize = (int)std::sqrt(N);
-
-    for (unsigned i = 0; i < N; i++){
-        bdd all_conditions = bddtrue;
+    if ((i < N - squareSize) && (i % squareSize != 0)) {
+        index = i + squareSize - 1;
         
-        bdd eq_1 = bddfalse;
-        bdd eq_2 = bddfalse;
-        bdd eq_3 = bddfalse;
-        bdd eq_4 = bddfalse;
-        if (!(i < squareSize || i % squareSize == 0)){
-            bdd eq_1_1 = bdd_apply(p[0][i - squareSize - 1][4], p[2][i][3], bddop_biimp); // 0 1 : 2 3
-            eq_1 |= eq_1_1;
-            bdd eq_2_1 = bdd_apply(p[2][i - squareSize - 1][7], p[3][i][7], bddop_biimp);
-            eq_2 |= eq_2_1;
-            bdd eq_3_1 = bdd_apply(p[3][i - squareSize - 1][5], p[0][i][5], bddop_biimp);
-            eq_3 |= eq_3_1;
-            bdd eq_4_1 = bdd_apply(p[2][i - squareSize - 1][0], p[1][i][1], bddop_biimp);
-            eq_4 |= eq_4_1;
-        } else if (IS_GLUING) {
-            int index;
-            if (i % squareSize == 0){
-                if (i < squareSize){
-                    index = N - 1;
-                } else {
-                    index = i - 1;
-                }
-            } else if (i < squareSize){
-                index = N - squareSize - 1 + i;
-            }
-            bdd eq_1_1 = bdd_apply(p[0][index][4], p[2][i][3], bddop_biimp);
-            eq_1 |= eq_1_1;
-            bdd eq_2_1 = bdd_apply(p[2][index][7], p[3][i][7], bddop_biimp);
-            eq_2 |= eq_2_1;
-            bdd eq_3_1 = bdd_apply(p[3][index][5], p[0][i][5], bddop_biimp);
-            eq_3 |= eq_3_1;
-            bdd eq_4_1 = bdd_apply(p[2][index][0], p[1][i][1], bddop_biimp);
-            eq_4 |= eq_4_1;
-        }
-        if (!(i >= N - squareSize || i % squareSize == 0)){
-            bdd eq_1_2 = bdd_apply(p[0][i + squareSize - 1][4], p[2][i][3], bddop_biimp);
-            eq_1 |= eq_1_2;
-            bdd eq_2_2 = bdd_apply(p[2][i + squareSize - 1][7], p[3][i][7], bddop_biimp);
-            eq_2 |= eq_2_2;
-            bdd eq_3_2 = bdd_apply(p[3][i + squareSize - 1][5], p[0][i][5], bddop_biimp);
-            eq_3 |= eq_3_2;
-            bdd eq_4_2 = bdd_apply(p[2][i + squareSize - 1][0], p[1][i][1], bddop_biimp);
-            eq_4 |= eq_4_2;
-        } else if (IS_GLUING) {
-            int index;
-            if (i % squareSize == 0){
-                if (i >= N - squareSize){
-                    index = squareSize - 1;
-                } else {
-                    index = i + squareSize * 2 - 1;
-                }
-            } else if (i >= N - squareSize){
-                index = i + 2 - N;
-            }
-            bdd eq_1_2 = bdd_apply(p[0][index][4], p[2][i][3], bddop_biimp);
-            eq_1 |= eq_1_2;
-            bdd eq_2_2 = bdd_apply(p[2][index][7], p[3][i][7], bddop_biimp);
-            eq_2 |= eq_2_2;
-            bdd eq_3_2 = bdd_apply(p[3][index][5], p[0][i][5], bddop_biimp);
-            eq_3 |= eq_3_2;
-            bdd eq_4_2 = bdd_apply(p[2][index][0], p[1][i][1], bddop_biimp);
-            eq_4 |= eq_4_2;
-            
-        }
-        if (eq_1 != bddfalse) {
-            all_conditions &= eq_1;
-        }
-        if (eq_2 != bddfalse) {
-            all_conditions &= eq_2;
-        }
-        if (eq_3 != bddfalse) {
-            all_conditions &= eq_3;
-        }
-        if (eq_4 != bddfalse) {
-            all_conditions &= eq_4;
-        }
+        result &= bdd_apply(p[2][index][1], p[0][i][2], bddop_biimp);
+        
+        result &= bdd_apply(p[1][index][3], p[0][i][8], bddop_biimp);
 
-        if (all_conditions != bddtrue) {
-            result &= all_conditions;
+        result &= bdd_apply(p[0][index][5], p[2][i][1], bddop_biimp);
+    }
+
+    if (IS_GLUING && (i < N - squareSize) && (i % squareSize == 0)) {
+        index = i + 2 * squareSize - 1;
+        result &= bdd_apply(p[2][index][1], p[0][i][2], bddop_biimp);
+        result &= bdd_apply(p[1][index][3], p[0][i][8], bddop_biimp);
+
+        result &= bdd_apply(p[0][index][5], p[2][i][1], bddop_biimp);
+    }
+
+    if (!IS_GLUING && (i < N - squareSize) && (i % squareSize == 0)) {
+        index = i + 2 * squareSize - 1;
+        result &= !p[0][i][2];
+        result &= !p[0][i][8];
+        result &= !(p[2][index][1]);
+        result &= !(p[1][index][3]);
+
+
+        result &= !(p[2][i][1]);
+        
+    }
+
+    if ((i >= squareSize) && (i % squareSize != 0)) {
+        index = i - squareSize - 1;
+        
+        result &= bdd_apply(p[1][index][2], p[3][i][4], bddop_biimp);
+        
+        result &= bdd_apply(p[2][index][2], p[3][i][3], bddop_biimp);
+        
+    }
+
+    if (IS_GLUING && (i >= squareSize) && (i % squareSize == 0)) {
+        index = i - 1;
+        result &= bdd_apply(p[1][index][2], p[3][i][4], bddop_biimp);
+        result &= bdd_apply(p[2][index][2], p[3][i][3], bddop_biimp);
+    }
+
+    if (!IS_GLUING && (i >= squareSize) && (i % squareSize == 0)) {
+        result &= !(p[3][i][4]);
+        result &= !(p[3][i][3]);
+        index = i - 1;
+        result &= !(p[1][index][2]);
+        result &= !(p[2][index][2]);
+    }
+
+
+    }
+}
+
+void limitN4(bdd &result, const bdd (&p)[M][N][N]) {
+    unsigned right_top_index;
+    unsigned right_bottom_index;
+    const int squareSize = (int)std::sqrt(N);
+  
+    for (unsigned i = 0; i < N; i++) {
+        if ((i >= squareSize) && (i < N - squareSize) && (i % squareSize != 0)) {
+            right_top_index = i + squareSize - 1;
+            right_bottom_index = i - squareSize - 1;
+            
+            result &= !p[0][i][6] | p[3][right_top_index][5] | p[3][right_bottom_index][5];
+            
+            result &= !p[0][i][5] | p[3][right_top_index][7] | p[3][right_bottom_index][7];
+            
+            result &= !p[0][i][6] | p[0][right_top_index][8] | p[0][right_bottom_index][8];
+
+            result &= !p[3][i][3] | p[0][right_top_index][3] | p[0][right_bottom_index][3];
+        }
+    
+        else if ((i < squareSize) && (i % squareSize != 0)) {
+            right_top_index = i + squareSize - 1;
+            
+            result &= bdd_apply(p[0][i][6], p[3][right_top_index][5], bddop_biimp);
+            
+            result &= bdd_apply(p[0][i][5], p[3][right_top_index][7], bddop_biimp);
+            
+            result &= bdd_apply(p[0][i][6], p[0][right_top_index][8], bddop_biimp);
+
+            result &= bdd_apply(p[3][i][3], p[0][right_top_index][3], bddop_biimp);
+        }
+    
+        else if ((i >= N - squareSize) && (i % squareSize != 0)) {
+            right_bottom_index = i - squareSize - 1;
+            
+            result &= bdd_apply(p[0][i][6], p[3][right_bottom_index][5], bddop_biimp);
+            
+            result &= bdd_apply(p[0][i][5], p[3][right_bottom_index][7], bddop_biimp);
+            
+            result &= bdd_apply(p[0][i][6], p[0][right_bottom_index][8], bddop_biimp);
+
+            result &= bdd_apply(p[3][i][3], p[0][right_bottom_index][3], bddop_biimp);
+        }
+    
+        if (IS_GLUING && (i % squareSize == 0)) {
+            if (i < squareSize) {
+                right_top_index = i + 2 * squareSize - 1;
+                result &= bdd_apply(p[0][i][6], p[3][right_top_index][5], bddop_biimp);
+                result &= bdd_apply(p[0][i][5], p[3][right_top_index][7], bddop_biimp);
+                result &= bdd_apply(p[0][i][6], p[0][right_top_index][8], bddop_biimp);
+                result &= bdd_apply(p[3][i][3], p[0][right_top_index][3], bddop_biimp);
+            }
+            else if ((i >= squareSize) && (i < N - squareSize)) {
+                right_top_index = i - 1;
+                right_bottom_index = i + 2 * squareSize - 1;
+                result &= !p[0][i][6] | p[3][right_top_index][5] | p[3][right_bottom_index][5];
+                result &= !p[0][i][5] | p[3][right_top_index][7] | p[3][right_bottom_index][7];
+                result &= !p[0][i][6] | p[0][right_top_index][8] | p[0][right_bottom_index][8];
+                result &= !p[3][i][3] | p[0][right_top_index][3] | p[0][right_bottom_index][3];
+            }
+            else if (i >= N - squareSize) {
+                right_bottom_index = i - 1;
+                result &= bdd_apply(p[0][i][6], p[3][right_bottom_index][5], bddop_biimp);
+                result &= bdd_apply(p[0][i][5], p[3][right_bottom_index][7], bddop_biimp);
+                result &= bdd_apply(p[0][i][6], p[0][right_bottom_index][8], bddop_biimp);
+                result &= bdd_apply(p[3][i][3], p[0][right_bottom_index][3], bddop_biimp);
+            }
+        }
+        if (!IS_GLUING && (i % squareSize == 0)) {
+            if (i < squareSize) {
+                right_top_index = i + 2 * squareSize - 1;
+                result &= !(p[0][i][6]);
+                result &= !(p[0][i][5]);
+                result &= !(p[3][i][3]);
+                result &= !(p[3][right_top_index][5]);
+                result &= !(p[3][right_top_index][7]);
+                result &= !(p[0][right_top_index][8]);
+                result &= !(p[0][right_top_index][3]);
+            }
+            else if ((i >= squareSize) && (i < N - squareSize)) {
+                right_top_index = i - 1;
+                right_bottom_index = i + 2 * squareSize - 1;
+                result &= !p[0][i][6];
+                result &= !p[0][i][5];
+                result &= !p[3][i][3];
+
+                result &= !(p[3][right_top_index][5]);
+                result &= !(p[3][right_top_index][7]);
+                result &= !(p[0][right_top_index][8]);
+                result &= !(p[0][right_top_index][3]);
+
+                result &= !(p[3][right_bottom_index][5]);
+                result &= !(p[3][right_bottom_index][7]);
+                result &= !(p[0][right_bottom_index][8]);
+                result &= !(p[0][right_bottom_index][3]);
+            }
+            else if (i >= N - squareSize) {
+                right_bottom_index = i - 1;
+                result &= !(p[0][i][6]);
+                result &= !(p[0][i][5]);
+                result &= !(p[3][i][3]);
+            }
         }
     }
 }
@@ -247,7 +253,7 @@ void limitCompletenessOfProperties(bdd &result, const bdd (&p)[M][N][N]) {
 }
 
 int main(){
-    bdd_init(100000000, 1000000);
+    bdd_init(500000000, 2000000);
     bdd_setvarnum(LOG_N * N * M);
 
     bdd result = bddtrue;
@@ -266,16 +272,20 @@ int main(){
         }
     }
 
-    limit1(result, p);
-    limit2(result, p);
-    limit3(result, p);
-    limit4(result, p);
-    limitUniqOfProperties(result, p);
+    limitN1(result, p);
+    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
+    limitN2(result, p);
+    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
+    limitN3(result, p);
+    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
+    limitN4(result, p);
+    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
     limitCompletenessOfProperties(result, p);
+    limitUniqOfProperties(result, p);
 
     out.open("out.txt");
     unsigned satcount = (unsigned)bdd_satcount(result);
-    out << satcount << " solutions:\n" << std::endl;
+    out << satcount << " results:\n" << std::endl;
     if (satcount){
         bdd_allsat(result, fun);
     }
