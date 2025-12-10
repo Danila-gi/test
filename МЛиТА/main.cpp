@@ -28,199 +28,201 @@ const std::vector<std::string> M_languages = {"русский", "английс�
 void limitN1(bdd &result, const bdd (&p)[M][N][N]) {
     // 7 штук ограничений n1
   
+    // Игрок под номером 3 носит красные бутсы
     result &= p[0][3][0];
 
+    // Игрок под номером 5 пьет после игры пиво
     result &= p[1][5][1];
 
+    // Игрок под номером 1 говорит на английском
     result &= p[3][1][1];
 
-    result &= p[0][7][1];
+    // Игрок под нмоером 6 после игры пьет лимонад
+    result &= p[1][6][5];
 
-    result &= p[2][6][0];
+    // Игрок под номером 0 носит черные бутсы
+    result &= p[0][0][4];
 
-    result &= p[3][2][0];
+    // Игрок под номером 0 говорит на русском
+    result &= p[3][0][0];
 
-    result &= p[0][8][2];
+    // Игрок под номером 7 заключил контракт с dali
+    result &= p[2][7][6];
 }
 
 void limitN2(bdd &result, const bdd (&p)[M][N][N]) {
     // 5 штук ограничений n2
     for (unsigned i = 0; i < N; i++) {
-        result &= bdd_apply(p[0][i][3], p[1][i][7], bddop_biimp);
+        // Любитель тархуна носит зеленые бутсы
+        result &= bdd_apply(p[0][i][7], p[1][i][6], bddop_biimp);
 
+        // Любитель молока носит оранжевые бутсы
+        result &= bdd_apply(p[1][i][8], p[0][i][3], bddop_biimp);
+
+        // Тот, кто носит голубые бутсы заключил контракт с EA7
         result &= bdd_apply(p[0][i][6], p[2][i][7], bddop_biimp);
 
-        result &= bdd_apply(p[1][i][2], p[3][i][2], bddop_biimp);
+        // Любитель коктеля говорит на португальском
+        result &= bdd_apply(p[3][i][2], p[1][i][7], bddop_biimp);
 
-        result &= bdd_apply(p[1][i][5], p[2][i][5], bddop_biimp);
-
-        result &= bdd_apply(p[0][i][7], p[1][i][6], bddop_biimp);
+        // Любитель лимонада заключил контракт с boxraw
+        result &= bdd_apply(p[2][i][5], p[1][i][5], bddop_biimp);
     }
 }
 
 void limitN3(bdd &result, const bdd (&p)[M][N][N]) {
-    // 4 штуки ограничения n4
+    // 5 штук ограничений n3
     // Соседи: сверху-слева, снизу-слева
-    unsigned index;
     const int squareSize = (int)std::sqrt(N);
     for (unsigned i = 0; i < N; i++) {
-    if ((i < N - squareSize) && (i % squareSize != 0)) {
-        index = i + squareSize - 1;
-        
-        result &= bdd_apply(p[2][index][1], p[0][i][2], bddop_biimp);
-        
-        result &= bdd_apply(p[1][index][3], p[0][i][8], bddop_biimp);
+        if (i >= squareSize) {
+            if (i % squareSize != 0){  
+                // Кореец имеет соседа сверху-слева, который сотрудничает с puma
+                result &= bdd_apply(p[2][i - squareSize - 1][2], p[3][i][8], bddop_biimp);
 
-        result &= bdd_apply(p[0][index][5], p[2][i][1], bddop_biimp);
-    }
+                // Китаец имеет соседа сверху-слева, который пьет пепси
+                result &= bdd_apply(p[1][i - squareSize - 1][2], p[3][i][4], bddop_biimp);  
+            }
+            else if (IS_GLUING){
+                result &= bdd_apply(p[2][i - 1][2], p[3][i][8], bddop_biimp);
+                result &= bdd_apply(p[1][i - 1][2], p[3][i][4], bddop_biimp);
+            }
+            else {
+                result &= !p[3][i][8];
+                result &= !p[3][i][4];
+                result &= !p[2][i - 1][2];
+                result &= !p[1][i - 1][2];
+            }
+        }
 
-    if (IS_GLUING && (i < N - squareSize) && (i % squareSize == 0)) {
-        index = i + 2 * squareSize - 1;
-        result &= bdd_apply(p[2][index][1], p[0][i][2], bddop_biimp);
-        result &= bdd_apply(p[1][index][3], p[0][i][8], bddop_biimp);
+        else {
+            result &= !p[3][i][8];
+            result &= !p[3][i][4];
+            result &= !p[2][N - squareSize + i][2];
+            result &= !p[1][N - squareSize + i][2];
+        }
 
-        result &= bdd_apply(p[0][index][5], p[2][i][1], bddop_biimp);
-    }
+        if (i < N - squareSize) { 
+            if (i % squareSize != 0){
+                // Владелец желтых бутс имеет соседа снизу-слева, который пьет колу          
+                result &= bdd_apply(p[1][i + squareSize - 1][3], p[0][i][8], bddop_biimp);
 
-    if (!IS_GLUING && (i < N - squareSize) && (i % squareSize == 0)) {
-        index = i + 2 * squareSize - 1;
-        result &= !p[0][i][2];
-        result &= !p[0][i][8];
-        result &= !(p[2][index][1]);
-        result &= !(p[1][index][3]);
+                // Владелец фиолетовых бутс имеет соседа снизу-слева, который сотрудничает с boxraw
+                result &= bdd_apply(p[2][i + squareSize - 1][5], p[0][i][5], bddop_biimp);
 
-
-        result &= !(p[2][i][1]);
-        
-    }
-
-    if ((i >= squareSize) && (i % squareSize != 0)) {
-        index = i - squareSize - 1;
-        
-        result &= bdd_apply(p[1][index][2], p[3][i][4], bddop_biimp);
-        
-        result &= bdd_apply(p[2][index][2], p[3][i][3], bddop_biimp);
-        
-    }
-
-    if (IS_GLUING && (i >= squareSize) && (i % squareSize == 0)) {
-        index = i - 1;
-        result &= bdd_apply(p[1][index][2], p[3][i][4], bddop_biimp);
-        result &= bdd_apply(p[2][index][2], p[3][i][3], bddop_biimp);
-    }
-
-    if (!IS_GLUING && (i >= squareSize) && (i % squareSize == 0)) {
-        result &= !(p[3][i][4]);
-        result &= !(p[3][i][3]);
-        index = i - 1;
-        result &= !(p[1][index][2]);
-        result &= !(p[2][index][2]);
-    }
-
-
+                // Партнер nike имеет соседа снизу-слева, который носит фиолетовые бутсы    
+                result &= bdd_apply(p[0][i + squareSize - 1][5], p[2][i][1], bddop_biimp);
+            }
+            else if (IS_GLUING){
+                result &= bdd_apply(p[1][i + 2 * squareSize - 1][3], p[0][i][8], bddop_biimp);
+                result &= bdd_apply(p[2][i + 2 * squareSize - 1][5], p[0][i][5], bddop_biimp);
+                result &= bdd_apply(p[0][i + 2 * squareSize - 1][5], p[2][i][1], bddop_biimp);
+            }
+            else {
+                result &= !p[0][i][8];
+                result &= !p[0][i][5];
+                result &= !p[2][i][1];
+                result &= !p[1][i + 2 * squareSize - 1][3];
+                result &= !p[2][i + 2 * squareSize - 1][5];
+                result &= !p[0][i + 2 * squareSize - 1][5];
+            }
+        }
+        else {
+            result &= !p[0][i][5];
+            result &= !p[0][i][8];
+            result &= !p[2][i][1];
+            result &= !p[1][i - N + squareSize][3];
+            result &= !p[2][i - N + squareSize][5];
+            result &= !p[0][i - N + squareSize][5];
+        }
     }
 }
 
 void limitN4(bdd &result, const bdd (&p)[M][N][N]) {
-    unsigned right_top_index;
-    unsigned right_bottom_index;
+    // 4 штуки ограничений n4
+    // Соседи: сверху-слева, снизу-слева
     const int squareSize = (int)std::sqrt(N);
   
     for (unsigned i = 0; i < N; i++) {
-        if ((i >= squareSize) && (i < N - squareSize) && (i % squareSize != 0)) {
-            right_top_index = i + squareSize - 1;
-            right_bottom_index = i - squareSize - 1;
+        // Владелец голубых бутс имеет соседа француза
+        bdd eq_1 = bddfalse;
+        // Владелец фиолетовых бутс имеет соседа японца
+        bdd eq_2 = bddfalse;
+        // Владелец голубых бутс имеет соседа с желтыми бутсами
+        bdd eq_3 = bddfalse;
+        // Испанец имеет соседа с оранжевыми бутсами
+        bdd eq_4 = bddfalse;
+    
+        if ((i < N - squareSize) && (i % squareSize != 0)) {            
+            eq_1 |= bdd_apply(p[0][i][6], p[3][i + squareSize - 1][5], bddop_biimp);
             
-            result &= !p[0][i][6] | p[3][right_top_index][5] | p[3][right_bottom_index][5];
+            eq_2 |= bdd_apply(p[0][i][5], p[3][i + squareSize - 1][7], bddop_biimp);
             
-            result &= !p[0][i][5] | p[3][right_top_index][7] | p[3][right_bottom_index][7];
-            
-            result &= !p[0][i][6] | p[0][right_top_index][8] | p[0][right_bottom_index][8];
+            eq_3 |= bdd_apply(p[0][i][6], p[0][i + squareSize - 1][8], bddop_biimp);
 
-            result &= !p[3][i][3] | p[0][right_top_index][3] | p[0][right_bottom_index][3];
+            eq_4 |= bdd_apply(p[3][i][3], p[0][i + squareSize - 1][3], bddop_biimp);
         }
     
-        else if ((i < squareSize) && (i % squareSize != 0)) {
-            right_top_index = i + squareSize - 1;
+        if ((i >= squareSize) && (i % squareSize != 0)) {            
+            eq_1 |= bdd_apply(p[0][i][6], p[3][i - squareSize - 1][5], bddop_biimp);
             
-            result &= bdd_apply(p[0][i][6], p[3][right_top_index][5], bddop_biimp);
+            eq_2 |= bdd_apply(p[0][i][5], p[3][i - squareSize - 1][7], bddop_biimp);
             
-            result &= bdd_apply(p[0][i][5], p[3][right_top_index][7], bddop_biimp);
-            
-            result &= bdd_apply(p[0][i][6], p[0][right_top_index][8], bddop_biimp);
+            eq_3 |= bdd_apply(p[0][i][6], p[0][i - squareSize - 1][8], bddop_biimp);
 
-            result &= bdd_apply(p[3][i][3], p[0][right_top_index][3], bddop_biimp);
+            eq_4 |= bdd_apply(p[3][i][3], p[0][i - squareSize - 1][3], bddop_biimp);
+        }
+        bdd eq_all = eq_1 & eq_2 & eq_3 & eq_4;
+
+        if (eq_all != bddfalse){
+            result &= eq_all;
         }
     
-        else if ((i >= N - squareSize) && (i % squareSize != 0)) {
-            right_bottom_index = i - squareSize - 1;
+        if (IS_GLUING && (eq_all == bddfalse)) {
+            eq_1 = bddfalse;
+            eq_2 = bddfalse;
+            eq_3 = bddfalse;
+            eq_4 = bddfalse;
+            if (i < N - squareSize) {
+                eq_1 |= bdd_apply(p[0][i][6], p[3][i + 2 * squareSize - 1][5], bddop_biimp);
             
-            result &= bdd_apply(p[0][i][6], p[3][right_bottom_index][5], bddop_biimp);
-            
-            result &= bdd_apply(p[0][i][5], p[3][right_bottom_index][7], bddop_biimp);
-            
-            result &= bdd_apply(p[0][i][6], p[0][right_bottom_index][8], bddop_biimp);
+                eq_2 |= bdd_apply(p[0][i][5], p[3][i + 2 * squareSize - 1][7], bddop_biimp);
+                
+                eq_3 |= bdd_apply(p[0][i][6], p[0][i + 2 * squareSize - 1][8], bddop_biimp);
 
-            result &= bdd_apply(p[3][i][3], p[0][right_bottom_index][3], bddop_biimp);
-        }
-    
-        if (IS_GLUING && (i % squareSize == 0)) {
-            if (i < squareSize) {
-                right_top_index = i + 2 * squareSize - 1;
-                result &= bdd_apply(p[0][i][6], p[3][right_top_index][5], bddop_biimp);
-                result &= bdd_apply(p[0][i][5], p[3][right_top_index][7], bddop_biimp);
-                result &= bdd_apply(p[0][i][6], p[0][right_top_index][8], bddop_biimp);
-                result &= bdd_apply(p[3][i][3], p[0][right_top_index][3], bddop_biimp);
+                eq_4 |= bdd_apply(p[3][i][3], p[0][i + 2 * squareSize - 1][3], bddop_biimp);
             }
-            else if ((i >= squareSize) && (i < N - squareSize)) {
-                right_top_index = i - 1;
-                right_bottom_index = i + 2 * squareSize - 1;
-                result &= !p[0][i][6] | p[3][right_top_index][5] | p[3][right_bottom_index][5];
-                result &= !p[0][i][5] | p[3][right_top_index][7] | p[3][right_bottom_index][7];
-                result &= !p[0][i][6] | p[0][right_top_index][8] | p[0][right_bottom_index][8];
-                result &= !p[3][i][3] | p[0][right_top_index][3] | p[0][right_bottom_index][3];
+            if (i >= squareSize) {
+                eq_1 |= bdd_apply(p[0][i][6], p[3][i - 1][5], bddop_biimp);
+            
+                eq_2 |= bdd_apply(p[0][i][5], p[3][i - 1][7], bddop_biimp);
+                
+                eq_3 |= bdd_apply(p[0][i][6], p[0][i - 1][8], bddop_biimp);
+
+                eq_4 |= bdd_apply(p[3][i][3], p[0][i - 1][3], bddop_biimp);
             }
-            else if (i >= N - squareSize) {
-                right_bottom_index = i - 1;
-                result &= bdd_apply(p[0][i][6], p[3][right_bottom_index][5], bddop_biimp);
-                result &= bdd_apply(p[0][i][5], p[3][right_bottom_index][7], bddop_biimp);
-                result &= bdd_apply(p[0][i][6], p[0][right_bottom_index][8], bddop_biimp);
-                result &= bdd_apply(p[3][i][3], p[0][right_bottom_index][3], bddop_biimp);
+
+            eq_all = eq_1 & eq_2 & eq_3 & eq_4;
+
+            if (eq_all != bddfalse){
+                result &= eq_all;
             }
         }
-        if (!IS_GLUING && (i % squareSize == 0)) {
-            if (i < squareSize) {
-                right_top_index = i + 2 * squareSize - 1;
-                result &= !(p[0][i][6]);
-                result &= !(p[0][i][5]);
-                result &= !(p[3][i][3]);
-                result &= !(p[3][right_top_index][5]);
-                result &= !(p[3][right_top_index][7]);
-                result &= !(p[0][right_top_index][8]);
-                result &= !(p[0][right_top_index][3]);
+        else if (!IS_GLUING && (eq_all == bddfalse)) {
+            result &= !p[0][i][6];
+            result &= !p[0][i][5];
+            result &= !p[3][i][3];
+            if (i < N - squareSize) {
+                result &= !p[3][i + 2 * squareSize - 1][5];
+                result &= !p[3][i + 2 * squareSize - 1][7];
+                result &= !p[0][i + 2 * squareSize - 1][8];
+                result &= !p[0][i + 2 * squareSize - 1][3];
             }
-            else if ((i >= squareSize) && (i < N - squareSize)) {
-                right_top_index = i - 1;
-                right_bottom_index = i + 2 * squareSize - 1;
-                result &= !p[0][i][6];
-                result &= !p[0][i][5];
-                result &= !p[3][i][3];
-
-                result &= !(p[3][right_top_index][5]);
-                result &= !(p[3][right_top_index][7]);
-                result &= !(p[0][right_top_index][8]);
-                result &= !(p[0][right_top_index][3]);
-
-                result &= !(p[3][right_bottom_index][5]);
-                result &= !(p[3][right_bottom_index][7]);
-                result &= !(p[0][right_bottom_index][8]);
-                result &= !(p[0][right_bottom_index][3]);
-            }
-            else if (i >= N - squareSize) {
-                right_bottom_index = i - 1;
-                result &= !(p[0][i][6]);
-                result &= !(p[0][i][5]);
-                result &= !(p[3][i][3]);
+            else if (i >= squareSize) {
+                result &= !p[3][i - 1][5];
+                result &= !p[3][i - 1][7];
+                result &= !p[0][i - 1][8];
+                result &= !p[0][i - 1][3];
             }
         }
     }
@@ -273,19 +275,15 @@ int main(){
     }
 
     limitN1(result, p);
-    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
     limitN2(result, p);
-    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
     limitN3(result, p);
-    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
     limitN4(result, p);
-    std::cout << bdd_satcount(result) << " results:\n" << std::endl;
     limitCompletenessOfProperties(result, p);
     limitUniqOfProperties(result, p);
 
     out.open("out.txt");
     unsigned satcount = (unsigned)bdd_satcount(result);
-    out << satcount << " results:\n" << std::endl;
+    out << satcount << " solutions:\n" << std::endl;
     if (satcount){
         bdd_allsat(result, fun);
     }
