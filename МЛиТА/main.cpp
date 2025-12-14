@@ -8,7 +8,7 @@
 #define N 9
 #define M 4
 #define LOG_N 4
-#define IS_GLUING true
+#define IS_GLUING false
 
 std::ofstream out;
 
@@ -18,7 +18,7 @@ void fun(char* varset, int size);
 // k = 0
 const std::vector<std::string> M_colors = {"красные", "синие", "белые", "оранжевые", "черные", "фиолетовые", "голубые", "зеленые", "желтые"};
 // k = 1
-const std::vector<std::string> M_drinks = {"вино", "пиво", "пепси", "колу", "воду", "лимонад", "тархун", "коктель", "молоко"};
+const std::vector<std::string> M_drinks = {"вино", "пиво", "пепси", "колу", "воду", "лимонад", "тархун", "коктейль", "молоко"};
 // k = 2
 const std::vector<std::string> M_brends = {"demix", "nike", "puma", "adidas", "under armour", "boxraw", "dali", "EA7", "FN"};
 // k = 3
@@ -32,7 +32,7 @@ void limitN1(bdd &result, const bdd (&p)[M][N][N]) {
     result &= p[0][3][0];
 
     // Игрок под номером 5 пьет после игры пиво
-    result &= p[1][5][1];
+    //result &= p[1][5][1];
 
     // Игрок под номером 1 говорит на английском
     result &= p[3][1][1];
@@ -62,7 +62,7 @@ void limitN2(bdd &result, const bdd (&p)[M][N][N]) {
         // Тот, кто носит голубые бутсы заключил контракт с EA7
         result &= bdd_apply(p[0][i][6], p[2][i][7], bddop_biimp);
 
-        // Любитель коктеля говорит на португальском
+        // Любитель коктейля говорит на португальском
         result &= bdd_apply(p[3][i][2], p[1][i][7], bddop_biimp);
 
         // Любитель лимонада заключил контракт с boxraw
@@ -81,25 +81,33 @@ void limitN3(bdd &result, const bdd (&p)[M][N][N]) {
                 result &= bdd_apply(p[2][i - squareSize - 1][2], p[3][i][8], bddop_biimp);
 
                 // Китаец имеет соседа сверху-слева, который пьет пепси
-                result &= bdd_apply(p[1][i - squareSize - 1][2], p[3][i][4], bddop_biimp);  
+                result &= bdd_apply(p[1][i - squareSize - 1][2], p[3][i][4], bddop_biimp);
+
+                result &= bdd_apply(p[2][i - squareSize - 1][3], p[1][i][4], bddop_biimp);
+                
             }
             else if (IS_GLUING){
                 result &= bdd_apply(p[2][i - 1][2], p[3][i][8], bddop_biimp);
                 result &= bdd_apply(p[1][i - 1][2], p[3][i][4], bddop_biimp);
+                result &= bdd_apply(p[2][i - 1][3], p[1][i][4], bddop_biimp);
             }
             else {
                 result &= !p[3][i][8];
                 result &= !p[3][i][4];
+                result &= !p[1][i][4];
                 result &= !p[2][i - 1][2];
                 result &= !p[1][i - 1][2];
+                result &= !p[2][i - 1][3];
             }
         }
 
         else {
             result &= !p[3][i][8];
             result &= !p[3][i][4];
+            result &= !p[1][i][4];
             result &= !p[2][N - squareSize + i][2];
             result &= !p[1][N - squareSize + i][2];
+            result &= !p[2][N - squareSize + i][3];
         }
 
         if (i < N - squareSize) { 
@@ -144,45 +152,61 @@ void limitN4(bdd &result, const bdd (&p)[M][N][N]) {
     const int squareSize = (int)std::sqrt(N);
   
     for (unsigned i = 0; i < N; i++) {
-        // Владелец голубых бутс имеет соседа француза
-        bdd eq_1 = bddfalse;
-        // Владелец фиолетовых бутс имеет соседа японца
-        bdd eq_2 = bddfalse;
-        // Владелец голубых бутс имеет соседа с желтыми бутсами
-        bdd eq_3 = bddfalse;
-        // Испанец имеет соседа с оранжевыми бутсами
-        bdd eq_4 = bddfalse;
-    
-        if ((i < N - squareSize) && (i % squareSize != 0)) {            
-            eq_1 |= bdd_apply(p[0][i][6], p[3][i + squareSize - 1][5], bddop_biimp);
-            
-            eq_2 |= bdd_apply(p[0][i][5], p[3][i + squareSize - 1][7], bddop_biimp);
-            
-            eq_3 |= bdd_apply(p[0][i][6], p[0][i + squareSize - 1][8], bddop_biimp);
+        if (i % squareSize != 0){
+            // Владелец голубых бутс имеет соседа француза
+            bdd eq_1 = bddfalse;
+            // Владелец фиолетовых бутс имеет соседа японца
+            bdd eq_2 = bddfalse;
+            // Владелец голубых бутс имеет соседа с желтыми бутсами
+            bdd eq_3 = bddfalse;
+            // Испанец имеет соседа с оранжевыми бутсами
+            bdd eq_4 = bddfalse;
+        
+            if ((i < N - squareSize) && (i % squareSize != 0)) {            
+                eq_1 |= bdd_apply(p[0][i][6], p[3][i + squareSize - 1][5], bddop_biimp);
+                
+                eq_2 |= bdd_apply(p[0][i][5], p[3][i + squareSize - 1][7], bddop_biimp);
+                
+                eq_3 |= bdd_apply(p[0][i][6], p[0][i + squareSize - 1][8], bddop_biimp);
 
-            eq_4 |= bdd_apply(p[3][i][3], p[0][i + squareSize - 1][3], bddop_biimp);
+                eq_4 |= bdd_apply(p[3][i][3], p[0][i + squareSize - 1][3], bddop_biimp);
+            }
+        
+            if ((i >= squareSize) && (i % squareSize != 0)) {            
+                eq_1 |= bdd_apply(p[0][i][6], p[3][i - squareSize - 1][5], bddop_biimp);
+                
+                eq_2 |= bdd_apply(p[0][i][5], p[3][i - squareSize - 1][7], bddop_biimp);
+                
+                eq_3 |= bdd_apply(p[0][i][6], p[0][i - squareSize - 1][8], bddop_biimp);
+
+                eq_4 |= bdd_apply(p[3][i][3], p[0][i - squareSize - 1][3], bddop_biimp);
+            }
+
+            eq_1 |= !p[0][i][6];
+            eq_2 |= !p[0][i][5];
+            eq_3 |= !p[0][i][6];
+            eq_4 |= !p[3][i][3];
+
+            if (eq_1 != bddfalse){
+                result &= eq_1;
+            }
+            if (eq_2 != bddfalse){
+                result &= eq_2;
+            }
+            if (eq_3 != bddfalse){
+                result &= eq_3;
+            }
+            if (eq_4 != bddfalse){
+                result &= eq_4;
+            }
         }
     
-        if ((i >= squareSize) && (i % squareSize != 0)) {            
-            eq_1 |= bdd_apply(p[0][i][6], p[3][i - squareSize - 1][5], bddop_biimp);
-            
-            eq_2 |= bdd_apply(p[0][i][5], p[3][i - squareSize - 1][7], bddop_biimp);
-            
-            eq_3 |= bdd_apply(p[0][i][6], p[0][i - squareSize - 1][8], bddop_biimp);
-
-            eq_4 |= bdd_apply(p[3][i][3], p[0][i - squareSize - 1][3], bddop_biimp);
-        }
-        bdd eq_all = eq_1 & eq_2 & eq_3 & eq_4;
-
-        if (eq_all != bddfalse){
-            result &= eq_all;
-        }
-    
-        if (IS_GLUING && (eq_all == bddfalse)) {
-            eq_1 = bddfalse;
-            eq_2 = bddfalse;
-            eq_3 = bddfalse;
-            eq_4 = bddfalse;
+        if (IS_GLUING && (i % squareSize == 0)) {
+            bdd eq_1 = bddfalse;
+            bdd eq_2 = bddfalse;
+            bdd eq_3 = bddfalse;
+            bdd eq_4 = bddfalse;
+            bdd eq_5 = bddfalse;
             if (i < N - squareSize) {
                 eq_1 |= bdd_apply(p[0][i][6], p[3][i + 2 * squareSize - 1][5], bddop_biimp);
             
@@ -202,13 +226,20 @@ void limitN4(bdd &result, const bdd (&p)[M][N][N]) {
                 eq_4 |= bdd_apply(p[3][i][3], p[0][i - 1][3], bddop_biimp);
             }
 
-            eq_all = eq_1 & eq_2 & eq_3 & eq_4;
-
-            if (eq_all != bddfalse){
-                result &= eq_all;
+            if (eq_1 != bddfalse){
+                result &= eq_1;
+            }
+            if (eq_2 != bddfalse){
+                result &= eq_2;
+            }
+            if (eq_3 != bddfalse){
+                result &= eq_3;
+            }
+            if (eq_4 != bddfalse){
+                result &= eq_4;
             }
         }
-        else if (!IS_GLUING && (eq_all == bddfalse)) {
+        else if (!IS_GLUING && (i % squareSize == 0)) {
             result &= !p[0][i][6];
             result &= !p[0][i][5];
             result &= !p[3][i][3];
@@ -306,13 +337,13 @@ void print()
                 num += (unsigned)(var[J + k] << k);
             }
             if (j == 0)
-                out << std::setw(30) << std::left << M_colors[num];
+                out << num;
             if (j == 1)
-                out << std::setw(30) << std::left << M_drinks[num]; 
+                out << num; 
             if (j == 2)
-                out << std::setw(30) << std::left << M_brends[num]; 
+                out << num; 
             if (j == 3)
-                out << std::setw(30) << std::left << M_languages[num];
+                out << num;
         }
         out << std::endl;
     }
