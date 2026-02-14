@@ -26,3 +26,11 @@ def home():
 @app.get("/admins")
 def admins():
     return {"admins": db.get_admins()}
+
+@app.get("/add_test_admin")
+def admins():
+    db.add_admin("test", "qwerty")
+
+@app.get("/remove_test_admin")
+def admins():
+    db.remove_admin("test")
