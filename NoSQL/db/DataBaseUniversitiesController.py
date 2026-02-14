@@ -2,13 +2,14 @@ from pymongo import MongoClient
 
 
 class DataBaseUniversitiesController:
-    def __init__(self):
+    def __init__(self, url_db, name_db):
         self.__client = None
         self.__db = None
-        self.__name_db = "universities"
+        self.__url_db = url_db
+        self.__name_db = name_db
 
     def connect_to_db(self):
-        self.__client = MongoClient('mongodb://localhost:27017/')
+        self.__client = MongoClient(self.__url_db)
         self.__db = self.__client[self.__name_db]
 
     def close_db(self):

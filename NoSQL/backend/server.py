@@ -1,8 +1,15 @@
 from fastapi import FastAPI
+import os
+from dotenv import load_dotenv
 from db.DataBaseUniversitiesController import DataBaseUniversitiesController
 
+load_dotenv()
+
 app = FastAPI()
-db = DataBaseUniversitiesController()
+db = DataBaseUniversitiesController(
+    f"{os.getenv("DATABASE_TYPE")}://{os.getenv("DATABASE_HOST")}:{os.getenv("DATABASE_PORT")}/",
+    os.getenv("DATABASE_NAME")
+)
 
 @app.on_event("startup")
 async def startup_event():
