@@ -1,5 +1,12 @@
 import uvicorn
+import os
+from dotenv import load_dotenv
 from backend.server import app
 
+load_dotenv()
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8080)
+    host = os.getenv("HOST")
+    port = int(os.getenv("PORT"))
+
+    uvicorn.run(app, host=host, port=port)
